@@ -93,7 +93,8 @@ async function loadRules() {
           statusText: value.statusText || '',
           body: (typeof bodyFromLocal === 'string') ? bodyFromLocal : (value.body || ''),
           globalEnabled: globalEnabled,
-          variants: variants
+          variants: variants,
+          wildcardRequireMatch: (value.matchType === 'wildcard' && value.wildcardRequireMatch !== false)
         });
       }
     }

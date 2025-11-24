@@ -309,7 +309,14 @@ function renderRuleDetails(rule) {
       </div>
       <div class="wildcard-section ${rule.matchType === 'wildcard' ? '' : 'hidden'}">
         <div class="flex items-center justify-between mb-2">
-          <label class="label">Wildcard Variants</label>
+          <div class="flex items-center gap-3">
+            <label class="label">Wildcard Variants</label>
+            <label class="switch flex items-center cursor-pointer">
+              <input type="checkbox" class="wildcard-require-match" ${rule.wildcardRequireMatch ? 'checked' : ''} aria-label="Require variant match" />
+              <span class="slider ml-2"></span>
+            </label>
+            <span class="text-xs text-gray-500">Require variant to intercept</span>
+          </div>
           <button class="add-variant btn btn-sm">Add Variant</button>
         </div>
         <div class="variants-list space-y-3">
@@ -353,10 +360,12 @@ function renderRuleDetails(rule) {
   const bodyTypeEl = detailsContainer.querySelector('.bodyType');
   const statusCodeEl = detailsContainer.querySelector('.statusCode');
   const bodyEl = detailsContainer.querySelector('.body');
+  const responseBodySection = bodyEl ? bodyEl.parentElement : null;
   const enabledToggle = detailsContainer.querySelector('.enabled-toggle');
   const wildcardSection = detailsContainer.querySelector('.wildcard-section');
   const addVariantBtn = detailsContainer.querySelector('.add-variant');
   const variantsListEl = detailsContainer.querySelector('.variants-list');
+  const wildcardRequireMatchEl = detailsContainer.querySelector('.wildcard-require-match');
 
   nameEl.addEventListener('blur', async () => {
     rule.name = nameEl.value;
@@ -374,13 +383,45 @@ function renderRuleDetails(rule) {
 
   matchTypeEl.addEventListener('change', async () => {
     rule.matchType = matchTypeEl.value;
+    if (rule.matchType === 'wildcard' && rule.wildcardRequireMatch !== false) {
+      rule.wildcardRequireMatch = true;
+      if (bodyEl) bodyEl.value = '';
+      await setRuleBody(rule.id, '');
+    }
     await setRuleMeta(rule);
     flashStatus('Match type updated', 'success');
     if (wildcardSection) {
       if (rule.matchType === 'wildcard') wildcardSection.classList.remove('hidden');
       else wildcardSection.classList.add('hidden');
     }
+    if (responseBodySection) {
+      const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
+      responseBodySection.classList.toggle('hidden', hideBody);
+    }
   });
+
+  if (wildcardRequireMatchEl) {
+    wildcardRequireMatchEl.addEventListener('change', async () => {
+      rule.wildcardRequireMatch = !!wildcardRequireMatchEl.checked;
+      await setRuleMeta(rule);
+      flashStatus('Wildcard matching updated', 'success');
+      if (responseBodySection) {
+        const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
+        responseBodySection.classList.toggle('hidden', hideBody);
+      }
+      if (rule.wildcardRequireMatch) {
+        if (bodyEl) {
+          bodyEl.value = '';
+        }
+        await setRuleBody(rule.id, '');
+      }
+    });
+  }
+
+  if (responseBodySection) {
+    const initialHide = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
+    responseBodySection.classList.toggle('hidden', initialHide);
+  }
 
   patternEl.addEventListener('blur', async () => {
     rule.pattern = patternEl.value;

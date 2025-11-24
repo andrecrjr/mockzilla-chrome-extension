@@ -66,7 +66,7 @@ async function refresh() {
 
 // Add rule and group functions
 async function addRule() {
-  const newRule = { id: uid(), name: '', matchType: 'exact', pattern: '', enabled: true, bodyType: 'json', group: '', statusCode: 200, body: '', variants: [] };
+  const newRule = { id: uid(), name: '', matchType: 'exact', pattern: '', enabled: true, bodyType: 'json', group: '', statusCode: 200, body: '', variants: [], wildcardRequireMatch: true };
   await setRule(newRule);
   await refresh();
   // Automatically select the new rule

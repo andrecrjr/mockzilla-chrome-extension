@@ -155,6 +155,12 @@
       const absUrl = normalizeUrl(url);
       const rule = state.rules.find((r) => matchesRule(absUrl, r));
       if (rule) {
+        if (rule.matchType === 'wildcard' && rule.wildcardRequireMatch === true) {
+          const v = selectVariant(rule, absUrl);
+          if (!v) {
+            return state.originalFetch.apply(this, arguments);
+          }
+        }
         notifyRuleHit(rule.id, absUrl);
         return buildResponse(rule, absUrl);
       }
@@ -186,6 +192,12 @@
       const absUrl = normalizeUrl(_url);
       const rule = state.rules.find((r) => matchesRule(absUrl, r));
       if (rule) {
+        if (rule.matchType === 'wildcard' && rule.wildcardRequireMatch === true) {
+          const vCheck = selectVariant(rule, absUrl);
+          if (!vCheck) {
+            return originalSend.apply(this, arguments);
+          }
+        }
         notifyRuleHit(rule.id, absUrl);
         const variant = selectVariant(rule, absUrl);
         const bodyType = variant ? variant.bodyType : rule.bodyType;
@@ -219,7 +231,8 @@
         ...rule,
         enabled: rule.enabled !== false, // default to true when unset
         globalEnabled: rule.globalEnabled !== false,
-        variants: Array.isArray(rule.variants) ? rule.variants : []
+        variants: Array.isArray(rule.variants) ? rule.variants : [],
+        wildcardRequireMatch: (rule.matchType === 'wildcard' && rule.wildcardRequireMatch !== false)
       })) : [];
   }
 

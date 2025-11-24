@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Mockzilla",
+  "name": "Mockzilla - Request Interceptor for HTTP APIs",
   "version": "0.1",
   "description": "Intercept multiple API endpoints and replace responses with custom mock data.",
   "permissions": ["scripting", "storage", "activeTab", "tabs"],
