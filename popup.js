@@ -276,8 +276,7 @@ function render(rules, hits) {
       panel.classList.toggle('max-h-[500px]', !!isOpen);
       __accordionOpen[rule.id] = !!isOpen;
       if (isOpen) {
-        // Focus first interactive element for accessibility
-        setTimeout(() => { try { nameEl.focus(); } catch {} }, 150);
+        setTimeout(() => { try { header.focus(); } catch {} }, 150);
       }
     }
 

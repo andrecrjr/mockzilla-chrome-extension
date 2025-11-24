@@ -116,17 +116,50 @@ if (window.chrome && chrome.storage && chrome.storage.onChanged) {
 }
 
 // Forward rule hits from the page to the background script
+const __pendingHits = [];
+let __flushScheduled = false;
+
+function safeSendRuleHit(ruleId, url) {
+  let ok = false;
+  try { ok = !!(chrome && chrome.runtime && chrome.runtime.id); } catch {}
+  if (ok) {
+    try { 
+      chrome.runtime.sendMessage({ type: 'RULE_HIT', ruleId, url }); 
+      return; 
+    } catch (e) {
+      // fall through to queue
+    }
+  }
+  __pendingHits.push({ ruleId, url });
+  if (!__flushScheduled) {
+    __flushScheduled = true;
+    const retry = () => {
+      let ready = false;
+      try { ready = !!(chrome && chrome.runtime && chrome.runtime.id); } catch {}
+      if (ready) {
+        const items = __pendingHits.splice(0);
+        items.forEach((h) => { 
+          try { chrome.runtime.sendMessage({ type: 'RULE_HIT', ruleId: h.ruleId, url: h.url }); } catch {} 
+        });
+        __flushScheduled = false;
+      } else {
+        setTimeout(retry, 100);
+      }
+    };
+    setTimeout(retry, 100);
+  }
+}
+
 window.addEventListener('message', (ev) => {
   const msg = ev.data;
   if (!msg || !msg.__rr) return;
   if (msg.type === 'RULE_HIT') {
-    chrome.runtime.sendMessage({ type: 'RULE_HIT', ruleId: msg.ruleId, url: msg.url });
+    safeSendRuleHit(msg.ruleId, msg.url);
   }
-  // Injected script can actively request rules; respond with latest
   if (msg.type === 'REQUEST_RULES') {
     (async () => {
       try {
-        await loadRules(); // loadRules will call sendRulesToPage
+        await loadRules();
       } catch {}
     })();
   }
