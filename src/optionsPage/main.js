@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeToggleRuleButton();
   initializeHeaderControls();
   applyPrefsToDOM();
+  await handleAutoCreateRule();
 });
 
 function initializeEventListeners() {
@@ -240,4 +241,22 @@ function initializeKeyboardShortcuts() {
       return;
     }
   });
+}
+
+async function handleAutoCreateRule() {
+  try {
+    const params = new URLSearchParams(location.search || '');
+    const queryWantsNew = params.has('newRule');
+    let flag = false;
+    if (window.chrome && chrome.storage && chrome.storage.local) {
+      try {
+        const { rr_autocreate_rule } = await chrome.storage.local.get('rr_autocreate_rule');
+        flag = !!rr_autocreate_rule;
+        if (flag) await chrome.storage.local.remove('rr_autocreate_rule');
+      } catch {}
+    }
+    if (queryWantsNew || flag) {
+      await addRule();
+    }
+  } catch {}
 }

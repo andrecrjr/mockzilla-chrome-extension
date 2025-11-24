@@ -351,6 +351,22 @@ document.getElementById('clearHits').addEventListener('click', async () => {
   await refresh();
 });
 
+document.getElementById('addRule').addEventListener('click', async () => {
+  try {
+    if (window.chrome && chrome.storage && chrome.storage.local) {
+      await chrome.storage.local.set({ rr_autocreate_rule: Date.now() });
+    }
+  } catch {}
+  try {
+    if (window.chrome && chrome.runtime && chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else if (window.chrome && chrome.runtime && chrome.tabs) {
+      const url = chrome.runtime.getURL('options.html?newRule=1');
+      await chrome.tabs.create({ url });
+    }
+  } catch {}
+});
+
 // Theme toggle button
 document.getElementById('settingsBtn').addEventListener('click', () => {
   const next = getTheme() === 'dark' ? 'light' : 'dark';
