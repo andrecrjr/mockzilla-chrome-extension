@@ -1,7 +1,7 @@
 // UI rendering module for options page - handles all DOM rendering functions
 
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
-import { selectRule, selectGroup, refresh } from './ruleManager.js';
+import { selectRule, selectGroup, refresh, duplicateRule } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
 import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection } from './state.js';
 
@@ -241,6 +241,7 @@ function renderRuleDetails(rule) {
             <span class="slider ml-2"></span>
           </label>
           <span class="ml-2 text-sm ${rule.enabled ? 'text-green-600' : 'text-gray-500'}">${rule.enabled ? 'Enabled' : 'Disabled'}</span>
+          <button class="duplicate-rule btn btn-neutral">Duplicate</button>
         </div>
       </div>
       
@@ -362,6 +363,7 @@ function renderRuleDetails(rule) {
   const bodyEl = detailsContainer.querySelector('.body');
   const responseBodySection = bodyEl ? bodyEl.parentElement : null;
   const enabledToggle = detailsContainer.querySelector('.enabled-toggle');
+  const duplicateBtn = detailsContainer.querySelector('.duplicate-rule');
   const wildcardSection = detailsContainer.querySelector('.wildcard-section');
   const addVariantBtn = detailsContainer.querySelector('.add-variant');
   const variantsListEl = detailsContainer.querySelector('.variants-list');
@@ -415,6 +417,12 @@ function renderRuleDetails(rule) {
         }
         await setRuleBody(rule.id, '');
       }
+    });
+  }
+
+  if (duplicateBtn) {
+    duplicateBtn.addEventListener('click', async () => {
+      await duplicateRule(rule.id);
     });
   }
 

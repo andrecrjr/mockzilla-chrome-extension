@@ -49,6 +49,10 @@
         .toast-info { @apply border-blue-200 text-blue-700 bg-blue-50; }
         .icon-btn { @apply inline-flex items-center justify-center rounded-md border border-purple-300 bg-purple-100 text-purple-700 hover:bg-purple-200 px-3 py-1 text-xs dark:border-purple-700/40 dark:bg-purple-700/20 dark:text-purple-200 dark:hover:bg-purple-700/30; }
         .pill { @apply inline-flex items-center rounded-full bg-purple-100 text-purple-700 border border-purple-300 px-2 py-0.5 text-[10px] dark:bg-purple-700/20 dark:text-purple-200 dark:border-purple-700/40; }
+        .modal-overlay { @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50; }
+        .modal-panel { @apply p-6 w-full max-w-md; }
+        .modal-title { @apply font-medium text-gray-800 dark:text-purple-100 mb-3; }
+        .modal-actions { @apply mt-3 flex justify-end gap-2; }
       }
     </style>
   </head>
@@ -206,11 +210,11 @@
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"></div>
 
     <!-- Import Modal -->
-    <div id="importModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-lg p-6 w-1/2 max-w-md">
-        <h3 class="font-medium text-gray-900 mb-3">Import Rules</h3>
+    <div id="importModal" class="modal-overlay hidden">
+      <div class="card modal-panel">
+        <h3 class="modal-title">Import Rules</h3>
         <textarea id="importTextarea" class="w-full text-xs border border-gray-300 rounded p-2 min-h-[150px] focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-200" placeholder="Paste your exported rules JSON here"></textarea>
-        <div class="mt-3 flex justify-end gap-2">
+        <div class="modal-actions">
           <button id="cancelImport" class="btn btn-neutral">Cancel</button>
           <button id="confirmImport" class="btn btn-primary">Import</button>
         </div>
@@ -218,9 +222,9 @@
     </div>
 
     <!-- Group Modal -->
-    <div id="groupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-      <div class="bg-white rounded-lg p-6 w-1/2 max-w-md">
-        <h3 class="font-medium text-gray-900 mb-3">Create or Edit Group</h3>
+    <div id="groupModal" class="modal-overlay hidden">
+      <div class="card modal-panel">
+        <h3 class="modal-title">Create or Edit Group</h3>
         <div class="mb-3">
           <label class="label block mb-1">Group Name</label>
           <input id="groupName" class="w-full input" placeholder="Enter group name" />
@@ -229,7 +233,7 @@
           <label class="label block mb-1">Group Description (optional)</label>
           <textarea id="groupDescription" class="w-full textarea" placeholder="Enter group description"></textarea>
         </div>
-        <div class="mt-3 flex justify-end gap-2">
+        <div class="modal-actions">
           <button id="cancelGroup" class="btn btn-neutral">Cancel</button>
           <button id="saveGroup" class="btn btn-primary">Save Group</button>
         </div>

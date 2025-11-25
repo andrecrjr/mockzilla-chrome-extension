@@ -7,6 +7,9 @@ import { setSelectedRule as setInternalSelectedRule, setSelectedGroup as setInte
 
 function selectRule(ruleId) {
   setInternalSelectedRule(ruleId);
+  try {
+    renderRulesList(window.currentRules || [], window.currentGroups || []);
+  } catch {}
   const rule = window.currentRules?.find(r => r.id === ruleId) || null;
   renderRuleDetails(rule);
 }
@@ -72,6 +75,30 @@ async function addRule() {
   // Automatically select the new rule
   selectRule(newRule.id);
   flashStatus('New rule added', 'success');
+}
+
+async function duplicateRule(ruleId) {
+  const rules = await getRules();
+  const orig = rules.find(r => r.id === ruleId);
+  if (!orig) { flashStatus('Rule not found', 'error'); return; }
+  const newId = uid();
+  const cloned = {
+    id: newId,
+    name: '',
+    matchType: orig.matchType,
+    pattern: orig.pattern,
+    enabled: orig.enabled,
+    bodyType: orig.bodyType,
+    group: orig.group || '',
+    statusCode: orig.statusCode || 200,
+    body: orig.body || '',
+    variants: Array.isArray(orig.variants) ? orig.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || orig.bodyType, statusCode: v.statusCode || orig.statusCode || 200, body: v.body || '' })) : [],
+    wildcardRequireMatch: orig.wildcardRequireMatch === true,
+  };
+  await setRule(cloned);
+  setInternalSelectedRule(newId);
+  await refresh();
+  flashStatus('Rule duplicated', 'success');
 }
 
 async function addGroup(groupName, groupDescription) {
@@ -225,5 +252,6 @@ export {
   expandAll, 
   collapseAll, 
   exportRules, 
-  importRules
+  importRules,
+  duplicateRule
 };
