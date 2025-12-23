@@ -44,12 +44,6 @@
       "wildcardRequireMatch": true,
       "variants": [
         {
-          "key": "1",
-          "bodyType": "json",
-          "statusCode": 200,
-          "body": "{\"matched\":\"wildcard\",\"key\":\"1\"}"
-        },
-        {
           "key": "2",
           "bodyType": "json",
           "statusCode": 200,
