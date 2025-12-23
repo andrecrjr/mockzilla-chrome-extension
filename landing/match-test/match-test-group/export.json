@@ -1,0 +1,61 @@
+{
+  "groups": [
+    {
+      "id": "match-test-group",
+      "name": "match-test-group",
+      "description": "Landing match-test presets"
+    }
+  ],
+  "rules": [
+    {
+      "id": "match-test-substring-todos-1",
+      "name": "Match Test: substring /todos/1",
+      "matchType": "substring",
+      "pattern": "/todos/1",
+      "bodyType": "json",
+      "body": "{\"matched\":\"substring\"}",
+      "statusCode": 200,
+      "enabled": true,
+      "group": "match-test-group",
+      "variants": []
+    },
+    {
+      "id": "match-test-exact-todos-1",
+      "name": "Match Test: exact todos/1",
+      "matchType": "exact",
+      "pattern": "https://jsonplaceholder.typicode.com/todos/1",
+      "bodyType": "json",
+      "body": "{\"matched\":\"exact\"}",
+      "statusCode": 200,
+      "enabled": true,
+      "group": "match-test-group",
+      "variants": []
+    },
+    {
+      "id": "match-test-wildcard-todos-star",
+      "name": "Match Test: wildcard todos/* (variants)",
+      "matchType": "wildcard",
+      "pattern": "https://jsonplaceholder.typicode.com/todos/*",
+      "bodyType": "json",
+      "body": "",
+      "statusCode": 200,
+      "enabled": true,
+      "group": "match-test-group",
+      "wildcardRequireMatch": true,
+      "variants": [
+        {
+          "key": "1",
+          "bodyType": "json",
+          "statusCode": 200,
+          "body": "{\"matched\":\"wildcard\",\"key\":\"1\"}"
+        },
+        {
+          "key": "2",
+          "bodyType": "json",
+          "statusCode": 200,
+          "body": "{\"matched\":\"wildcard\",\"key\":\"2\"}"
+        }
+      ]
+    }
+  ]
+}
