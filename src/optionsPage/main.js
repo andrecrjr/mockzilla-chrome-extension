@@ -52,33 +52,65 @@ function initializeEventListeners() {
     collapseAll();
   });
 
-  // Export rules functionality
-  document.getElementById('exportRules').addEventListener('click', async () => {
-    await exportRules();
-  });
-  const exportIcon = document.getElementById('exportIconBtn');
-  if (exportIcon) {
-    exportIcon.addEventListener('click', async () => { await exportRules(); });
+  // Cloud Actions Modal
+  const cloudBtn = document.getElementById('cloudActionsBtn');
+  const unifiedModal = document.getElementById('unifiedActionsModal');
+  const closeUnifiedModal = document.getElementById('closeUnifiedModal');
+
+  if (cloudBtn && unifiedModal) {
+    cloudBtn.addEventListener('click', () => {
+      unifiedModal.classList.remove('hidden');
+    });
   }
 
-  // Sync functionality
-  const syncIcon = document.getElementById('syncIconBtn');
-  const syncModal = document.getElementById('syncModal');
-  const cancelSync = document.getElementById('cancelSync');
+  if (closeUnifiedModal && unifiedModal) {
+    closeUnifiedModal.addEventListener('click', () => {
+      unifiedModal.classList.add('hidden');
+    });
+  }
+
+  // Tab Switching Logic
+  const tabs = document.querySelectorAll('.cloud-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => {
+        t.classList.remove('active', 'border-purple-500', 'text-purple-700', 'dark:text-purple-300');
+        t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-200');
+      });
+      // Add active class to clicked tab
+      tab.classList.add('active', 'border-purple-500', 'text-purple-700', 'dark:text-purple-300');
+      tab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-200');
+
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('block'));
+
+      // Show target content
+      const targetId = `tab-${tab.dataset.tab}`;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('block');
+      }
+    });
+  });
+
+  // Export functionality (New Button)
+  const triggerExportBtn = document.getElementById('triggerExport');
+  if (triggerExportBtn) {
+    triggerExportBtn.addEventListener('click', async () => {
+      await exportRules();
+    });
+  }
+
+  // Sync functionality (New Modal)
   const confirmSync = document.getElementById('confirmSync');
   const serverUrlInput = document.getElementById('serverUrl');
 
-  if (syncIcon) {
-    syncIcon.addEventListener('click', () => {
+  // Pre-fill server URL
+  if (serverUrlInput) {
       serverUrlInput.value = getServerUrl() || '';
-      syncModal.classList.remove('hidden');
-    });
-  }
-
-  if (cancelSync) {
-    cancelSync.addEventListener('click', () => {
-      syncModal.classList.add('hidden');
-    });
   }
 
   if (confirmSync) {
@@ -96,7 +128,7 @@ function initializeEventListeners() {
       
       try {
         await syncToServer();
-        syncModal.classList.add('hidden');
+        unifiedModal.classList.add('hidden');
       } finally {
         confirmSync.disabled = false;
         confirmSync.innerHTML = btnContent;
@@ -104,23 +136,38 @@ function initializeEventListeners() {
     });
   }
 
-  // Import rules functionality
-  document.getElementById('importRules').addEventListener('click', () => {
-    document.getElementById('importModal').classList.remove('hidden');
-  });
-  const importIcon = document.getElementById('importIconBtn');
-  if (importIcon) {
-    importIcon.addEventListener('click', () => { document.getElementById('importModal').classList.remove('hidden'); });
+  // Import functionality (New Modal)
+  const confirmImport = document.getElementById('confirmImport');
+  if (confirmImport) {
+    confirmImport.addEventListener('click', async () => {
+      const importText = document.getElementById('importTextarea').value;
+      if (!importText.trim()) {
+          flashStatus('Please paste the JSON content', 'error');
+          return;
+      }
+      await importRules(importText);
+      unifiedModal.classList.add('hidden');
+      document.getElementById('importTextarea').value = '';
+    });
   }
 
-  // Server Import Functionality
-  const importServerIcon = document.getElementById('importFromServerIconBtn');
-  if (importServerIcon) {
-      importServerIcon.addEventListener('click', async () => {
+  // Server Import Functionality (New Button)
+  const serverImportBtn = document.getElementById('serverImportBtn');
+  if (serverImportBtn) {
+      serverImportBtn.addEventListener('click', async () => {
+          // Close unified modal first or handle layering?
+          // For now let's close unified modal and open the server import modal (which is dynamically rendered usually)
+          // Actually serverImport logic opens `serverImportModal`
+          unifiedModal.classList.add('hidden');
+          
           const modal = document.getElementById('serverImportModal');
           if (modal) modal.classList.remove('hidden');
           
           await loadServerFolders(1);
+          
+          // Ensure it's visible if it was just created
+          const createdModal = document.getElementById('serverImportModal');
+          if (createdModal) createdModal.classList.remove('hidden');
       });
   }
 
@@ -137,23 +184,8 @@ function initializeEventListeners() {
                    await refresh();
               }
           });
-      } else {
-          // If fetch fails (null), perhaps render an error state or close?
-          // For now, renderFolderImportModal(null) shows Loading... but we might want an error state in UI or just flashStatus (handled in fetchServerFolders)
       }
   }
-
-  document.getElementById('cancelImport').addEventListener('click', () => {
-    document.getElementById('importModal').classList.add('hidden');
-    document.getElementById('importTextarea').value = '';
-  });
-
-  document.getElementById('confirmImport').addEventListener('click', async () => {
-    const importText = document.getElementById('importTextarea').value;
-    await importRules(importText);
-    document.getElementById('importModal').classList.add('hidden');
-    document.getElementById('importTextarea').value = '';
-  });
 
   // Quick create folder card
   const quickCreateBtn = document.getElementById('quickCreateGroup');
@@ -229,15 +261,7 @@ function initializeHeaderControls() {
       setTheme(themeToggle.checked ? 'dark' : 'light');
     });
   }
-  const settingsBtn = document.getElementById('settingsBtn');
-  if (settingsBtn) {
-    settingsBtn.addEventListener('click', () => {
-      const next = getTheme() === 'dark' ? 'light' : 'dark';
-      setTheme(next);
-      if (themeToggle) themeToggle.checked = next === 'dark';
-      flashStatus(`Theme: ${next}`, 'info');
-    });
-  }
+
 
   // Density
   const densityToggle = document.getElementById('densityToggle');
