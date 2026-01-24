@@ -176,7 +176,64 @@ async function exportRules() {
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
   flashStatus('Rules and groups exported', 'success');
-  try{
+
+// Import rules functionality
+async function importRules(importText) {
+  if (!importText) {
+    flashStatus('No data to import', 'error');
+    return;
+  }
+
+  try {
+    const importedData = JSON.parse(importText);
+    let importedRules = [];
+    let importedGroups = [];
+    
+    if (Array.isArray(importedData)) {
+      // Legacy format - just rules
+      importedRules = importedData;
+    } else if (importedData.rules) {
+      // New format with groups
+      importedRules = importedData.rules || [];
+      importedGroups = importedData.groups || [];
+    } else {
+      // Unknown format
+      throw new Error('Invalid import format');
+    }
+
+    // Import groups first
+    for (const group of importedGroups) {
+      if (
+        typeof group !== 'object' ||
+        typeof group.id !== 'string' ||
+        typeof group.name !== 'string'
+      ) {
+        throw new Error(`Invalid group structure: ${JSON.stringify(group)}`);
+      }
+      await setGroup(group);
+    }
+
+    // Import rules
+    for (const rule of importedRules) {
+      if (
+        typeof rule !== 'object' ||
+        typeof rule.id !== 'string' ||
+        typeof rule.matchType !== 'string' ||
+        typeof rule.pattern !== 'string' ||
+        typeof rule.bodyType !== 'string' ||
+        typeof rule.body !== 'string'
+      ) {
+        throw new Error(`Invalid rule structure: ${JSON.stringify(rule)}`);
+      }
+      
+      // Ensure default status code if not present in import
+      if (rule.statusCode === undefined) rule.statusCode = 200;
+      if (!Array.isArray(rule.variants)) rule.variants = [];
+      
+      // If rule already exists, update it; otherwise, create a new one
+      await setRule(rule);
+    }
+
     await refresh();
     flashStatus(`Imported ${importedRules.length} rules and ${importedGroups.length} groups`, 'success');
   } catch (e) {
