@@ -436,7 +436,7 @@ async function importFolderFromServer(folderId) {
                 // Add mocks as rules with groupId
                 if (mocks && Array.isArray(mocks)) {
                     mocks.forEach(mock => {
-                        const rule = { ...mock, groupId: group.id };
+                        const rule = { ...mock, group: group.id };
                         if (!rule.matchType) rule.matchType = 'substring'; // Default
                         importedRules.push(rule);
                     });
