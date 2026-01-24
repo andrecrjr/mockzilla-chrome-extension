@@ -271,6 +271,7 @@ async function syncRules(rules) {
   const serverUrl = getServerUrl();
   if (!serverUrl) {
     console.warn('Cannot sync: No server URL configured');
+    flashStatus('Configure server URL in Cloud Actions first', 'error');
     return;
   }
 

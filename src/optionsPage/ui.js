@@ -3,7 +3,7 @@
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
 import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
-import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection } from './state.js';
+import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection, getServerUrl } from './state.js';
 
 function renderRulesList(rules, groups) {
   const root = document.getElementById('rulesList');
@@ -239,7 +239,7 @@ function renderRuleDetails(rule) {
         </div>
         <div class="flex items-center gap-2">
           <!-- Multi-Action Rule Header Controls -->
-          ${rule.group ? `
+          ${(rule.group && getServerUrl()) ? `
           <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
              <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
                 <label class="switch-sm flex items-center cursor-pointer">
@@ -267,7 +267,7 @@ function renderRuleDetails(rule) {
       </div>
       
       <!-- Mockzilla Server Sync Bio -->
-      ${rule.group ? `
+      ${(rule.group && getServerUrl()) ? `
       <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center">
          <div class="p-1.5 bg-white dark:bg-gray-800 rounded shadow-sm border border-purple-50 dark:border-purple-800/40">
            <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
@@ -603,6 +603,7 @@ function renderRuleDetails(rule) {
           item.setAttribute('data-key', keyInput.value);
           renderRulesList(window.currentRules || [], window.currentGroups || []);
           flashStatus('Variant key saved', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -612,6 +613,7 @@ function renderRuleDetails(rule) {
           rule.variants[idx].bodyType = bodyTypeInput.value;
           await setRuleVariantsMeta(rule.id, rule.variants);
           flashStatus('Variant type updated', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -621,6 +623,7 @@ function renderRuleDetails(rule) {
           rule.variants[idx].statusCode = parseInt(statusCodeInput.value, 10);
           await setRuleVariantsMeta(rule.id, rule.variants);
           flashStatus('Variant status updated', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -635,9 +638,11 @@ function renderRuleDetails(rule) {
               flashStatus('Invalid JSON', 'error');
             } else {
               flashStatus('Variant body saved', 'success');
+              triggerAutoSync();
             }
           } else {
             flashStatus('Variant body saved', 'success');
+            triggerAutoSync();
           }
         }
       });
@@ -648,6 +653,7 @@ function renderRuleDetails(rule) {
         rule.variants = (rule.variants || []).filter(v => String(v.key) !== String(delKey));
         renderRuleDetails(rule);
         flashStatus('Variant deleted', 'success');
+        triggerAutoSync();
       });
     });
   }
@@ -694,7 +700,10 @@ function renderRuleDetails(rule) {
   }
   
   // Also hook into other change events to trigger autoSync
-  const triggerAutoSync = () => autoSyncRule(rule);
+  const triggerAutoSync = async () => {
+      // Small delay to ensure blur/change event value has propagated to rule object if not already
+      setTimeout(() => autoSyncRule(rule), 50);
+  };
   
   nameEl.addEventListener('blur', triggerAutoSync);
   if (groupSelectEl) groupSelectEl.addEventListener('change', triggerAutoSync);
@@ -702,7 +711,7 @@ function renderRuleDetails(rule) {
   statusCodeEl.addEventListener('change', triggerAutoSync);
   enabledToggle.addEventListener('change', triggerAutoSync);
   bodyEl.addEventListener('blur', triggerAutoSync);
-  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 100));
+  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 150));
 }
 
 function renderGroupDetails(group) {
