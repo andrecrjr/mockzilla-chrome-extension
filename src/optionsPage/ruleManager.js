@@ -418,33 +418,38 @@ async function importFolderFromServer(folderId) {
         }
 
         const json = await res.json();
-        // json is { groups: [{ mocks: [...] }] } (SyncPayload)
+        // json should be { groups: [{ mocks: [...] }] } (SyncPayload)
         
-        const rules = [];
-        const groups = [];
+        // Transform SyncPayload to ImportFormat
+        // SyncPayload: { groups: [ { id, name, mocks: [] } ] }
+        // ImportFormat: { rules: [], groups: [] }
+    
+        const importedRules = [];
+        const importedGroups = [];
 
-        if (json.groups) {
-             json.groups.forEach(group => {
-                 const { mocks, ...groupData } = group;
-                 groups.push(groupData);
+        if (json.groups && Array.isArray(json.groups)) {
+            json.groups.forEach(group => {
+                // Add group to list (exclude mocks to keep it clean)
+                const { mocks, ...groupData } = group;
+                importedGroups.push(groupData);
 
-                 if (mocks) {
-                     mocks.forEach(mock => {
-                         if (!mock.matchType) mock.matchType = 'substring';
-                         mock.groupId = group.id; // Link to parent group
-                         rules.push(mock);
-                     });
-                 }
-             });
+                // Add mocks as rules with groupId
+                if (mocks && Array.isArray(mocks)) {
+                    mocks.forEach(mock => {
+                        const rule = { ...mock, groupId: group.id };
+                        if (!rule.matchType) rule.matchType = 'substring'; // Default
+                        importedRules.push(rule);
+                    });
+                }
+            });
         }
 
         const importPayload = {
-            rules: rules,
-            groups: groups
+            rules: importedRules,
+            groups: importedGroups
         };
 
         // Reuse importRules logic
-        // We need to stringify it because importRules expects a JSON string
         await importRules(JSON.stringify(importPayload));
         
         flashStatus('Folder imported successfully', 'success');
