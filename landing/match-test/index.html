@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Teste visual para comparar os match types do Mockzilla (substring, exact, wildcard + variants)." />
+  <title>Mockzilla - Match Type Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87'
+            },
+            secondary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e'
+            },
+            accent: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            },
+            dark: {
+              50: '#f9fafb',
+              100: '#f3f4f6',
+              200: '#e5e7eb',
+              300: '#d1d5db',
+              400: '#9ca3af',
+              500: '#6b7280',
+              600: '#4b5563',
+              700: '#374151',
+              800: '#1f2937',
+              900: '#111827'
+            },
+            light: {
+              50: '#f9fafb',
+              100: '#f3f4f6',
+              200: '#e5e7eb',
+              300: '#d1d5db',
+              400: '#9ca3af',
+              500: '#6b7280',
+              600: '#4b5563',
+              700: '#374151',
+              800: '#1f2937',
+              900: '#111827'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 font-sans dark:bg-gray-900 dark:text-gray-100" data-theme="light">
+  <header class="bg-light-50 shadow-md py-4 dark:bg-[#0b0f1a] dark:border-b dark:border-[#1b2235]">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <a href="../index.html" class="flex items-center space-x-3">
+        <div class="bg-primary-100 rounded-xl dark:bg-purple-800/30 w-24">
+          <img src="../mockzilla.png" alt="Mockzilla Logo">
+        </div>
+        <div>
+          <span class="text-2xl font-bold text-dark-800 dark:text-white">Mockzilla</span>
+          <p class="text-xs text-dark-500 dark:text-purple-200">API Mocking Platform</p>
+        </div>
+      </a>
+      <nav class="flex flex-wrap justify-center gap-4 md:gap-6">
+        <a href="../index.html" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+          <span>Home</span>
+          <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+        </a>
+        <a href="../docs.html" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+          <span>Documentation</span>
+          <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+        </a>
+        <a href="https://github.com/andrecrjr/mockzilla" target="_blank" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+          <span>GitHub</span>
+          <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+        </a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="../index.html" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i>
+          <span>Back to Site</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="py-10 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="text-sm text-dark-600 dark:text-gray-300">
+        <a href="../index.html" class="hover:text-primary-600 dark:hover:text-purple-400">Mockzilla</a>
+        <span class="mx-2 text-dark-400 dark:text-gray-500">/</span>
+        <span class="text-dark-800 dark:text-white">Match Type Test</span>
+      </div>
+      <div class="mt-3 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold text-dark-800 leading-tight dark:text-white">Match Type Test</h1>
+          <p class="text-dark-600 mt-2 max-w-2xl dark:text-gray-300">Página interna do site para testar o comportamento dos match types e validar regras com <span class="font-mono">fetch</span> e <span class="font-mono">XMLHttpRequest</span>.</p>
+          <div class="text-sm text-dark-600 mt-3 dark:text-gray-300">Base: <span id="baseUrl" class="font-mono break-all"></span></div>
+          <div class="text-sm text-dark-600 mt-1 dark:text-gray-300">Target API: <span class="font-mono">https://jsonplaceholder.typicode.com</span></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="copyUrls" class="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition">Copiar URLs</button>
+          <button id="clearLog" class="px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-dark-800 text-sm font-medium border border-gray-200 transition dark:bg-[#0f1424] dark:hover:bg-[#121a30] dark:text-gray-100 dark:border-[#1b2235]">Limpar log</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container mx-auto px-4 py-10">
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 dark:bg-[#0f1424] dark:border-[#1b2235]">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-lg font-semibold text-dark-800 dark:text-white">Import (Mockzilla Extension)</h2>
+          <div class="text-sm text-dark-600 mt-1 dark:text-gray-300">Cole no modal de import do Mockzilla. Cria o folder <span class="font-mono">match-test-group</span> com 3 regras.</div>
+          <div class="text-xs text-dark-500 mt-2 dark:text-gray-400">Arquivo espelho: <span class="font-mono">landing/match-test/match-test-group/export.json</span></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="copyRule px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition" data-copy="match-test-group">Copiar pacote</button>
+        </div>
+      </div>
+      <div class="mt-4 font-mono bg-gray-50 border border-gray-200 rounded-lg p-3 break-all text-xs text-dark-800 dark:bg-[#0b0f1a] dark:border-[#1b2235] dark:text-gray-100" data-copy="match-test-group">
+        {
+          "groups": [
+            {
+              "id": "match-test-group",
+              "name": "match-test-group",
+              "description": "Landing match-test presets"
+            }
+          ],
+          "rules": [
+            {
+              "id": "match-test-substring-todos-1",
+              "name": "Match Test: substring /todos/1",
+              "matchType": "substring",
+              "pattern": "/todos/1",
+              "bodyType": "json",
+              "body": "{\"matched\":\"substring\"}",
+              "statusCode": 200,
+              "enabled": true,
+              "group": "match-test-group",
+              "variants": []
+            },
+            {
+              "id": "match-test-exact-todos-1",
+              "name": "Match Test: exact todos/1",
+              "matchType": "exact",
+              "pattern": "https://jsonplaceholder.typicode.com/todos/1",
+              "bodyType": "json",
+              "body": "{\"matched\":\"exact\"}",
+              "statusCode": 200,
+              "enabled": true,
+              "group": "match-test-group",
+              "variants": []
+            },
+            {
+              "id": "match-test-wildcard-todos-star",
+              "name": "Match Test: wildcard todos/* (variants)",
+              "matchType": "wildcard",
+              "pattern": "https://jsonplaceholder.typicode.com/todos/*",
+              "bodyType": "json",
+              "body": "",
+              "statusCode": 200,
+              "enabled": true,
+              "group": "match-test-group",
+              "wildcardRequireMatch": true,
+              "variants": [
+                {
+                  "key": "1",
+                  "bodyType": "json",
+                  "statusCode": 200,
+                  "body": "{\"matched\":\"wildcard\",\"key\":\"1\"}"
+                },
+                {
+                  "key": "2",
+                  "bodyType": "json",
+                  "statusCode": 200,
+                  "body": "{\"matched\":\"wildcard\",\"key\":\"2\"}"
+                }
+              ]
+            }
+          ]
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 dark:bg-[#0f1424] dark:border-[#1b2235]">
+        <div class="flex items-center justify-between">
+          <h2 class="font-medium">Substring</h2>
+          <span class="text-xs text-dark-500 font-mono dark:text-gray-400">pattern: /todos/1</span>
+        </div>
+        <div class="text-sm text-dark-600 mt-2 dark:text-gray-300">Exemplo: <span class="font-mono">/todos/1</span> casa com <span class="font-mono">.../todos/1</span></div>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <button class="testBtn px-3 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition" data-url="https://jsonplaceholder.typicode.com/todos/1">/todos/1</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-800 text-sm font-medium transition dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100" data-url="https://jsonplaceholder.typicode.com/todos/10">/todos/10</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-800 text-sm font-medium transition dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100" data-url="https://jsonplaceholder.typicode.com/todos/1?x=1">/todos/1?x=1</button>
+        </div>
+        <details class="mt-4">
+          <summary class="cursor-pointer text-sm text-dark-700 dark:text-gray-300">Regras sugeridas</summary>
+          <div class="mt-2 text-xs text-dark-700 space-y-2 dark:text-gray-300">
+            <div class="font-mono bg-gray-50 border border-gray-200 rounded-lg p-3 break-all dark:bg-[#0b0f1a] dark:border-[#1b2235]" data-copy="substring">
+              [
+                {
+                  "id": "match-test-substring-todos-1",
+                  "name": "Match Test: substring /todos/1",
+                  "matchType": "substring",
+                  "pattern": "/todos/1",
+                  "bodyType": "json",
+                  "body": "{\"matched\":\"substring\"}",
+                  "statusCode": 200,
+                  "enabled": true
+                }
+              ]
+            </div>
+            <button class="copyRule px-3 py-2 rounded-lg bg-white hover:bg-gray-50 text-dark-800 text-sm font-medium border border-gray-200 transition dark:bg-[#0f1424] dark:hover:bg-[#121a30] dark:text-gray-100 dark:border-[#1b2235]" data-copy="substring">Copiar JSON</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 dark:bg-[#0f1424] dark:border-[#1b2235]">
+        <div class="flex items-center justify-between">
+          <h2 class="font-medium">Exact</h2>
+          <span class="text-xs text-dark-500 font-mono dark:text-gray-400">pattern: https://.../todos/1</span>
+        </div>
+        <div class="text-sm text-dark-600 mt-2 dark:text-gray-300">Exemplo: casa só com a URL exata (query muda tudo)</div>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <button class="testBtn px-3 py-2 rounded-lg bg-secondary-600 hover:bg-secondary-700 text-white text-sm font-medium transition" data-url="https://jsonplaceholder.typicode.com/todos/1">/todos/1</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-800 text-sm font-medium transition dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100" data-url="https://jsonplaceholder.typicode.com/todos/1?x=1">/todos/1?x=1</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-800 text-sm font-medium transition dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100" data-url="https://jsonplaceholder.typicode.com/todos/2">/todos/2</button>
+        </div>
+        <details class="mt-4">
+          <summary class="cursor-pointer text-sm text-dark-700 dark:text-gray-300">Regras sugeridas</summary>
+          <div class="mt-2 text-xs text-dark-700 space-y-2 dark:text-gray-300">
+            <div class="font-mono bg-gray-50 border border-gray-200 rounded-lg p-3 break-all dark:bg-[#0b0f1a] dark:border-[#1b2235]" data-copy="exact">
+              [
+                {
+                  "id": "match-test-exact-todos-1",
+                  "name": "Match Test: exact todos/1",
+                  "matchType": "exact",
+                  "pattern": "https://jsonplaceholder.typicode.com/todos/1",
+                  "bodyType": "json",
+                  "body": "{\"matched\":\"exact\"}",
+                  "statusCode": 200,
+                  "enabled": true
+                }
+              ]
+            </div>
+            <button class="copyRule px-3 py-2 rounded-lg bg-white hover:bg-gray-50 text-dark-800 text-sm font-medium border border-gray-200 transition dark:bg-[#0f1424] dark:hover:bg-[#121a30] dark:text-gray-100 dark:border-[#1b2235]" data-copy="exact">Copiar JSON</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 dark:bg-[#0f1424] dark:border-[#1b2235]">
+        <div class="flex items-center justify-between">
+          <h2 class="font-medium">Wildcard + Variants</h2>
+          <span class="text-xs text-dark-500 font-mono dark:text-gray-400">pattern: https://.../todos/*</span>
+        </div>
+        <div class="text-sm text-dark-600 mt-2 dark:text-gray-300">Exemplo: <span class="font-mono">/todos/*</span> captura o id e usa a key (ex: <span class="font-mono">1</span>)</div>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <button class="testBtn px-3 py-2 rounded-lg bg-accent-600 hover:bg-accent-700 text-white text-sm font-medium transition" data-url="https://jsonplaceholder.typicode.com/todos/1">/todos/1</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-accent-600 hover:bg-accent-700 text-white text-sm font-medium transition" data-url="https://jsonplaceholder.typicode.com/todos/2">/todos/2</button>
+          <button class="testBtn px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-800 text-sm font-medium transition dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100" data-url="https://jsonplaceholder.typicode.com/todos/999">/todos/999</button>
+        </div>
+        <details class="mt-4" open>
+          <summary class="cursor-pointer text-sm text-dark-700 dark:text-gray-300">Regras sugeridas</summary>
+          <div class="mt-2 text-xs text-dark-700 space-y-2 dark:text-gray-300">
+            <div class="font-mono bg-gray-50 border border-gray-200 rounded-lg p-3 break-all dark:bg-[#0b0f1a] dark:border-[#1b2235]" data-copy="wildcard">
+              [
+                {
+                  "id": "match-test-wildcard-todos-star",
+                  "name": "Match Test: wildcard todos/* (variants)",
+                  "matchType": "wildcard",
+                  "pattern": "https://jsonplaceholder.typicode.com/todos/*",
+                  "bodyType": "json",
+                  "body": "",
+                  "statusCode": 200,
+                  "enabled": true,
+                  "wildcardRequireMatch": true,
+                  "variants": [
+                    {
+                      "key": "1",
+                      "bodyType": "json",
+                      "statusCode": 200,
+                      "body": "{\"matched\":\"wildcard\",\"key\":\"1\"}"
+                    },
+                    {
+                      "key": "2",
+                      "bodyType": "json",
+                      "statusCode": 200,
+                      "body": "{\"matched\":\"wildcard\",\"key\":\"2\"}"
+                    }
+                  ]
+                }
+              ]
+            </div>
+            <button class="copyRule px-3 py-2 rounded-lg bg-white hover:bg-gray-50 text-dark-800 text-sm font-medium border border-gray-200 transition dark:bg-[#0f1424] dark:hover:bg-[#121a30] dark:text-gray-100 dark:border-[#1b2235]" data-copy="wildcard">Copiar JSON</button>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-white p-6 rounded-xl shadow-lg border border-gray-200 dark:bg-[#0f1424] dark:border-[#1b2235]">
+      <div class="flex items-center justify-between gap-4 flex-wrap">
+        <h2 class="font-medium">Log</h2>
+        <div class="text-xs text-dark-500 dark:text-gray-400">Cada clique faz <span class="font-mono">fetch</span> e <span class="font-mono">XMLHttpRequest</span></div>
+      </div>
+      <div id="log" class="mt-3 space-y-2"></div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const baseUrlEl = document.getElementById('baseUrl');
+      const logEl = document.getElementById('log');
+      const clearLogBtn = document.getElementById('clearLog');
+      const copyUrlsBtn = document.getElementById('copyUrls');
+
+      baseUrlEl.textContent = location.href;
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function safeJsonPreview(text) {
+        try {
+          const v = JSON.parse(text);
+          return JSON.stringify(v, null, 2);
+        } catch {
+          return String(text);
+        }
+      }
+
+      function appendLogRow(row) {
+        const div = document.createElement('div');
+        const ok = row.ok;
+        const pill = ok ? 'bg-emerald-700/40 text-emerald-200 border-emerald-700/60' : 'bg-rose-700/30 text-rose-200 border-rose-700/60';
+        div.className = 'border border-gray-200 rounded-lg bg-gray-50 p-3 dark:border-[#1b2235] dark:bg-[#0b0f1a]';
+        div.innerHTML = `
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-2 py-1 rounded border ${pill}">${escapeHtml(row.channel)} ${escapeHtml(row.status)}</span>
+              <span class="text-xs text-dark-500 dark:text-gray-400">${escapeHtml(row.ms)}ms</span>
+            </div>
+            <div class="text-xs text-dark-500 dark:text-gray-400">${escapeHtml(row.when)}</div>
+          </div>
+          <div class="mt-2 text-xs text-dark-700 font-mono break-all dark:text-gray-200">${escapeHtml(row.url)}</div>
+          <pre class="mt-2 text-xs text-dark-800 overflow-auto dark:text-gray-100">${escapeHtml(row.bodyPreview)}</pre>
+        `;
+        logEl.prepend(div);
+      }
+
+      async function runFetch(url) {
+        const started = performance.now();
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          const text = await res.text();
+          const ms = Math.round(performance.now() - started);
+          appendLogRow({
+            channel: 'fetch',
+            url,
+            status: res.status,
+            ok: res.ok,
+            ms,
+            when: new Date().toLocaleTimeString(),
+            bodyPreview: safeJsonPreview(text)
+          });
+        } catch (e) {
+          const ms = Math.round(performance.now() - started);
+          appendLogRow({
+            channel: 'fetch',
+            url,
+            status: 'ERR',
+            ok: false,
+            ms,
+            when: new Date().toLocaleTimeString(),
+            bodyPreview: e && e.message ? e.message : String(e)
+          });
+        }
+      }
+
+      function runXhr(url) {
+        const started = performance.now();
+        return new Promise((resolve) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', url);
+          xhr.onload = function () {
+            const ms = Math.round(performance.now() - started);
+            appendLogRow({
+              channel: 'xhr',
+              url,
+              status: xhr.status,
+              ok: xhr.status >= 200 && xhr.status < 300,
+              ms,
+              when: new Date().toLocaleTimeString(),
+              bodyPreview: safeJsonPreview(xhr.responseText)
+            });
+            resolve();
+          };
+          xhr.onerror = function () {
+            const ms = Math.round(performance.now() - started);
+            appendLogRow({
+              channel: 'xhr',
+              url,
+              status: 'ERR',
+              ok: false,
+              ms,
+              when: new Date().toLocaleTimeString(),
+              bodyPreview: 'Network error'
+            });
+            resolve();
+          };
+          xhr.send();
+        });
+      }
+
+      async function runBoth(url) {
+        await Promise.all([runFetch(url), runXhr(url)]);
+      }
+
+      document.querySelectorAll('.testBtn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const url = btn.getAttribute('data-url');
+          runBoth(url);
+        });
+      });
+
+      clearLogBtn.addEventListener('click', () => {
+        logEl.innerHTML = '';
+      });
+
+      function copyText(text) {
+        const v = String(text || '');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(v);
+        }
+        const ta = document.createElement('textarea');
+        ta.value = v;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        return Promise.resolve();
+      }
+
+      document.querySelectorAll('.copyRule').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const key = btn.getAttribute('data-copy');
+          const box = document.querySelector(`.font-mono[data-copy="${key}"]`);
+          if (!box) return;
+          await copyText(box.textContent.replace(/^\s+/gm, '').trim());
+          const originalLabel = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => { btn.textContent = originalLabel; }, 900);
+        });
+      });
+
+      copyUrlsBtn.addEventListener('click', async () => {
+        const urls = Array.from(document.querySelectorAll('.testBtn'))
+          .map((b) => b.getAttribute('data-url'))
+          .filter(Boolean);
+        const unique = Array.from(new Set(urls));
+        await copyText(unique.join('\n'));
+        copyUrlsBtn.textContent = 'Copiado!';
+        setTimeout(() => { copyUrlsBtn.textContent = 'Copiar URLs'; }, 900);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -261,13 +261,20 @@ function renderRuleDetails(rule) {
           </select>
         </div>
         
-        <div>
+        <div class="col-span-3">
           <label class="label block mb-1">Match Type</label>
           <select class="matchType select w-full" aria-label="Match type">
             <option value="substring" ${rule.matchType === 'substring' ? 'selected' : ''}>Substring</option>
             <option value="exact" ${rule.matchType === 'exact' ? 'selected' : ''}>Exact</option>
             <option value="wildcard" ${rule.matchType === 'wildcard' ? 'selected' : ''}>Wildcard</option>
           </select>
+          <div class="matchType-help text-xs text-gray-500 mt-2 space-y-1">
+            <div class="matchType-help-pattern"></div>
+            <div class="matchType-help-substring hidden"><strong>Substring</strong>: match any URL containing this text. Example: <span class="font-mono">/todos/1</span> matches <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
+            <div class="matchType-help-exact hidden"><strong>Exact</strong>: match only this full URL. Example: <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
+            <div class="matchType-help-wildcard hidden"><strong>Wildcard</strong>: each <span class="font-mono">*</span> captures a part of the URL and builds a <strong>variant key</strong> by joining captures with <span class="font-mono">|</span>. Example: <span class="font-mono">.../todos/*</span> + <span class="font-mono">.../todos/1</span> → key <span class="font-mono">1</span>. Great for multiple query params: <span class="font-mono">.../search?user=*&amp;status=*</span> → key <span class="font-mono">alice|open</span></div>
+            <div class="matchType-help-wildcard-require hidden"><strong>Require variant</strong> ON: if no variant key matches, the request passes through</div>
+          </div>
         </div>
         
         <div class="md:col-span-2">
@@ -316,7 +323,7 @@ function renderRuleDetails(rule) {
               <input type="checkbox" class="wildcard-require-match" ${rule.wildcardRequireMatch ? 'checked' : ''} aria-label="Require variant match" />
               <span class="slider ml-2"></span>
             </label>
-            <span class="text-xs text-gray-500">Require variant to intercept</span>
+            <span class="text-xs text-gray-500">Require variant to intercept (no key → pass through)</span>
           </div>
           <button class="add-variant btn btn-sm">Add Variant</button>
         </div>
@@ -324,7 +331,7 @@ function renderRuleDetails(rule) {
           ${(Array.isArray(rule.variants) ? rule.variants : []).map(v => `
             <div class="variant-item border rounded p-2" data-key="${escapeHtml(v.key)}">
               <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-                <input class="variant-key input w-full" placeholder="Captured key (e.g. 123 or a|b)" value="${escapeHtml(v.key)}" />
+                <input class="variant-key input w-full" placeholder="Variant key (captures joined by |, e.g. alice|open)" value="${escapeHtml(v.key)}" />
                 <select class="variant-bodyType select w-full">
                   <option value="text" ${v.bodyType === 'text' ? 'selected' : ''}>Text</option>
                   <option value="json" ${v.bodyType === 'json' ? 'selected' : ''}>JSON</option>
@@ -410,6 +417,46 @@ function renderRuleDetails(rule) {
   const addVariantBtn = detailsContainer.querySelector('.add-variant');
   const variantsListEl = detailsContainer.querySelector('.variants-list');
   const wildcardRequireMatchEl = detailsContainer.querySelector('.wildcard-require-match');
+  const matchTypeHelpPatternEl = detailsContainer.querySelector('.matchType-help-pattern');
+  const matchTypeHelpSubstringEl = detailsContainer.querySelector('.matchType-help-substring');
+  const matchTypeHelpExactEl = detailsContainer.querySelector('.matchType-help-exact');
+  const matchTypeHelpWildcardEl = detailsContainer.querySelector('.matchType-help-wildcard');
+  const matchTypeHelpWildcardRequireEl = detailsContainer.querySelector('.matchType-help-wildcard-require');
+
+  function updateMatchTypeHelp() {
+    if (!patternEl || !matchTypeEl) return;
+    const raw = String(patternEl.value || '').trim();
+    let s = raw;
+    const first = s[0];
+    const last = s[s.length - 1];
+    if (s.length >= 2 && ((first === '`' && last === '`') || (first === '"' && last === '"') || (first === "'" && last === "'"))) {
+      s = s.slice(1, -1).trim();
+    }
+    const abs = (() => {
+      try {
+        return new URL(s, location.href).href;
+      } catch {
+        return s;
+      }
+    })();
+
+    if (matchTypeHelpPatternEl) {
+      if (!s) {
+        matchTypeHelpPatternEl.textContent = '';
+      } else {
+        const display = matchTypeEl.value === 'exact' ? abs : s;
+        matchTypeHelpPatternEl.innerHTML = `<span class="font-mono break-all">${escapeHtml(display)}</span>`;
+      }
+    }
+
+    if (matchTypeHelpSubstringEl) matchTypeHelpSubstringEl.classList.toggle('hidden', matchTypeEl.value !== 'substring');
+    if (matchTypeHelpExactEl) matchTypeHelpExactEl.classList.toggle('hidden', matchTypeEl.value !== 'exact');
+    if (matchTypeHelpWildcardEl) matchTypeHelpWildcardEl.classList.toggle('hidden', matchTypeEl.value !== 'wildcard');
+    if (matchTypeHelpWildcardRequireEl) {
+      const show = matchTypeEl.value === 'wildcard' && !!rule?.wildcardRequireMatch;
+      matchTypeHelpWildcardRequireEl.classList.toggle('hidden', !show);
+    }
+  }
 
   nameEl.addEventListener('blur', async () => {
     rule.name = nameEl.value;
@@ -449,6 +496,7 @@ function renderRuleDetails(rule) {
       const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
       responseBodySection.classList.toggle('hidden', hideBody);
     }
+    updateMatchTypeHelp();
   });
 
   if (wildcardRequireMatchEl) {
@@ -456,6 +504,7 @@ function renderRuleDetails(rule) {
       rule.wildcardRequireMatch = !!wildcardRequireMatchEl.checked;
       await setRuleMeta(rule);
       flashStatus('Wildcard matching updated', 'success');
+      updateMatchTypeHelp();
       if (responseBodySection) {
         const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
         responseBodySection.classList.toggle('hidden', hideBody);
@@ -480,10 +529,17 @@ function renderRuleDetails(rule) {
     responseBodySection.classList.toggle('hidden', initialHide);
   }
 
+  updateMatchTypeHelp();
+
   patternEl.addEventListener('blur', async () => {
     rule.pattern = patternEl.value;
     await setRuleMeta(rule);
     flashStatus('Pattern saved', 'success');
+    updateMatchTypeHelp();
+  });
+
+  patternEl.addEventListener('input', () => {
+    updateMatchTypeHelp();
   });
 
   statusCodeEl.addEventListener('change', async () => {
