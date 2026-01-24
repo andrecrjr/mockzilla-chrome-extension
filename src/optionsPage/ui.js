@@ -664,6 +664,11 @@ function renderRuleDetails(rule) {
       if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
       rule.syncConfig.enabled = syncEnabledEl.checked;
       await setRuleMeta(rule);
+      
+      // Update window.currentRules to keep state in sync
+      const idx = (window.currentRules || []).findIndex(r => r.id === rule.id);
+      if (idx >= 0) window.currentRules[idx] = { ...rule };
+      
       flashStatus('Sync settings updated', 'success');
       renderRuleDetails(rule); // Re-render to update dot and button state
       
@@ -679,6 +684,11 @@ function renderRuleDetails(rule) {
       if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
       rule.syncConfig.autoSync = syncAutoSyncEl.checked;
       await setRuleMeta(rule);
+      
+      // Update window.currentRules to keep state in sync
+      const idx = (window.currentRules || []).findIndex(r => r.id === rule.id);
+      if (idx >= 0) window.currentRules[idx] = { ...rule };
+      
       flashStatus('Auto-sync settings updated', 'success');
       renderRuleDetails(rule); // Re-render to update dot state
       autoSyncRule(rule);

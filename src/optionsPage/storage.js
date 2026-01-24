@@ -85,7 +85,6 @@ async function setRule(rule) {
     group: rule.group || '', // Save group association
     statusCode: rule.statusCode || 200,
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
-    variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
     syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
   };
@@ -118,7 +117,6 @@ async function setRuleMeta(rule) {
     bodyType: rule.bodyType,
     group: rule.group || '', // Save group association
     statusCode: rule.statusCode || 200,
-    variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
     syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
