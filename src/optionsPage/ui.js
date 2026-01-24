@@ -234,15 +234,52 @@ function renderRuleDetails(rule) {
   detailsContainer.innerHTML = `
     <div class="space-y-4">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-medium text-gray-900">Rule Details</h2>
         <div class="flex items-center gap-2">
-          <label class="switch flex items-center cursor-pointer">
-            <input type="checkbox" class="enabled-toggle" ${rule.enabled ? 'checked' : ''} aria-label="Enable rule" />
-            <span class="slider ml-2"></span>
-          </label>
-          <span class="ml-2 text-sm ${rule.enabled ? 'text-green-600' : 'text-gray-500'}">${rule.enabled ? 'Enabled' : 'Disabled'}</span>
-          <button class="duplicate-rule btn btn-neutral">Duplicate</button>
+           <h2 class="text-lg font-medium text-gray-900 line-clamp-1">Rule Details</h2>
+           <span class="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded border border-purple-200">BETA</span>
         </div>
+        <div class="flex items-center gap-2">
+          <!-- Multi-Action Rule Header Controls -->
+          <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
+             <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
+                <label class="switch-sm flex items-center cursor-pointer">
+                  <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} />
+                  <span class="slider-sm"></span>
+                </label>
+                <span class="text-[10px] font-medium text-gray-500 uppercase tracking-tight">Auto</span>
+             </div>
+             
+             <button class="btn btn-xs btn-ghost text-purple-600 hover:bg-purple-50 flex items-center gap-1.5 sync-now-btn" title="Sync Now" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                <span class="text-[10px] font-bold">SYNC NOW</span>
+             </button>
+             
+             <div class="w-2 h-2 rounded-full ml-1 mr-2 ${rule.syncConfig?.enabled ? (rule.syncConfig?.autoSync ? 'bg-green-500 animate-pulse' : 'bg-blue-500') : 'bg-gray-300'}" title="${rule.syncConfig?.enabled ? 'Sync Active' : 'Sync Disabled'}"></div>
+          </div>
+
+          <label class="switch flex items-center cursor-pointer ml-2">
+            <input type="checkbox" class="enabled-toggle" ${rule.enabled ? 'checked' : ''} aria-label="Enable rule" />
+            <span class="slider"></span>
+          </label>
+          <button class="duplicate-rule btn btn-neutral btn-sm">Duplicate</button>
+        </div>
+      </div>
+      
+      <!-- Mockzilla Server Sync Bio -->
+      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-100 dark:border-purple-800/30 rounded-lg p-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400 flex gap-3 items-start">
+         <div class="p-2 bg-white dark:bg-gray-800 rounded-md shadow-sm border border-purple-100 dark:border-purple-800/50">
+           <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+         </div>
+         <div>
+           <strong class="text-purple-700 dark:text-purple-300 block mb-0.5">Mockzilla Server Sync (BETA)</strong>
+           Sync this rule automatically to your Mockzilla Server instance. High-fidelity data like variants and status codes are preserved using the server's meta-storage. Requires the rule to be associated with a Folder (Group).
+           <div class="mt-2 flex items-center gap-3">
+             <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 font-medium transition-colors">
+                <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
+                <span>Enable Server Synchronization</span>
+             </label>
+           </div>
+         </div>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -357,48 +394,6 @@ function renderRuleDetails(rule) {
           ${(!Array.isArray(rule.variants) || rule.variants.length === 0) ? '<div class="text-xs text-gray-500">No variants. Use Add Variant.</div>' : ''}
         </div>
       </div>
-
-      <!-- Mockzilla Server Sync -->
-      <details class="group/sync border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 ${!rule.group ? 'hidden' : ''}" id="syncDetails">
-        <summary class="cursor-pointer p-3 font-medium text-sm flex items-center justify-between text-gray-700 dark:text-gray-200 hover:text-purple-600">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-            Mockzilla Server Sync
-          </div>
-          <svg class="w-4 h-4 transition-transform group-open/sync:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </summary>
-        <div class="p-4 pt-0 border-t border-gray-200 dark:border-gray-700 mt-2">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div class="flex items-center gap-3">
-                <label class="switch flex items-center cursor-pointer">
-                  <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
-                  <span class="slider ml-2"></span>
-                </label>
-                <span class="text-sm font-medium">Enable Sync</span>
-             </div>
-             
-             <div class="sync-controls ${rule.syncConfig?.enabled ? '' : 'opacity-50 pointer-events-none'} transition-opacity">
-                <label class="label block mb-1">Method</label>
-                <select class="sync-method select w-full">
-                  ${['GET','POST','PUT','PATCH','DELETE','HEAD','OPTIONS'].map(m => `<option value="${m}" ${rule.syncConfig?.method === m ? 'selected' : ''}>${m}</option>`).join('')}
-                </select>
-             </div>
-             
-             <div class="sync-controls ${rule.syncConfig?.enabled ? '' : 'opacity-50 pointer-events-none'} transition-opacity md:col-span-2 flex items-center justify-between">
-                <div>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} class="checkbox rounded text-purple-600" />
-                      <span class="text-sm">Auto Sync on Save</span>
-                    </label>
-                    <p class="text-xs text-gray-500 mt-1 pl-6">Automatically push changes to server when you save this rule.</p>
-                </div>
-                <button class="btn btn-sm btn-primary sync-now-btn" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
-                   Sync Now
-                </button>
-             </div>
-          </div>
-        </div>
-      </details>
     </div>
   `;
 
@@ -417,46 +412,10 @@ function renderRuleDetails(rule) {
   const addVariantBtn = detailsContainer.querySelector('.add-variant');
   const variantsListEl = detailsContainer.querySelector('.variants-list');
   const wildcardRequireMatchEl = detailsContainer.querySelector('.wildcard-require-match');
-  const matchTypeHelpPatternEl = detailsContainer.querySelector('.matchType-help-pattern');
-  const matchTypeHelpSubstringEl = detailsContainer.querySelector('.matchType-help-substring');
-  const matchTypeHelpExactEl = detailsContainer.querySelector('.matchType-help-exact');
-  const matchTypeHelpWildcardEl = detailsContainer.querySelector('.matchType-help-wildcard');
-  const matchTypeHelpWildcardRequireEl = detailsContainer.querySelector('.matchType-help-wildcard-require');
-
-  function updateMatchTypeHelp() {
-    if (!patternEl || !matchTypeEl) return;
-    const raw = String(patternEl.value || '').trim();
-    let s = raw;
-    const first = s[0];
-    const last = s[s.length - 1];
-    if (s.length >= 2 && ((first === '`' && last === '`') || (first === '"' && last === '"') || (first === "'" && last === "'"))) {
-      s = s.slice(1, -1).trim();
-    }
-    const abs = (() => {
-      try {
-        return new URL(s, location.href).href;
-      } catch {
-        return s;
-      }
-    })();
-
-    if (matchTypeHelpPatternEl) {
-      if (!s) {
-        matchTypeHelpPatternEl.textContent = '';
-      } else {
-        const display = matchTypeEl.value === 'exact' ? abs : s;
-        matchTypeHelpPatternEl.innerHTML = `<span class="font-mono break-all">${escapeHtml(display)}</span>`;
-      }
-    }
-
-    if (matchTypeHelpSubstringEl) matchTypeHelpSubstringEl.classList.toggle('hidden', matchTypeEl.value !== 'substring');
-    if (matchTypeHelpExactEl) matchTypeHelpExactEl.classList.toggle('hidden', matchTypeEl.value !== 'exact');
-    if (matchTypeHelpWildcardEl) matchTypeHelpWildcardEl.classList.toggle('hidden', matchTypeEl.value !== 'wildcard');
-    if (matchTypeHelpWildcardRequireEl) {
-      const show = matchTypeEl.value === 'wildcard' && !!rule?.wildcardRequireMatch;
-      matchTypeHelpWildcardRequireEl.classList.toggle('hidden', !show);
-    }
-  }
+  
+  const syncEnabledEl = detailsContainer.querySelector('.sync-enabled');
+  const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
+  const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
 
   nameEl.addEventListener('blur', async () => {
     rule.name = nameEl.value;
@@ -469,13 +428,6 @@ function renderRuleDetails(rule) {
     rule.group = groupSelectEl.value;
     await setRuleMeta(rule);
     renderRulesList(window.currentRules || [], window.currentGroups || []); // Update the sidebar
-    
-    // Toggle sync visibility
-    if (syncDetailsEl) {
-        if (!rule.group) syncDetailsEl.classList.add('hidden');
-        else syncDetailsEl.classList.remove('hidden');
-    }
-    
     flashStatus('Group updated', 'success');
   });
 
@@ -615,7 +567,6 @@ function renderRuleDetails(rule) {
         if (idx >= 0) {
           rule.variants[idx].key = keyInput.value;
           await setRuleVariantsMeta(rule.id, rule.variants);
-          // Update the key reference on the DOM element so subsequent edits use the new key
           item.setAttribute('data-key', keyInput.value);
           renderRulesList(window.currentRules || [], window.currentGroups || []);
           flashStatus('Variant key saved', 'success');
@@ -667,40 +618,20 @@ function renderRuleDetails(rule) {
       });
     });
   }
+  
   // Sync Event Listeners
-  const syncEnabledEl = detailsContainer.querySelector('.sync-enabled');
-  const syncMethodEl = detailsContainer.querySelector('.sync-method');
-  const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
-  const syncDetailsEl = detailsContainer.querySelector('#syncDetails');
-  const syncControls = detailsContainer.querySelectorAll('.sync-controls');
-
   if (syncEnabledEl) {
     syncEnabledEl.addEventListener('change', async () => {
       if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
       rule.syncConfig.enabled = syncEnabledEl.checked;
       await setRuleMeta(rule);
       flashStatus('Sync settings updated', 'success');
-      syncControls.forEach(el => {
-        el.classList.toggle('opacity-50', !rule.syncConfig.enabled);
-        el.classList.toggle('pointer-events-none', !rule.syncConfig.enabled);
-      });
-      if (syncNowBtn) {
-        syncNowBtn.disabled = !rule.syncConfig.enabled;
-      }
+      renderRuleDetails(rule); // Re-render to update dot and button state
+      
       // Fire auto sync if enabled
       if (rule.syncConfig.enabled && rule.syncConfig.autoSync) {
          autoSyncRule(rule);
       }
-    });
-  }
-
-  if (syncMethodEl) {
-    syncMethodEl.addEventListener('change', async () => {
-      if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
-      rule.syncConfig.method = syncMethodEl.value;
-      await setRuleMeta(rule);
-      flashStatus('Sync method updated', 'success');
-      autoSyncRule(rule);
     });
   }
 
@@ -710,21 +641,21 @@ function renderRuleDetails(rule) {
       rule.syncConfig.autoSync = syncAutoSyncEl.checked;
       await setRuleMeta(rule);
       flashStatus('Auto-sync settings updated', 'success');
+      renderRuleDetails(rule); // Re-render to update dot state
       autoSyncRule(rule);
     });
   }
 
-  const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
   if (syncNowBtn) {
      syncNowBtn.addEventListener('click', async () => {
-        const originalText = syncNowBtn.textContent;
+        const originalText = syncNowBtn.innerHTML;
         syncNowBtn.disabled = true;
-        syncNowBtn.textContent = 'Syncing...';
+        syncNowBtn.innerHTML = 'SYNCING...';
         try {
             await manualSyncRule(rule);
         } finally {
             syncNowBtn.disabled = !rule.syncConfig?.enabled;
-            syncNowBtn.textContent = originalText;
+            syncNowBtn.innerHTML = originalText;
         }
      });
   }
@@ -732,23 +663,13 @@ function renderRuleDetails(rule) {
   // Also hook into other change events to trigger autoSync
   const triggerAutoSync = () => autoSyncRule(rule);
   
-  // Hook existing elements
-  const existingNameBlur = nameEl.onblur; // Note: using addEventListener above so onblur might be null
-  // We can't easily hook into existing listeners defined in this closure without rewriting them.
-  // We will add NEW listeners that just run autoSync.
   nameEl.addEventListener('blur', triggerAutoSync);
   if (groupSelectEl) groupSelectEl.addEventListener('change', triggerAutoSync);
   patternEl.addEventListener('blur', triggerAutoSync);
   statusCodeEl.addEventListener('change', triggerAutoSync);
   enabledToggle.addEventListener('change', triggerAutoSync);
   bodyEl.addEventListener('blur', triggerAutoSync);
-  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 100)); // Wait for add
-  // For variants, we need to delegate or add to the loop. 
-  // It's handled in the loop above? No, I need to add it there.
-  // Instead of re-iterating, I'll update the loop code in a separate replacement if I can, OR just assume auto-sync works for main fields.
-  // The user prioritizes main fields. I will add it to the variant loop in a separate replacement if needed, or just let main fields drive it.
-  // Let's add it to variants loop in a separate quick edit if feasible.
-
+  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 100));
 }
 
 function renderGroupDetails(group) {

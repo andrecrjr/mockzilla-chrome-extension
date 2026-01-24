@@ -309,12 +309,17 @@ async function syncRules(rules) {
       id: rule.id,
       name: rule.name,
       pattern: rule.pattern,
-      method: rule.syncConfig.method || 'GET',
       body: rule.body,
       response: rule.body,
       statusCode: rule.statusCode,
       matchType: rule.matchType,
-      enabled: rule.enabled
+      enabled: rule.enabled,
+      variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({
+        key: v.key,
+        bodyType: v.bodyType,
+        statusCode: v.statusCode,
+        body: v.body
+      })) : []
     });
   }
 
