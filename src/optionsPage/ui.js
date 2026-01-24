@@ -240,6 +240,7 @@ function renderRuleDetails(rule) {
         </div>
         <div class="flex items-center gap-2">
           <!-- Multi-Action Rule Header Controls -->
+          ${rule.group ? `
           <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
              <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
                 <label class="switch-sm flex items-center cursor-pointer">
@@ -256,6 +257,7 @@ function renderRuleDetails(rule) {
              
              <div class="w-2 h-2 rounded-full ml-1 mr-2 ${rule.syncConfig?.enabled ? (rule.syncConfig?.autoSync ? 'bg-green-500 animate-pulse' : 'bg-blue-500') : 'bg-gray-300'}" title="${rule.syncConfig?.enabled ? 'Sync Active' : 'Sync Disabled'}"></div>
           </div>
+          ` : ''}
 
           <label class="switch flex items-center cursor-pointer ml-2">
             <input type="checkbox" class="enabled-toggle" ${rule.enabled ? 'checked' : ''} aria-label="Enable rule" />
@@ -266,21 +268,23 @@ function renderRuleDetails(rule) {
       </div>
       
       <!-- Mockzilla Server Sync Bio -->
-      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-100 dark:border-purple-800/30 rounded-lg p-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400 flex gap-3 items-start">
-         <div class="p-2 bg-white dark:bg-gray-800 rounded-md shadow-sm border border-purple-100 dark:border-purple-800/50">
-           <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+      ${rule.group ? `
+      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center">
+         <div class="p-1.5 bg-white dark:bg-gray-800 rounded shadow-sm border border-purple-50 dark:border-purple-800/40">
+           <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
          </div>
-         <div>
-           <strong class="text-purple-700 dark:text-purple-300 block mb-0.5">Mockzilla Server Sync (BETA)</strong>
-           Sync this rule automatically to your Mockzilla Server instance. High-fidelity data like variants and status codes are preserved using the server's meta-storage. Requires the rule to be associated with a Folder (Group).
-           <div class="mt-2 flex items-center gap-3">
-             <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 font-medium transition-colors">
-                <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
-                <span>Enable Server Synchronization</span>
-             </label>
+         <div class="flex-1 flex items-center justify-between">
+           <div>
+             <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
+             Preserve variants and status codes.
            </div>
+           <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
+              <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
+              <span>Enable Sync</span>
+           </label>
          </div>
       </div>
+      ` : ''}
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -417,6 +421,35 @@ function renderRuleDetails(rule) {
   const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
   const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
 
+  const updateMatchTypeHelp = () => {
+    const helpPattern = detailsContainer.querySelector('.matchType-help-pattern');
+    const helpSubstring = detailsContainer.querySelector('.matchType-help-substring');
+    const helpExact = detailsContainer.querySelector('.matchType-help-exact');
+    const helpWildcard = detailsContainer.querySelector('.matchType-help-wildcard');
+    const helpWildcardRequire = detailsContainer.querySelector('.matchType-help-wildcard-require');
+
+    if (!helpPattern) return;
+
+    const matchType = matchTypeEl.value;
+    const pattern = patternEl.value;
+
+    helpSubstring?.classList.toggle('hidden', matchType !== 'substring');
+    helpExact?.classList.toggle('hidden', matchType !== 'exact');
+    helpWildcard?.classList.toggle('hidden', matchType !== 'wildcard');
+    helpWildcardRequire?.classList.toggle('hidden', matchType !== 'wildcard' || !wildcardRequireMatchEl?.checked);
+
+    if (matchType === 'wildcard') {
+      const stars = (pattern.match(/\*/g) || []).length;
+      if (stars === 0) {
+        helpPattern.innerHTML = '<span class="text-amber-600">⚠️ No wildcards found in pattern.</span>';
+      } else {
+        helpPattern.innerHTML = `<span class="text-blue-600 font-medium">✨ Pattern has ${stars} wildcard ${stars === 1 ? 'part' : 'parts'}. Captured keys will be joined by "|".</span>`;
+      }
+    } else {
+      helpPattern.textContent = '';
+    }
+  };
+
   nameEl.addEventListener('blur', async () => {
     rule.name = nameEl.value;
     await setRuleMeta(rule);
@@ -428,6 +461,7 @@ function renderRuleDetails(rule) {
     rule.group = groupSelectEl.value;
     await setRuleMeta(rule);
     renderRulesList(window.currentRules || [], window.currentGroups || []); // Update the sidebar
+    renderRuleDetails(rule); // Re-render details to show/hide sync UI
     flashStatus('Group updated', 'success');
   });
 
