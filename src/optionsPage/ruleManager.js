@@ -247,10 +247,10 @@ async function importRules(importText) {
 // Auto-sync wrapper
 async function autoSyncRule(rule) {
   if (rule?.syncConfig?.autoSync && rule.enabled && rule.syncConfig.enabled) {
-    // Debounce or just fire? Fire for now.
-    // We need to fetch the latest groups to ensure we have the group name.
-    const ruleWithGroup = { ...rule };
-    await syncRules([ruleWithGroup]);
+    // Debounce is handled by the caller or UI event loop naturally for now.
+    // We MUST sync ALL rules to preserve the group state on the server, 
+    // as the server wipes the folder contents on sync.
+    await syncToServer();
   }
 }
 
@@ -261,7 +261,8 @@ async function manualSyncRule(rule) {
          return;
     }
     const ruleWithGroup = { ...rule };
-    await syncRules([ruleWithGroup]);
+    // Same as autoSync: we must sync ALL rules to avoid wiping others in the group
+    await syncToServer();
 }
 
 // Sync Logic
