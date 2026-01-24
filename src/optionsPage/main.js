@@ -1,6 +1,7 @@
 // Main module for options page - initializes the UI and handles event listeners
 
-import { addRule, addGroup, expandAll, collapseAll, exportRules, importRules, refresh, syncToServer } from './ruleManager.js';
+import { addRule, addGroup, expandAll, collapseAll, exportRules, refresh, syncToServer } from './ruleManager.js';
+import { importRules } from './ruleManager.js';
 import { setEnabled, getEnabled } from './storage.js';
 import { flashStatus, debounce } from './utils.js';
 import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped, getServerUrl, setServerUrl } from './state.js';
