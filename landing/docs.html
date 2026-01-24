@@ -121,20 +121,24 @@
                 </div>
             </div>
             <nav class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <a href="#overview" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Overview</span>
+                <a href="#getting-started" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Getting Started</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#api" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>API Reference</span>
+                <a href="#deployment" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Deployment</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#workflows" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Workflows</span>
+                <a href="#using-mockzilla" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Using Mockzilla</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#mcp" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>MCP Integration</span>
+                <a href="#ai-integration" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>AI Integration</span>
+                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
+                <a href="#extension-sync" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Extension Sync</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
             </nav>
@@ -152,10 +156,10 @@
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h1 class="text-4xl md:text-5xl font-bold text-dark-800 mb-4 dark:text-white">
-                    Mockzilla <span class="text-primary-600 dark:text-purple-400">HTTP Server</span> Documentation
+                    Self-Host Your Own <span class="text-primary-600 dark:text-purple-400">Mockzilla</span> Server
                 </h1>
                 <p class="text-lg text-dark-600 mb-8 max-w-2xl mx-auto dark:text-gray-300">
-                    Comprehensive technical documentation for the Mockzilla HTTP Server, a powerful Next.js application with PostgreSQL database that provides dynamic API mocking with stateful workflows and AI integration.
+                    Deploy your own private API mocking platform with Docker. Perfect for development teams who need realistic mocks, stateful workflows, and AI integration.
                 </p>
                 <div class="flex justify-center flex-wrap gap-4">
                     <a href="#overview" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
@@ -169,666 +173,287 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
-                    <i class="fas fa-bolt text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
-                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Dynamic Mocks</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Generate realistic data using JSON Schema and Faker for realistic testing.</p>
+                    <i class="fas fa-docker text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
+                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Easy Docker Deploy</h3>
+                    <p class="text-dark-600 dark:text-gray-300">Single command to run your private mock server. No complex setup required.</p>
                 </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
-                    <i class="fas fa-project-diagram text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
-                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Stateful Workflows</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Simulate complex user flows with persistent state and logic between requests.</p>
+                    <i class="fas fa-database text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
+                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Flexible Storage</h3>
+                    <p class="text-dark-600 dark:text-gray-300">Choose in-memory (fast) or PostgreSQL (persistent) based on your needs.</p>
                 </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
-                    <i class="fas fa-robot text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
-                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">AI Integration</h3>
-                    <p class="text-dark-600 dark:text-gray-300">First-class support for AI agents to control your mocks directly.</p>
+                    <i class="fas fa-users text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
+                    <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Team Collaboration</h3>
+                    <p class="text-dark-600 dark:text-gray-300">Share mocks across your team with Chrome Extension sync.</p>
                 </div>
             </div>
         </div>
     </section>
 
+
     <!-- Documentation Sections -->
     <main class="container mx-auto px-4 py-12">
-        <!-- Overview Section -->
-        <section id="overview" class="mb-16">
+        <!-- Getting Started Section -->
+        <section id="getting-started" class="mb-16">
             <div class="flex items-center mb-8">
-                <i class="fas fa-book text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Overview</h2>
+                <i class="fas fa-rocket text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Getting Started</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Architecture & Tech Stack</h3>
-                <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Mockzilla HTTP Server is a powerful Next.js application with PostgreSQL database, built with modern web technologies. It provides a comprehensive API mocking platform with dynamic response generation, stateful workflows, and AI integration via Model Context Protocol (MCP).
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Quick Start with Docker</h3>
+                
+                <p class="mb-6 text-dark-600 dark:text-gray-300">
+                    Mockzilla is designed for easy self-hosting with Docker. Choose between fast in-memory storage or persistent PostgreSQL based on your needs.
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                    <div>
-                        <h4 class="text-xl font-semibold mb-4 text-dark-800 dark:text-white">Tech Stack</h4>
-                        <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
-                            <li><strong>Framework</strong>: Next.js 16 with App Router</li>
-                            <li><strong>Runtime</strong>: Bun</li>
-                            <li><strong>Language</strong>: TypeScript</li>
-                            <li><strong>Database</strong>: PostgreSQL with Drizzle ORM</li>
-                            <li><strong>Styling</strong>: Tailwind CSS 4</li>
-                            <li><strong>UI Components</strong>: Radix UI</li>
-                            <li><strong>Forms</strong>: React Hook Form + Zod</li>
-                            <li><strong>Deployment</strong>: Docker</li>
-                        </ul>
-                    </div>
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🚀 Option 1: Fast Start (In-Memory)</h4>
+                <p class="mb-3 text-dark-600 dark:text-gray-300">
+                    Perfect for development and testing. Data is stored in memory by default.
+                </p>
+                <div class="code-block mb-4">
+                    <div class="text-green-400">// Pull the latest image</div>
+                    docker pull andrecrjr/mockzilla:latest
                     
-                    <div>
-                        <h4 class="text-xl font-semibold mb-4 text-dark-800 dark:text-white">Core Features</h4>
-                        <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
-                            <li>Dynamic Response Generation with JSON Schema + Faker</li>
-                            <li>Stateful Workflows with persistent state & logic</li>
-                            <li>Mini-Database for transient data</li>
-                            <li>First-class MCP (Model Context Protocol) Support</li>
-                            <li>Folder Organization for mock grouping</li>
-                            <li>Export/Import for backup & sharing</li>
-                        </ul>
-                    </div>
+                    <div class="text-green-400 mt-2">// Start Mockzilla</div>
+                    docker run -p 36666:36666 andrecrjr/mockzilla:latest
                 </div>
-            </div>
+                <p class="text-sm text-dark-600 dark:text-gray-400 mb-6">
+                    Access your mock server at <code>http://localhost:36666</code>
+                </p>
 
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Quick Start</h3>
-                
-                <h4 class="text-lg font-semibold mt-6 mb-4 text-dark-800 dark:text-white">Using Docker (Recommended)</h4>
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">💾 Option 2: With Volume Persistence</h4>
+                <p class="mb-3 text-dark-600 dark:text-gray-300">
+                    Keep your mocks between container restarts while using fast in-memory database.
+                </p>
                 <div class="code-block mb-4">
-                    <div class="text-green-400">// Copy environment template</div>
-                    cp .env.example .env
-                    <div class="text-green-400">// Start development environment</div>
-                    make dev-up
-                    <div class="text-green-400">// Visit application at: http://localhost:36666</div>
+                    docker run -d \
+                      --name mockzilla \
+                      -p 36666:36666 \
+                      -v mockzilla-data:/data \
+                      andrecrjr/mockzilla:latest
                 </div>
-                
-                <h4 class="text-lg font-semibold mt-6 mb-4 text-dark-800 dark:text-white">Using Bun (Local Development)</h4>
+
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🗄️ Option 3: With PostgreSQL (Production)</h4>
+                <p class="mb-3 text-dark-600 dark:text-gray-300">
+                    For production environments with external PostgreSQL database.
+                </p>
                 <div class="code-block mb-4">
-                    <div class="text-green-400">// Install dependencies</div>
-                    bun install
-                    <div class="text-green-400">// Set up environment variables</div>
-                    cp .env.example .env
-                    <div class="text-green-400">// Update DATABASE_URL to: postgresql://mockzilla:mockzilla@localhost:5432/mockzilla</div>
-                    <div class="text-green-400">// Run database migrations</div>
-                    bun run db:push
-                    <div class="text-green-400">// Start development server</div>
-                    bun run dev
+                    docker run -d \
+                      --name mockzilla \
+                      -p 36666:36666 \
+                      -e DATABASE_URL=postgresql://user:pass@host:5432/mockzilla \
+                      andrecrjr/mockzilla:latest
+                </div>
+
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">📍 Next Steps</h5>
+                    <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
+                        <li>• Visit <code>http://localhost:36666</code> to access the UI</li>
+                        <li>• Create your first mock folder</li>
+                        <li>• Add mocks with dynamic responses using JSON Schema</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- API Reference Section -->
-        <section id="api" class="mb-16">
+        <!-- Deployment Section -->
+        <section id="deployment" class="mb-16">
             <div class="flex items-center mb-8">
-                <i class="fas fa-code text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">API Reference</h2>
+                <i class="fas fa-server text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Deployment Options</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Core Endpoints</h3>
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Running in Background</h3>
                 
-                <div class="space-y-6">
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">GET /api/folders</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">List all mock folders</p>
-                        <div class="mt-2">
-                            <h5 class="font-medium text-dark-800 dark:text-white">Query Parameters:</h5>
-                            <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                                <li><code>page</code> - Page number (optional, default: 1)</li>
-                                <li><code>limit</code> - Items per page (optional, default: 10)</li>
-                                <li><code>all</code> - Include all items without pagination (optional)</li>
-                            </ul>
-                        </div>
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    For long-running deployments, use the <code>-d</code> flag to run in detached mode:
+                </p>
+                
+                <div class="code-block mb-4">
+                    docker run -d \
+                      --name mockzilla \
+                      -p 36666:36666 \
+                      -v mockzilla-data:/data \
+                      andrecrjr/mockzilla:latest
+                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">Container Management</h4>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="font-semibold text-dark-800 dark:text-white mb-2">View logs:</p>
+                        <div class="code-block text-sm">docker logs mockzilla</div>
                     </div>
-                    
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">POST /api/folders</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">Create a new mock folder</p>
-                        <div class="mt-2">
-                            <h5 class="font-medium text-dark-800 dark:text-white">Request Body:</h5>
-                            <div class="code-block text-sm">
-                            {<br>
-                            &nbsp;&nbsp;"name": "string",<br>
-                            &nbsp;&nbsp;"description": "string" (optional)<br>
-                            }
-                            </div>
-                        </div>
+                    <div>
+                        <p class="font-semibold text-dark-800 dark:text-white mb-2">Stop container:</p>
+                        <div class="code-block text-sm">docker stop mockzilla</div>
                     </div>
-                    
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">GET /api/mocks</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">List all mocks</p>
-                        <div class="mt-2">
-                            <h5 class="font-medium text-dark-800 dark:text-white">Query Parameters:</h5>
-                            <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                                <li><code>folderId</code> - Filter by folder ID (optional)</li>
-                                <li><code>id</code> - Get specific mock (optional)</li>
-                                <li><code>page</code> - Page number (optional, default: 1)</li>
-                                <li><code>limit</code> - Items per page (optional, default: 10)</li>
-                            </ul>
-                        </div>
+                    <div>
+                        <p class="font-semibold text-dark-800 dark:text-white mb-2">Restart container:</p>
+                        <div class="code-block text-sm">docker restart mockzilla</div>
                     </div>
-                    
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">POST /api/mocks</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">Create a new mock</p>
-                        <div class="mt-2">
-                            <h5 class="font-medium text-dark-800 dark:text-white">Request Body:</h5>
-                            <div class="code-block text-sm">
-                            {<br>
-                            &nbsp;&nbsp;"name": "string",<br>
-                            &nbsp;&nbsp;"path": "string",<br>
-                            &nbsp;&nbsp;"method": "GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS",<br>
-                            &nbsp;&nbsp;"statusCode": "number",<br>
-                            &nbsp;&nbsp;"response": "string",<br>
-                            &nbsp;&nbsp;"folderId": "string",<br>
-                            &nbsp;&nbsp;"matchType": "exact|substring" (optional, default: "exact"),<br>
-                            &nbsp;&nbsp;"bodyType": "json|text" (optional, default: "json"),<br>
-                            &nbsp;&nbsp;"enabled": "boolean" (optional, default: true)<br>
-                            }
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">GET /mock/:folderSlug/:mockPath</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">Access a specific mock endpoint</p>
+                    <div>
+                        <p class="font-semibold text-dark-800 dark:text-white mb-2">Remove container:</p>
+                        <div class="code-block text-sm">docker rm -f mockzilla</div>
                     </div>
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Advanced Endpoints</h3>
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Environment Variables</h3>
                 
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">GET /api/workflow/scenarios</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">List all workflow scenarios</p>
+                        <p class="font-semibold text-dark-800 dark:text-white"><code>DATABASE_URL</code></p>
+                        <p class="text-sm text-dark-600 dark:text-gray-300">PostgreSQL connection string (optional)</p>
+                        <code class="text-xs text-dark-500 dark:text-gray-400">postgresql://user:pass@host:5432/database</code>
                     </div>
-                    
                     <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">POST /api/workflow/transitions</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">Create a new workflow transition</p>
-                        <div class="mt-2">
-                            <h5 class="font-medium text-dark-800 dark:text-white">Request Body:</h5>
-                            <div class="code-block text-sm">
-                            {<br>
-                            &nbsp;&nbsp;"scenarioId": "string",<br>
-                            &nbsp;&nbsp;"name": "string",<br>
-                            &nbsp;&nbsp;"path": "string",<br>
-                            &nbsp;&nbsp;"method": "GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS",<br>
-                            &nbsp;&nbsp;"conditions": "array|object",<br>
-                            &nbsp;&nbsp;"effects": "array|object",<br>
-                            &nbsp;&nbsp;"response": "object"<br>
-                            }
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
-                        <h4 class="text-lg font-semibold text-dark-800 dark:text-white"><code class="text-sm bg-primary-50 dark:bg-purple-900/20 px-2 py-1 rounded">POST /api/workflow/:scenarioId/:path</code></h4>
-                        <p class="text-dark-600 dark:text-gray-300">Execute a workflow transition</p>
+                        <p class="font-semibold text-dark-800 dark:text-white"><code>PORT</code></p>
+                        <p class="text-sm text-dark-600 dark:text-gray-300">Server port (default: 36666)</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Workflows Section -->
-        <section id="workflows" class="mb-16">
+        <!-- Using Mockzilla Section -->
+        <section id="using-mockzilla" class="mb-16">
             <div class="flex items-center mb-8">
-                <i class="fas fa-project-diagram text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Workflow Scenarios</h2>
+                <i class="fas fa-play-circle text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Using Mockzilla</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Creating Mocks</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-semibold text-dark-800 dark:text-white mb-2">1. Create a Folder</h4>
+                        <p class="text-dark-600 dark:text-gray-300 text-sm mb-2">
+                            Organize your mocks by creating folders for different projects or features.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-dark-800 dark:text-white mb-2">2. Add a Mock Endpoint</h4>
+                        <p class="text-dark-600 dark:text-gray-300 text-sm mb-2">
+                            Define your API endpoint (e.g., <code>/api/users</code>) with HTTP method and status code.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-dark-800 dark:text-white mb-2">3. Choose Response Type</h4>
+                        <ul class="list-disc pl-6 text-dark-600 dark:text-gray-300 text-sm space-y-1">
+                            <li><strong>Static JSON:</strong> Fixed response for simple cases</li>
+                            <li><strong>Dynamic Schema:</strong> Generate realistic data with JSON Schema + Faker</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-dark-800 dark:text-white mb-2">4. Test Your Mock</h4>
+                        <p class="text-dark-600 dark:text-gray-300 text-sm">
+                            Use the built-in preview or make requests to <code>http://localhost:36666/mock/[your-endpoint]</code>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 Pro Tip</h5>
+                    <p class="text-primary-700 dark:text-purple-300 text-sm">
+                        Use JSON Schema with Faker for realistic mock data. For example, use <code>faker.person.fullName</code> for names or <code>faker.internet.email</code> for emails.
+                    </p>
+                </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Stateful Workflows</h3>
+                
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Mockzilla provides powerful workflow scenarios that allow you to create complex, stateful API interactions. Each scenario can have multiple transitions with conditions, effects, and responses.
+                    Create complex multi-step flows with persistent state. Perfect for simulating:
                 </p>
                 
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Conditions</h4>
-                <p class="text-dark-600 dark:text-gray-300">
-                    Conditions determine when a transition should execute. They are evaluated against the input context.
+                <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300 mb-4">
+                    <li>Login/logout flows with session tracking</li>
+                    <li>Shopping carts with add/remove operations</li>
+                    <li>Multi-step form submissions</li>
+                    <li>API requests that depend on previous calls</li>
+                </ul>
+
+                <p class="text-dark-600 dark:text-gray-300 text-sm">
+                    Use Workflow Scenarios in the UI to create transitions with conditions and effects.
                 </p>
-                
-                <div class="mt-4">
-                    <h5 class="font-medium text-dark-800 dark:text-white">Supported Condition Types:</h5>
-                    <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                        <li><code>eq</code> - Equals</li>
-                        <li><code>neq</code> - Not Equals</li>
-                        <li><code>exists</code> - Field exists (not null/undefined)</li>
-                        <li><code>gt</code> - Greater Than</li>
-                        <li><code>lt</code> - Less Than</li>
-                        <li><code>contains</code> - Array includes or string substring</li>
-                    </ul>
-                </div>
-                
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Effects</h4>
-                <p class="text-dark-600 dark:text-gray-300">
-                    Effects are actions that modify the state or database during a transition.
-                </p>
-                
-                <div class="mt-4">
-                    <h5 class="font-medium text-dark-800 dark:text-white">Supported Effect Types:</h5>
-                    <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                        <li><code>state.set</code> - Set state variables</li>
-                        <li><code>db.push</code> - Add row to table</li>
-                        <li><code>db.update</code> - Update rows</li>
-                        <li><code>db.remove</code> - Remove rows</li>
-                    </ul>
-                </div>
+            </div>
+        </section>
+
+        <!-- AI Integration Section -->
+        <section id="ai-integration" class="mb-16">
+            <div class="flex items-center mb-8">
+                <i class="fas fa-robot text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">AI Integration</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Stateful Workflows</h3>
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Model Context Protocol (MCP)</h3>
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Mockzilla provides powerful workflow scenarios that allow you to create complex, stateful API interactions. Each scenario can have multiple transitions with conditions, effects, and responses.
+                    Let AI agents create and manage your mocks. Mockzilla exposes 24 tools via MCP for complete automation.
                 </p>
-
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Conditions</h4>
-                <p class="text-dark-600 dark:text-gray-300">
-                    Conditions determine when a transition should execute. They are evaluated against the input context.
-                </p>
-
-                <div class="mt-4">
-                    <h5 class="font-medium text-dark-800 dark:text-white">Supported Condition Types:</h5>
-                    <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                        <li><code>eq</code> - Equals</li>
-                        <li><code>neq</code> - Not Equals</li>
-                        <li><code>exists</code> - Field exists (not null/undefined)</li>
-                        <li><code>gt</code> - Greater Than</li>
-                        <li><code>lt</code> - Less Than</li>
-                        <li><code>contains</code> - Array includes or string substring</li>
-                    </ul>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Setup</h4>
+                
+                <div class="mb-4">
+                    <p class="text-dark-600 dark:text-gray-300 mb-2">
+                        <strong>Option 1 (Recommended):</strong> Direct connection for modern MI clients:
+                    </p>
+                    <div class="code-block">
+                        http://localhost:36666/api/mcp
+                    </div>
                 </div>
 
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Effects</h4>
-                <p class="text-dark-600 dark:text-gray-300">
-                    Effects are actions that modify the state or database during a transition.
-                </p>
+                <div class="mb-4">
+                    <p class="text-dark-600 dark:text-gray-300 mb-2">
+                        <strong>Option 2:</strong> For Claude Desktop, add to MCP settings:
+                    </p>
+                    <div class="code-block text-sm">
+                        {
+                          "mcpServers": {
+                            "mockzilla": {
+                              "command": "npx",
+                              "args": ["-y", "mcp-remote", "http://localhost:36666/api/mcp"]
+                            }
+                          }
+                        }
+                    </div>
+                </div>
 
-                <div class="mt-4">
-                    <h5 class="font-medium text-dark-800 dark:text-white">Supported Effect Types:</h5>
-                    <ul class="list-disc pl-5 text-dark-600 dark:text-gray-300">
-                        <li><code>state.set</code> - Set state variables</li>
-                        <li><code>db.push</code> - Add row to table</li>
-                        <li><code>db.update</code> - Update rows</li>
-                        <li><code>db.remove</code> - Remove rows</li>
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">What AI Can Do</h5>
+                    <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
+                        <li>• Create realistic mocks with dynamic data</li>
+                        <li>• Build complex stateful workflows</li>
+                        <li>• Manage folders and organization</li>
+                        <li>• Test and debug mock responses</li>
                     </ul>
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">First Workflow: Login & Dashboard Flow</h3>
-
-                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-                    <!-- Step 1 -->
-                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-full border border-primary bg-background shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 text-sm font-bold shadow shadow-primary/30">
-                            1
-                        </div>
-                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2rem)] p-4 border border-primary/20 rounded-lg">
-                            <h3 class="font-bold text-primary mb-1">Create a Scenario</h3>
-                            <p class="text-sm text-muted-foreground mb-2">
-                                Think of a scenario as a container for one specific feature.
-                            </p>
-                            <div class="bg-muted p-2 rounded text-sm font-mono">
-                                Name: <strong>auth-flow</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-full border border-muted bg-background shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 text-sm font-bold text-muted-foreground">
-                            2
-                        </div>
-                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2rem)] p-4 border border-muted rounded-lg">
-                            <h3 class="font-bold mb-1">Define Login Transition</h3>
-                            <p class="text-sm text-muted-foreground mb-2">
-                                When user hits <code>POST /login</code>, set a flag.
-                            </p>
-                            <div class="space-y-2">
-                                <div class="text-sm">
-                                    <span class="font-semibold block text-primary mb-1">
-                                        Effects (What happens):
-                                    </span>
-                                    <pre class="bg-muted p-2 rounded font-mono text-xs overflow-x-auto">
-                                        [
-                                          { "type": "state.set", "raw": { "isLoggedIn": true }},
-                                          { "type": "state.set", "raw": { "user": "{{input.body.username}}" }}
-                                        ]
-                                    </pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-full border border-muted bg-background shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 text-sm font-bold text-muted-foreground">
-                            3
-                        </div>
-                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2rem)] p-4 border border-muted rounded-lg">
-                            <h3 class="font-bold mb-1">Protect the Dashboard</h3>
-                            <p class="text-sm text-muted-foreground mb-2">
-                                Create <code>GET /dashboard</code> that only works if logged in.
-                            </p>
-                            <div class="space-y-2">
-                                <div class="text-sm">
-                                    <span class="font-semibold block text-yellow-500 mb-1">
-                                        Conditions (The Guard):
-                                    </span>
-                                    <pre class="bg-muted p-2 rounded font-mono text-xs overflow-x-auto">
-                                        [
-                                          { "type": "eq", "field": "state.isLoggedIn", "value": true }
-                                        ]
-                                    </pre>
-                                    <p class="mt-1 text-xs text-muted-foreground">
-                                        If this condition fails, it returns 404 (or the next matching transition).
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-full border border-muted bg-background shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 text-sm font-bold text-muted-foreground">
-                            4
-                        </div>
-                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2rem)] p-4 border border-muted rounded-lg">
-                            <h3 class="font-bold mb-1">Test It!</h3>
-                            <p class="text-sm text-muted-foreground mb-2">
-                                Use the <strong>Test Workflow</strong> tab or curl.
-                            </p>
-                            <div class="text-sm font-mono bg-muted p-2 rounded">
-                                1. POST /login (Success!)
-                                <br>
-                                2. GET /dashboard (Access Granted!)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Workflow Example</h3>
-
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Agent Skills (Optional)</h3>
+                
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    Install specialized skills for your AI agent:
+                </p>
+                
                 <div class="code-block mb-4">
-                    <div class="text-gray-400">// Example workflow scenario with transitions for shopping cart</div>
-                    {<br>
-                    &nbsp;&nbsp;"scenarios": [<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": "shopping-cart",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Shopping Cart Workflow",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "Handles cart operations"<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;],<br>
-                    &nbsp;&nbsp;"transitions": [<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"scenarioId": "shopping-cart",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "Add Item to Cart",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/cart/add",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"method": "POST",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"conditions": [<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type": "eq",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"field": "input.body.type",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value": "item"<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"effects": [<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type": "db.push",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"table": "cart",<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"value": "{{input.body}}"<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"response": {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status": 201,<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"body": { "message": "Item added to cart", "id": "{{input.body.id}}" }<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    &nbsp;&nbsp;]<br>
-                    }
+                    npx add-skill https://github.com/andrecrjr/mockzilla
                 </div>
 
-                <p class="mt-4 text-dark-600 dark:text-gray-300">
-                    In this example, the workflow defines a scenario ("shopping-cart") with transitions that handle cart operations. When a POST request is made to <code>/cart/add</code> with a body containing <code>{type: "item"}</code>,
-                    the system adds the item to the cart database and returns a 201 status with a success message.
+                <p class="text-dark-600 dark:text-gray-300 text-sm">
+                    This installs expert patterns for creating mocks (<code>mockzilla-mock-maker</code>) and designing workflows (<code>mockzilla-workflow-architect</code>).
                 </p>
-
-                <div class="mt-8">
-                    <h4 class="text-lg font-semibold mb-4 text-dark-800 dark:text-white">JSON Templates for Conditions, Effects, and Responses</h4>
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h5 class="text-md font-semibold mb-2 text-dark-800 dark:text-white">Conditions Examples</h5>
-                            <div class="space-y-3">
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Check login state</span><br>
-                                    [<br>
-                                    &nbsp;&nbsp;{<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"type": "eq",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"field": "state.isLoggedIn",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"value": true<br>
-                                    &nbsp;&nbsp;}<br>
-                                    ]
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Check for pagination</span><br>
-                                    [<br>
-                                    &nbsp;&nbsp;{<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"type": "exists",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"field": "input.query.page"<br>
-                                    &nbsp;&nbsp;},<br>
-                                    &nbsp;&nbsp;{<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"type": "gt",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"field": "input.query.page",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"value": 1<br>
-                                    &nbsp;&nbsp;}<br>
-                                    ]
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Check authorization header</span><br>
-                                    [<br>
-                                    &nbsp;&nbsp;{<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"type": "exists",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"field": "input.headers.authorization"<br>
-                                    &nbsp;&nbsp;}<br>
-                                    ]
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Match URL parameter</span><br>
-                                    [<br>
-                                    &nbsp;&nbsp;{<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"type": "eq",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"field": "input.params.id",<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"value": "42"<br>
-                                    &nbsp;&nbsp;}<br>
-                                    ]
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h5 class="text-md font-semibold mb-2 text-dark-800 dark:text-white">Effects Examples</h5>
-                            <div class="space-y-3">
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Set state variables</span><br>
-                                    {<br>
-                                    &nbsp;&nbsp;"type": "state.set",<br>
-                                    &nbsp;&nbsp;"raw": {<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"isLoggedIn": true,<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"userId": "{{ input.body.id }}"<br>
-                                    &nbsp;&nbsp;}<br>
-                                    }
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Add to database table</span><br>
-                                    {<br>
-                                    &nbsp;&nbsp;"type": "db.push",<br>
-                                    &nbsp;&nbsp;"table": "users",<br>
-                                    &nbsp;&nbsp;"value": "{{ input.body }}"<br>
-                                    }
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Update database records</span><br>
-                                    {<br>
-                                    &nbsp;&nbsp;"type": "db.update",<br>
-                                    &nbsp;&nbsp;"table": "users",<br>
-                                    &nbsp;&nbsp;"match": {<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"id": "{{ input.params.id }}"<br>
-                                    &nbsp;&nbsp;},<br>
-                                    &nbsp;&nbsp;"set": {<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"role": "admin"<br>
-                                    &nbsp;&nbsp;}<br>
-                                    }
-                                </div>
-
-                                <div class="code-block text-xs">
-                                    <span class="text-gray-400">// Remove from database</span><br>
-                                    {<br>
-                                    &nbsp;&nbsp;"type": "db.remove",<br>
-                                    &nbsp;&nbsp;"table": "cart",<br>
-                                    &nbsp;&nbsp;"match": {<br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;"sku": "{{ input.params.sku }}"<br>
-                                    &nbsp;&nbsp;}<br>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <h5 class="text-md font-semibold mb-2 text-dark-800 dark:text-white">Response Body Examples</h5>
-                        <div class="grid md:grid-cols-2 gap-3">
-                            <div class="code-block text-xs">
-                                {<br>
-                                &nbsp;&nbsp;"success": true,<br>
-                                &nbsp;&nbsp;"user": "{{ state.userId }}"<br>
-                                }
-                            </div>
-                            <div class="code-block text-xs">
-                                {<br>
-                                &nbsp;&nbsp;"success": true,<br>
-                                &nbsp;&nbsp;"count": "{{ db.cart.length }}"<br>
-                                }
-                            </div>
-                            <div class="code-block text-xs">
-                                {{ db.users }}
-                            </div>
-                            <div class="code-block text-xs">
-                                {<br>
-                                &nbsp;&nbsp;"echo": "{{ input.body.name }}"<br>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Shopping Cart Example</h3>
-
-                <div class="space-y-4">
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">1. Add Item</h4>
-                        <p class="text-xs text-muted-foreground mb-2">POST /cart/add</p>
-                        <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Effect:</span>
-                                db.push('cart', {"{{ input.body }}": ""})
-                            </div>
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Response:</span>
-                                { "success": true, "count": "{{ db.cart.length }}" }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">2. View Cart</h4>
-                        <p class="text-xs text-muted-foreground mb-2">GET /cart</p>
-                        <div class="bg-background p-2 rounded border text-xs font-mono">
-                            <span class="text-muted-foreground block">Response:</span>
-                            { "items": {{ db.cart }} }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Users CRUD Journey</h3>
-
-                <div class="space-y-4">
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">Create User</h4>
-                        <p class="text-xs text-muted-foreground mb-2">POST /users</p>
-                        <div class="grid md:grid-cols-2 gap-2 text-xs font-mono">
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Conditions:</span>
-                                []
-                            </div>
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Effect:</span>
-                                { "type": "db.push", "table": "users", "value": "{{ input.body }}" }
-                            </div>
-                            <div class="bg-background p-2 rounded border md:col-span-2">
-                                <span class="text-muted-foreground block">Response:</span>
-                                { "id": "{{ input.body.id }}", "created": true }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">List Users</h4>
-                        <p class="text-xs text-muted-foreground mb-2">GET /users</p>
-                        <div class="bg-background p-2 rounded border text-xs font-mono">
-                            <span class="text-muted-foreground block">Response:</span>
-                            {{ db.users }}
-                        </div>
-                    </div>
-
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">Update User</h4>
-                        <p class="text-xs text-muted-foreground mb-2">PUT /users/:id</p>
-                        <div class="grid md:grid-cols-2 gap-2 text-xs font-mono">
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Effect:</span>
-                                { "type": "db.update", "table": "users", "match": { "id": "{{ input.params.id }}" }, "set": "{{ input.body }}" }
-                            </div>
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Response:</span>
-                                { "updated": true, "id": "{{ input.params.id }}" }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-muted/30 p-4 rounded-lg border">
-                        <h4 class="font-bold text-sm mb-2">Delete User</h4>
-                        <p class="text-xs text-muted-foreground mb-2">DELETE /users/:id</p>
-                        <div class="grid md:grid-cols-2 gap-2 text-xs font-mono">
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Effect:</span>
-                                { "type": "db.remove", "table": "users", "match": { "id": "{{ input.params.id }}" } }
-                            </div>
-                            <div class="bg-background p-2 rounded border">
-                                <span class="text-muted-foreground block">Response:</span>
-                                { "deleted": true, "id": "{{ input.params.id }}" }
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -846,100 +471,124 @@
                     This enables AI-assisted development where AI agents can create and manage mocks programmatically.
                 </p>
                 
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Available MCP Tools</h4>
-                <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
-                    <li><code>create_mock</code> - Create new mock endpoints with specified responses</li>
-                    <li><code>create_workflow_transition</code> - Define workflow rules with conditions and effects</li>
-                    <li><code>inspect_workflow_state</code> - Read scenario state and database contents</li>
-                    <li><code>reset_workflow_state</code> - Clear scenario data for a fresh start</li>
-                    <li><code>update_mock</code> - Update existing mock configurations</li>
-                    <li><code>delete_mock</code> - Remove mock endpoints</li>
-                    <li><code>create_schema_mock</code> - Create mocks with dynamic JSON schema generation</li>
-                </ul>
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Connection Options</h4>
                 
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
-                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">MCP Configuration</h4>
-                    <p class="text-primary-700 dark:text-purple-300">
-                        To connect an AI agent to Mockzilla, configure the MCP client with the endpoint:
+                <div class="mb-4">
+                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 1: Direct URL (Preferred)</h5>
+                    <p class="text-dark-600 dark:text-gray-300 mb-2">
+                        Modern MCP clients (Cursor, custom agents) can connect directly:
                     </p>
-                    <div class="code-block mt-2">
+                    <div class="code-block">
                         http://localhost:36666/api/mcp
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Configuration Section -->
-        <section id="configuration" class="mb-16">
-            <div class="flex items-center mb-8">
-                <i class="fas fa-cog text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Configuration</h2>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Environment Variables</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4 text-dark-800 dark:text-white">Database Configuration</h4>
-                        <div class="code-block text-sm">
-                            POSTGRES_USER=mockzilla<br>
-                            POSTGRES_PASSWORD=mockzilla<br>
-                            POSTGRES_DB=mockzilla<br>
-                            DATABASE_URL=postgresql://mockzilla:mockzilla@postgres:5432/mockzilla
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4 text-dark-800 dark:text-white">Application Configuration</h4>
-                        <div class="code-block text-sm">
-                            NODE_ENV=development<br>
-                            NEXT_TELEMETRY_DISABLED=1<br>
-                            PORT=36666
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">MCP Server Configuration</h3>
 
                 <div class="mb-6">
-                    <h4 class="text-xl font-semibold mb-2 text-dark-800 dark:text-white">Integration with AI Agents</h4>
-                    <p class="text-dark-600 dark:text-gray-300">
-                        Add this configuration to your project's settings to connect Mockzilla with the MCP server:
+                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 2: Stdio Bridge (For Claude Desktop)</h5>
+                    <p class="text-dark-600 dark:text-gray-300 mb-2">
+                        If your client only supports local stdio servers, use <code>mcp-remote</code> as a bridge:
                     </p>
-
-                    <div class="code-block mt-3">
-                        {<br>
-                        &nbsp;&nbsp;"mockzilla": {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"command": "npx",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"args": [<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"-y",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mcp-remote",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"http://localhost:36666/api/mcp" // MCP server endpoint<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-                        &nbsp;&nbsp;}<br>
+                    <div class="code-block">
+                        {
+                        &nbsp;&nbsp;"mcpServers": {
+                        &nbsp;&nbsp;&nbsp;&nbsp;"mockzilla": {
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"command": "npx",
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"args": ["-y", "mcp-remote", "http://localhost:36666/api/mcp"]
+                        &nbsp;&nbsp;&nbsp;&nbsp;}
+                        &nbsp;&nbsp;}
                         }
                     </div>
-                    <p class="text-dark-600 dark:text-gray-300 mt-3">
-                        This configuration enables the MCP server to handle advanced tools with AI on port 36666 (locally) or using your own DNS.
-                    </p>
                 </div>
-
-                <div>
-                    <h4 class="text-xl font-semibold mb-2 text-dark-800 dark:text-white">Available MCP Tools</h4>
-                    <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
-                        <li><code>create_mock</code> - Create new endpoints</li>
-                        <li><code>create_workflow_transition</code> - Define workflow rules</li>
-                        <li><code>inspect_workflow_state</code> - Read scenario state</li>
-                        <li><code>reset_workflow_state</code> - Clear scenario data</li>
-                        <li><code>create_schema_mock</code> - Create mocks with dynamic JSON schema</li>
-                        <li><code>update_mock</code> - Update existing mock configurations</li>
+                
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-dark-800 dark:text-white">24 Available Tools</h4>
+                <p class="text-dark-600 dark:text-gray-300 mb-3">
+                    Mockzilla exposes 24 specialized tools organized into 4 categories:
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">📁 Folders (5 tools)</h5>
+                        <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
+                            <li>• List, create, get, update, delete</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">🎯 Mocks (7 tools)</h5>
+                        <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
+                            <li>• <code>create_schema_mock</code> (recommended)</li>
+                            <li>• List, create, get, update, delete, preview</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">🔄 Workflow Scenarios (5 tools)</h5>
+                        <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
+                            <li>• List, create, delete scenarios</li>
+                            <li>• Export/import for backup</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">⚡ Transitions & State (7 tools)</h5>
+                        <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
+                            <li>• <code>inspect_workflow_state</code> (powerful)</li>
+                            <li>• Create, update, delete, test transitions</li>
+                            <li>• Reset state</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 Pro Tips</h4>
+                    <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
+                        <li>• Use <code>create_schema_mock</code> for data-heavy mocks with realistic data</li>
+                        <li>• Use <code>inspect_workflow_state</code> when debugging stateful workflows</li>
+                        <li>• Leverage Agent Skills for proven patterns (see Installation section)</li>
                     </ul>
                 </div>
             </div>
         </section>
+
+        <!-- Extension Sync Section -->
+        <section id="extension-sync" class="mb-16">
+            <div class="flex items-center mb-8">
+                <i class="fas fa-sync text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Chrome Extension Sync</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Server-Extension Synchronization</h3>
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    Sync your Chrome Extension mocks to the Mockzilla server to share with your team and back up your work.
+                </p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Quick Setup</h4>
+                <div class="space-y-3 text-dark-600 dark:text-gray-300">
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">1.</span>
+                        <div>Open extension options and enable "Mockzilla Server Sync" for your groups</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">2.</span>
+                        <div>Set server URL (default: <code>http://localhost:36666</code>)</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">3.</span>
+                        <div>Click "Sync Now" - mocks appear on server with "-extension" suffix</div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 High-Fidelity Storage</h4>
+                    <p class="text-primary-700 dark:text-purple-300 text-sm">
+                        Extension-specific features (like variants) are preserved on the server even if not displayed in the UI. When you import back to the extension, all features are restored.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    
     </main>
 
     <!-- Footer -->
@@ -963,9 +612,11 @@
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Documentation Sections</h3>
                     <ul class="space-y-2">
                         <li><a href="#overview" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Overview</a></li>
+                        <li><a href="#installation" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Installation</a></li>
+                        <li><a href="#mcp" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">MCP Integration</a></li>
+                        <li><a href="#extension-sync" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Extension Sync</a></li>
                         <li><a href="#api" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">API Reference</a></li>
                         <li><a href="#workflows" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Workflow Scenarios</a></li>
-                        <li><a href="#mcp" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">MCP Integration</a></li>
                     </ul>
                 </div>
 

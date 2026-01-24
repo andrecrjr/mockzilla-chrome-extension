@@ -39,6 +39,7 @@ async function getRules() {
           body: (typeof bodyFromLocal === 'string') ? bodyFromLocal : (value.body || ''),
           variants,
           wildcardRequireMatch: (value.matchType === 'wildcard' && value.wildcardRequireMatch !== false),
+          syncConfig: value.syncConfig || { enabled: false, method: 'GET', autoSync: false },
         });
       }
     }
@@ -85,6 +86,7 @@ async function setRule(rule) {
     statusCode: rule.statusCode || 200,
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
+    syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
   };
   const bodyKey = `rr_body_${rule.id}`;
   const bodyValue = rule.body ?? '';
@@ -117,6 +119,7 @@ async function setRuleMeta(rule) {
     statusCode: rule.statusCode || 200,
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
+    syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
   };
   await chrome.storage.sync.set({ [metaKey]: metaValue });
 }

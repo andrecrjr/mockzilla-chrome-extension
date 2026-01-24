@@ -1,9 +1,9 @@
 // UI rendering module for options page - handles all DOM rendering functions
 
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
-import { selectRule, selectGroup, refresh, duplicateRule } from './ruleManager.js';
+import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
-import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection } from './state.js';
+import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection, getServerUrl } from './state.js';
 
 function renderRulesList(rules, groups) {
   const root = document.getElementById('rulesList');
@@ -234,16 +234,56 @@ function renderRuleDetails(rule) {
   detailsContainer.innerHTML = `
     <div class="space-y-4">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-medium text-gray-900">Rule Details</h2>
         <div class="flex items-center gap-2">
-          <label class="switch flex items-center cursor-pointer">
+           <h2 class="text-lg font-medium line-clamp-1">Rule Details</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Multi-Action Rule Header Controls -->
+          ${(rule.group && getServerUrl() && rule.syncConfig?.enabled) ? `
+          <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
+             <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
+                <label class="switch-sm flex items-center cursor-pointer">
+                  <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} />
+                  <span class="slider-sm"></span>
+                </label>
+                <span class="text-[10px] font-medium text-gray-500 uppercase tracking-tight">Auto</span>
+             </div>
+             
+             <button class="btn btn-xs btn-ghost text-purple-600 hover:bg-purple-50 flex items-center gap-1.5 sync-now-btn" title="Sync Now" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                <span class="text-[10px] font-bold">SYNC NOW</span>
+             </button>
+             
+             <div class="w-2 h-2 rounded-full ml-1 mr-2 ${rule.syncConfig?.enabled ? (rule.syncConfig?.autoSync ? 'bg-green-500 animate-pulse' : 'bg-blue-500') : 'bg-gray-300'}" title="${rule.syncConfig?.enabled ? 'Sync Active' : 'Sync Disabled'}"></div>
+          </div>
+          ` : ''}
+
+          <label class="switch flex items-center cursor-pointer ml-2">
             <input type="checkbox" class="enabled-toggle" ${rule.enabled ? 'checked' : ''} aria-label="Enable rule" />
-            <span class="slider ml-2"></span>
+            <span class="slider"></span>
           </label>
-          <span class="ml-2 text-sm ${rule.enabled ? 'text-green-600' : 'text-gray-500'}">${rule.enabled ? 'Enabled' : 'Disabled'}</span>
-          <button class="duplicate-rule btn btn-neutral">Duplicate</button>
+          <button class="duplicate-rule btn btn-neutral btn-sm">Duplicate</button>
         </div>
       </div>
+      
+      <!-- Mockzilla Server Sync Bio -->
+      ${(rule.group && getServerUrl()) ? `
+      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center">
+         <div class="p-1.5 bg-white dark:bg-gray-800 rounded shadow-sm border border-purple-50 dark:border-purple-800/40">
+           <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+         </div>
+         <div class="flex-1 flex items-center justify-between">
+           <div>
+             <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
+             Store this extension mock data on the Mockzilla server.
+           </div>
+           <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
+              <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
+              <span>Enable Sync</span>
+           </label>
+         </div>
+      </div>
+      ` : ''}
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -261,13 +301,20 @@ function renderRuleDetails(rule) {
           </select>
         </div>
         
-        <div>
+        <div class="col-span-3">
           <label class="label block mb-1">Match Type</label>
           <select class="matchType select w-full" aria-label="Match type">
             <option value="substring" ${rule.matchType === 'substring' ? 'selected' : ''}>Substring</option>
             <option value="exact" ${rule.matchType === 'exact' ? 'selected' : ''}>Exact</option>
             <option value="wildcard" ${rule.matchType === 'wildcard' ? 'selected' : ''}>Wildcard</option>
           </select>
+          <div class="matchType-help text-xs text-gray-500 mt-2 space-y-1">
+            <div class="matchType-help-pattern"></div>
+            <div class="matchType-help-substring hidden"><strong>Substring</strong>: match any URL containing this text. Example: <span class="font-mono">/todos/1</span> matches <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
+            <div class="matchType-help-exact hidden"><strong>Exact</strong>: match only this full URL. Example: <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
+            <div class="matchType-help-wildcard hidden"><strong>Wildcard</strong>: each <span class="font-mono">*</span> captures a part of the URL and builds a <strong>variant key</strong> by joining captures with <span class="font-mono">|</span>. Example: <span class="font-mono">.../todos/*</span> + <span class="font-mono">.../todos/1</span> → key <span class="font-mono">1</span>. Great for multiple query params: <span class="font-mono">.../search?user=*&amp;status=*</span> → key <span class="font-mono">alice|open</span></div>
+            <div class="matchType-help-wildcard-require hidden"><strong>Require variant</strong> ON: if no variant key matches, the request passes through</div>
+          </div>
         </div>
         
         <div class="md:col-span-2">
@@ -316,7 +363,7 @@ function renderRuleDetails(rule) {
               <input type="checkbox" class="wildcard-require-match" ${rule.wildcardRequireMatch ? 'checked' : ''} aria-label="Require variant match" />
               <span class="slider ml-2"></span>
             </label>
-            <span class="text-xs text-gray-500">Require variant to intercept</span>
+            <span class="text-xs text-gray-500">Require variant to intercept (no key → pass through)</span>
           </div>
           <button class="add-variant btn btn-sm">Add Variant</button>
         </div>
@@ -324,7 +371,7 @@ function renderRuleDetails(rule) {
           ${(Array.isArray(rule.variants) ? rule.variants : []).map(v => `
             <div class="variant-item border rounded p-2" data-key="${escapeHtml(v.key)}">
               <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-                <input class="variant-key input w-full" placeholder="Captured key (e.g. 123 or a|b)" value="${escapeHtml(v.key)}" />
+                <input class="variant-key input w-full" placeholder="Variant key (captures joined by |, e.g. alice|open)" value="${escapeHtml(v.key)}" />
                 <select class="variant-bodyType select w-full">
                   <option value="text" ${v.bodyType === 'text' ? 'selected' : ''}>Text</option>
                   <option value="json" ${v.bodyType === 'json' ? 'selected' : ''}>JSON</option>
@@ -368,6 +415,39 @@ function renderRuleDetails(rule) {
   const addVariantBtn = detailsContainer.querySelector('.add-variant');
   const variantsListEl = detailsContainer.querySelector('.variants-list');
   const wildcardRequireMatchEl = detailsContainer.querySelector('.wildcard-require-match');
+  
+  const syncEnabledEl = detailsContainer.querySelector('.sync-enabled');
+  const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
+  const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
+
+  const updateMatchTypeHelp = () => {
+    const helpPattern = detailsContainer.querySelector('.matchType-help-pattern');
+    const helpSubstring = detailsContainer.querySelector('.matchType-help-substring');
+    const helpExact = detailsContainer.querySelector('.matchType-help-exact');
+    const helpWildcard = detailsContainer.querySelector('.matchType-help-wildcard');
+    const helpWildcardRequire = detailsContainer.querySelector('.matchType-help-wildcard-require');
+
+    if (!helpPattern) return;
+
+    const matchType = matchTypeEl.value;
+    const pattern = patternEl.value;
+
+    helpSubstring?.classList.toggle('hidden', matchType !== 'substring');
+    helpExact?.classList.toggle('hidden', matchType !== 'exact');
+    helpWildcard?.classList.toggle('hidden', matchType !== 'wildcard');
+    helpWildcardRequire?.classList.toggle('hidden', matchType !== 'wildcard' || !wildcardRequireMatchEl?.checked);
+
+    if (matchType === 'wildcard') {
+      const stars = (pattern.match(/\*/g) || []).length;
+      if (stars === 0) {
+        helpPattern.innerHTML = '<span class="text-amber-600">⚠️ No wildcards found in pattern.</span>';
+      } else {
+        helpPattern.innerHTML = `<span class="text-blue-600 font-medium">✨ Pattern has ${stars} wildcard ${stars === 1 ? 'part' : 'parts'}. Captured keys will be joined by "|".</span>`;
+      }
+    } else {
+      helpPattern.textContent = '';
+    }
+  };
 
   nameEl.addEventListener('blur', async () => {
     rule.name = nameEl.value;
@@ -380,6 +460,7 @@ function renderRuleDetails(rule) {
     rule.group = groupSelectEl.value;
     await setRuleMeta(rule);
     renderRulesList(window.currentRules || [], window.currentGroups || []); // Update the sidebar
+    renderRuleDetails(rule); // Re-render details to show/hide sync UI
     flashStatus('Group updated', 'success');
   });
 
@@ -400,6 +481,7 @@ function renderRuleDetails(rule) {
       const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
       responseBodySection.classList.toggle('hidden', hideBody);
     }
+    updateMatchTypeHelp();
   });
 
   if (wildcardRequireMatchEl) {
@@ -407,6 +489,7 @@ function renderRuleDetails(rule) {
       rule.wildcardRequireMatch = !!wildcardRequireMatchEl.checked;
       await setRuleMeta(rule);
       flashStatus('Wildcard matching updated', 'success');
+      updateMatchTypeHelp();
       if (responseBodySection) {
         const hideBody = rule.matchType === 'wildcard' && !!rule.wildcardRequireMatch;
         responseBodySection.classList.toggle('hidden', hideBody);
@@ -431,10 +514,17 @@ function renderRuleDetails(rule) {
     responseBodySection.classList.toggle('hidden', initialHide);
   }
 
+  updateMatchTypeHelp();
+
   patternEl.addEventListener('blur', async () => {
     rule.pattern = patternEl.value;
     await setRuleMeta(rule);
     flashStatus('Pattern saved', 'success');
+    updateMatchTypeHelp();
+  });
+
+  patternEl.addEventListener('input', () => {
+    updateMatchTypeHelp();
   });
 
   statusCodeEl.addEventListener('change', async () => {
@@ -510,10 +600,10 @@ function renderRuleDetails(rule) {
         if (idx >= 0) {
           rule.variants[idx].key = keyInput.value;
           await setRuleVariantsMeta(rule.id, rule.variants);
-          // Update the key reference on the DOM element so subsequent edits use the new key
           item.setAttribute('data-key', keyInput.value);
           renderRulesList(window.currentRules || [], window.currentGroups || []);
           flashStatus('Variant key saved', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -523,6 +613,7 @@ function renderRuleDetails(rule) {
           rule.variants[idx].bodyType = bodyTypeInput.value;
           await setRuleVariantsMeta(rule.id, rule.variants);
           flashStatus('Variant type updated', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -532,6 +623,7 @@ function renderRuleDetails(rule) {
           rule.variants[idx].statusCode = parseInt(statusCodeInput.value, 10);
           await setRuleVariantsMeta(rule.id, rule.variants);
           flashStatus('Variant status updated', 'success');
+          triggerAutoSync();
         }
       });
 
@@ -546,9 +638,11 @@ function renderRuleDetails(rule) {
               flashStatus('Invalid JSON', 'error');
             } else {
               flashStatus('Variant body saved', 'success');
+              triggerAutoSync();
             }
           } else {
             flashStatus('Variant body saved', 'success');
+            triggerAutoSync();
           }
         }
       });
@@ -559,9 +653,75 @@ function renderRuleDetails(rule) {
         rule.variants = (rule.variants || []).filter(v => String(v.key) !== String(delKey));
         renderRuleDetails(rule);
         flashStatus('Variant deleted', 'success');
+        triggerAutoSync();
       });
     });
   }
+  
+  // Sync Event Listeners
+  if (syncEnabledEl) {
+    syncEnabledEl.addEventListener('change', async () => {
+      if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
+      rule.syncConfig.enabled = syncEnabledEl.checked;
+      await setRuleMeta(rule);
+      
+      // Update window.currentRules to keep state in sync
+      const idx = (window.currentRules || []).findIndex(r => r.id === rule.id);
+      if (idx >= 0) window.currentRules[idx] = { ...rule };
+      
+      flashStatus('Sync settings updated', 'success');
+      renderRuleDetails(rule); // Re-render to update dot and button state
+      
+      // Fire auto sync if enabled
+      if (rule.syncConfig.enabled && rule.syncConfig.autoSync) {
+         autoSyncRule(rule);
+      }
+    });
+  }
+
+  if (syncAutoSyncEl) {
+    syncAutoSyncEl.addEventListener('change', async () => {
+      if (!rule.syncConfig) rule.syncConfig = { enabled: false, method: 'GET', autoSync: false };
+      rule.syncConfig.autoSync = syncAutoSyncEl.checked;
+      await setRuleMeta(rule);
+      
+      // Update window.currentRules to keep state in sync
+      const idx = (window.currentRules || []).findIndex(r => r.id === rule.id);
+      if (idx >= 0) window.currentRules[idx] = { ...rule };
+      
+      flashStatus('Auto-sync settings updated', 'success');
+      renderRuleDetails(rule); // Re-render to update dot state
+      autoSyncRule(rule);
+    });
+  }
+
+  if (syncNowBtn) {
+     syncNowBtn.addEventListener('click', async () => {
+        const originalText = syncNowBtn.innerHTML;
+        syncNowBtn.disabled = true;
+        syncNowBtn.innerHTML = 'SYNCING...';
+        try {
+            await manualSyncRule(rule);
+        } finally {
+            syncNowBtn.disabled = !rule.syncConfig?.enabled;
+            syncNowBtn.innerHTML = originalText;
+        }
+     });
+  }
+  
+  // Also hook into other change events to trigger autoSync
+  const triggerAutoSync = async () => {
+      // Small delay to ensure blur/change event value has propagated to rule object if not already
+      setTimeout(() => autoSyncRule(rule), 50);
+  };
+  
+  nameEl.addEventListener('blur', triggerAutoSync);
+  if (groupSelectEl) groupSelectEl.addEventListener('change', triggerAutoSync);
+  patternEl.addEventListener('blur', triggerAutoSync);
+  statusCodeEl.addEventListener('change', triggerAutoSync);
+  enabledToggle.addEventListener('change', triggerAutoSync);
+  bodyEl.addEventListener('blur', triggerAutoSync);
+  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 150));
 }
 
 function renderGroupDetails(group) {
@@ -634,4 +794,87 @@ function renderGroupDetails(group) {
   });
 }
 
-export { renderRulesList, renderRuleDetails, renderGroupDetails, groupExpandedState };
+function renderFolderImportModal(foldersData, onPageChange, onImport) {
+  let modal = document.getElementById('serverImportModal');
+  if (!modal) {
+    // Create modal if it doesn't exist
+    modal = document.createElement('div');
+    modal.id = 'serverImportModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50';
+    modal.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Folder from Server</h3>
+          <button id="closeServerImport" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1" id="serverFoldersList">
+          <!-- Folders render here -->
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                 <button id="serverFolderPrev" class="btn btn-sm btn-ghost" disabled>Previous</button>
+                 <span id="serverFolderPageInfo" class="text-xs text-gray-500">Page 1</span>
+                 <button id="serverFolderNext" class="btn btn-sm btn-ghost" disabled>Next</button>
+            </div>
+          <button id="cancelServerImport" class="btn btn-ghost mr-2">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Bind close events
+    document.getElementById('closeServerImport').addEventListener('click', () => modal.classList.add('hidden'));
+    document.getElementById('cancelServerImport').addEventListener('click', () => modal.classList.add('hidden'));
+  }
+  
+  // Render Content
+  const listContainer = document.getElementById('serverFoldersList');
+  const prevBtn = document.getElementById('serverFolderPrev');
+  const nextBtn = document.getElementById('serverFolderNext');
+  const pageInfo = document.getElementById('serverFolderPageInfo');
+
+  if (!foldersData) {
+      listContainer.innerHTML = '<div class="text-center p-4 text-gray-500">Loading...</div>';
+      return;
+  }
+
+  // Clear old listeners by cloning (simple way to reset without complex cleanup)
+  const newPrev = prevBtn.cloneNode(true);
+  prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+  const newNext = nextBtn.cloneNode(true);
+  nextBtn.parentNode.replaceChild(newNext, nextBtn);
+
+  const { data, meta } = foldersData;
+  listContainer.innerHTML = '';
+  
+  if (data.length === 0) {
+      listContainer.innerHTML = '<div class="text-center p-4 text-gray-500">No folders found on server.</div>';
+  } else {
+      data.forEach(folder => {
+          const item = document.createElement('div');
+          item.className = 'p-3 border rounded border-gray-200 dark:border-gray-700 mb-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center group';
+          item.innerHTML = `
+            <div class="min-w-0">
+                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">${escapeHtml(folder.name)}</div>
+                <div class="text-xs text-gray-500 truncate">${escapeHtml(folder.description || 'No description')}</div>
+            </div>
+            <button class="btn btn-sm btn-primary opacity-0 group-hover:opacity-100 transition-opacity">Import</button>
+          `;
+          item.addEventListener('click', () => onImport(folder.id));
+          listContainer.appendChild(item);
+      });
+  }
+
+  // Pagination Logic
+  pageInfo.textContent = `Page ${meta.page} of ${meta.totalPages}`;
+  newPrev.disabled = meta.page <= 1;
+  newNext.disabled = meta.page >= meta.totalPages;
+
+  newPrev.addEventListener('click', () => onPageChange(meta.page - 1));
+  newNext.addEventListener('click', () => onPageChange(meta.page + 1));
+}
+
+export { renderRulesList, renderRuleDetails, renderGroupDetails, groupExpandedState, renderFolderImportModal };
+

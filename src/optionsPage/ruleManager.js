@@ -3,7 +3,7 @@
 import { renderRuleDetails, renderGroupDetails, renderRulesList } from './ui.js';
 import { setRuleMeta, setRuleBody, setGroup, deleteGroup, deleteRule, setEnabled, getRules, getGroups, setRule } from './storage.js';
 import { flashStatus, uid } from './utils.js';
-import { setSelectedRule as setInternalSelectedRule, setSelectedGroup as setInternalSelectedGroup, setSelectedId, setSelectedType, getSelectedType, getSelectedId, clearSelection, setGroupExpanded } from './state.js';
+import { setSelectedRule as setInternalSelectedRule, setSelectedGroup as setInternalSelectedGroup, setSelectedId, setSelectedType, getSelectedType, getSelectedId, clearSelection, setGroupExpanded, getServerUrl } from './state.js';
 
 function selectRule(ruleId) {
   setInternalSelectedRule(ruleId);
@@ -176,6 +176,7 @@ async function exportRules() {
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
   flashStatus('Rules and groups exported', 'success');
+
 }
 
 // Import rules functionality
@@ -243,6 +244,120 @@ async function importRules(importText) {
   }
 }
 
+// Auto-sync wrapper
+async function autoSyncRule(rule) {
+  if (rule?.syncConfig?.autoSync && rule.enabled && rule.syncConfig.enabled) {
+    // Debounce is handled by the caller or UI event loop naturally for now.
+    // We MUST sync ALL rules to preserve the group state on the server, 
+    // as the server wipes the folder contents on sync.
+    await syncToServer();
+  }
+}
+
+async function manualSyncRule(rule) {
+    // We verify sync is enabled for the rule, but we don't check autoSync
+    if (!rule.syncConfig?.enabled) {
+         flashStatus('Enable sync for this rule first', 'error');
+         return;
+    }
+    const ruleWithGroup = { ...rule };
+    // Same as autoSync: we must sync ALL rules to avoid wiping others in the group
+    await syncToServer();
+}
+
+// Sync Logic
+
+async function syncRules(rules) {
+  const serverUrl = getServerUrl();
+  if (!serverUrl) {
+    console.warn('Cannot sync: No server URL configured');
+    flashStatus('Configure server URL in Cloud Actions first', 'error');
+    return;
+  }
+
+  // Filter valid rules for sync
+  const rulesToSync = rules.filter(r => 
+    r.syncConfig?.enabled && r.group && r.group !== 'ungrouped'
+  );
+
+  if (rulesToSync.length === 0) return;
+
+  const groups = await getGroups();
+  const groupMap = new Map(groups.map(g => [g.id, g]));
+
+  const payloadGroups = {};
+
+  for (const rule of rulesToSync) {
+    const groupId = rule.group || 'ungrouped';
+    let groupName = 'Ungrouped Rules';
+    let groupDesc = '';
+
+    if (rule.group && groupMap.has(rule.group)) {
+      groupName = groupMap.get(rule.group).name;
+      groupDesc = groupMap.get(rule.group).description;
+    }
+
+    if (!payloadGroups[groupId]) {
+      payloadGroups[groupId] = {
+        id: groupId,
+        name: groupName,
+        description: groupDesc,
+        mocks: []
+      };
+    }
+
+    payloadGroups[groupId].mocks.push({
+      id: rule.id,
+      name: rule.name,
+      pattern: rule.pattern,
+      body: rule.body,
+      response: rule.body,
+      statusCode: rule.statusCode,
+      matchType: rule.matchType,
+      enabled: rule.enabled,
+      variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({
+        key: v.key,
+        bodyType: v.bodyType,
+        statusCode: v.statusCode,
+        body: v.body
+      })) : []
+    });
+  }
+
+  const payload = {
+    groups: Object.values(payloadGroups)
+  };
+
+  try {
+    const res = await fetch(`${serverUrl}/api/sync/extension`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+       throw new Error(`Server returned ${res.status}`);
+    }
+    const json = await res.json();
+    console.log('Sync success:', json);
+    flashStatus('Synced to Mockzilla Server', 'success');
+  } catch (e) {
+    console.error('Sync failed:', e);
+    flashStatus(`Sync failed: ${e.message}`, 'error');
+  }
+}
+
+async function syncToServer() {
+  const rules = await getRules();
+  // Filter for ONLY enabled sync rules
+  const syncable = rules.filter(r => r.syncConfig?.enabled);
+  if (syncable.length === 0) {
+    flashStatus('No rules enabled for sync', 'info');
+    return;
+  }
+  await syncRules(syncable);
+}
+
 export { 
   selectRule, 
   selectGroup, 
@@ -253,5 +368,97 @@ export {
   collapseAll, 
   exportRules, 
   importRules,
-  duplicateRule
-};
+  duplicateRule,
+  autoSyncRule,
+  manualSyncRule,
+  syncToServer,
+  fetchServerFolders,
+  importFolderFromServer
+}
+
+async function fetchServerFolders(page = 1, limit = 10) {
+    const serverUrl = getServerUrl();
+    if (!serverUrl) {
+      flashStatus('No server URL configured', 'error');
+      return null;
+    }
+
+    try {
+        const res = await fetch(`${serverUrl}/api/folders?page=${page}&limit=${limit}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server returned ${res.status}`);
+        }
+
+        const json = await res.json();
+        return json; // Expecting { data: [...], meta: { ... } }
+    } catch (e) {
+        console.error('Fetch server folders failed:', e);
+        flashStatus(`Fetch fail: ${e.message}`, 'error');
+        return null;
+    }
+}
+
+async function importFolderFromServer(folderId) {
+    const serverUrl = getServerUrl();
+    if (!serverUrl) {
+        flashStatus('No server URL configured', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${serverUrl}/api/folders/${folderId}/to-extension`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server returned ${res.status}`);
+        }
+
+        const json = await res.json();
+        // json should be { groups: [{ mocks: [...] }] } (SyncPayload)
+        
+        // Transform SyncPayload to ImportFormat
+        // SyncPayload: { groups: [ { id, name, mocks: [] } ] }
+        // ImportFormat: { rules: [], groups: [] }
+    
+        const importedRules = [];
+        const importedGroups = [];
+
+        if (json.groups && Array.isArray(json.groups)) {
+            json.groups.forEach(group => {
+                // Add group to list (exclude mocks to keep it clean)
+                const { mocks, ...groupData } = group;
+                importedGroups.push(groupData);
+
+                // Add mocks as rules with groupId
+                if (mocks && Array.isArray(mocks)) {
+                    mocks.forEach(mock => {
+                        const rule = { ...mock, group: group.id };
+                        if (!rule.matchType) rule.matchType = 'substring'; // Default
+                        importedRules.push(rule);
+                    });
+                }
+            });
+        }
+
+        const importPayload = {
+            rules: importedRules,
+            groups: importedGroups
+        };
+
+        // Reuse importRules logic
+        await importRules(JSON.stringify(importPayload));
+        
+        flashStatus('Folder imported successfully', 'success');
+        return true;
+    } catch (e) {
+        console.error('Import folder failed:', e);
+        flashStatus(`Import failed: ${e.message}`, 'error');
+        return false;
+    }
+}

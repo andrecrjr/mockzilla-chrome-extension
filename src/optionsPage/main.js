@@ -1,9 +1,11 @@
 // Main module for options page - initializes the UI and handles event listeners
 
-import { addRule, addGroup, expandAll, collapseAll, exportRules, importRules, refresh } from './ruleManager.js';
+import { addRule, addGroup, expandAll, collapseAll, exportRules, refresh, syncToServer, fetchServerFolders, importFolderFromServer } from './ruleManager.js';
+import { importRules } from './ruleManager.js';
+import { renderFolderImportModal } from './ui.js';
 import { setEnabled, getEnabled } from './storage.js';
 import { flashStatus, debounce } from './utils.js';
-import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped } from './state.js';
+import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped, getServerUrl, setServerUrl } from './state.js';
 
 // Initialize the page when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -50,35 +52,140 @@ function initializeEventListeners() {
     collapseAll();
   });
 
-  // Export rules functionality
-  document.getElementById('exportRules').addEventListener('click', async () => {
-    await exportRules();
-  });
-  const exportIcon = document.getElementById('exportIconBtn');
-  if (exportIcon) {
-    exportIcon.addEventListener('click', async () => { await exportRules(); });
+  // Cloud Actions Modal
+  const cloudBtn = document.getElementById('cloudActionsBtn');
+  const unifiedModal = document.getElementById('unifiedActionsModal');
+  const closeUnifiedModal = document.getElementById('closeUnifiedModal');
+
+  if (cloudBtn && unifiedModal) {
+    cloudBtn.addEventListener('click', () => {
+      unifiedModal.classList.remove('hidden');
+    });
   }
 
-  // Import rules functionality
-  document.getElementById('importRules').addEventListener('click', () => {
-    document.getElementById('importModal').classList.remove('hidden');
-  });
-  const importIcon = document.getElementById('importIconBtn');
-  if (importIcon) {
-    importIcon.addEventListener('click', () => { document.getElementById('importModal').classList.remove('hidden'); });
+  if (closeUnifiedModal && unifiedModal) {
+    closeUnifiedModal.addEventListener('click', () => {
+      unifiedModal.classList.add('hidden');
+    });
   }
 
-  document.getElementById('cancelImport').addEventListener('click', () => {
-    document.getElementById('importModal').classList.add('hidden');
-    document.getElementById('importTextarea').value = '';
+  // Tab Switching Logic
+  const tabs = document.querySelectorAll('.cloud-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => {
+        t.classList.remove('active', 'border-purple-500', 'text-purple-700', 'dark:text-purple-300');
+        t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-200');
+      });
+      // Add active class to clicked tab
+      tab.classList.add('active', 'border-purple-500', 'text-purple-700', 'dark:text-purple-300');
+      tab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-200');
+
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('block'));
+
+      // Show target content
+      const targetId = `tab-${tab.dataset.tab}`;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('block');
+      }
+    });
   });
 
-  document.getElementById('confirmImport').addEventListener('click', async () => {
-    const importText = document.getElementById('importTextarea').value;
-    await importRules(importText);
-    document.getElementById('importModal').classList.add('hidden');
-    document.getElementById('importTextarea').value = '';
-  });
+  // Export functionality (New Button)
+  const triggerExportBtn = document.getElementById('triggerExport');
+  if (triggerExportBtn) {
+    triggerExportBtn.addEventListener('click', async () => {
+      await exportRules();
+    });
+  }
+
+  // Sync functionality (New Modal)
+  const confirmSync = document.getElementById('confirmSync');
+  const serverUrlInput = document.getElementById('serverUrl');
+
+  // Pre-fill server URL
+  if (serverUrlInput) {
+      serverUrlInput.value = getServerUrl() || '';
+  }
+
+  if (confirmSync) {
+    confirmSync.addEventListener('click', async () => {
+      const url = serverUrlInput.value.trim();
+      if (!url) {
+        flashStatus('Server URL is required', 'error');
+        return;
+      }
+      setServerUrl(url); // Save preference
+      
+      const btnContent = confirmSync.innerHTML;
+      confirmSync.disabled = true;
+      confirmSync.textContent = 'Syncing...';
+      
+      try {
+        await syncToServer();
+        unifiedModal.classList.add('hidden');
+      } finally {
+        confirmSync.disabled = false;
+        confirmSync.innerHTML = btnContent;
+      }
+    });
+  }
+
+  // Import functionality (New Modal)
+  const confirmImport = document.getElementById('confirmImport');
+  if (confirmImport) {
+    confirmImport.addEventListener('click', async () => {
+      const importText = document.getElementById('importTextarea').value;
+      if (!importText.trim()) {
+          flashStatus('Please paste the JSON content', 'error');
+          return;
+      }
+      await importRules(importText);
+      unifiedModal.classList.add('hidden');
+      document.getElementById('importTextarea').value = '';
+    });
+  }
+
+  // Server Import Functionality (New Button)
+  const serverImportBtn = document.getElementById('serverImportBtn');
+  if (serverImportBtn) {
+      serverImportBtn.addEventListener('click', async () => {
+          // Close unified modal first or handle layering?
+          // For now let's close unified modal and open the server import modal (which is dynamically rendered usually)
+          // Actually serverImport logic opens `serverImportModal`
+          unifiedModal.classList.add('hidden');
+          
+          const modal = document.getElementById('serverImportModal');
+          if (modal) modal.classList.remove('hidden');
+          
+          await loadServerFolders(1);
+          
+          // Ensure it's visible if it was just created
+          const createdModal = document.getElementById('serverImportModal');
+          if (createdModal) createdModal.classList.remove('hidden');
+      });
+  }
+
+  async function loadServerFolders(page) {
+      // Show loading state
+      renderFolderImportModal(null, null, null);
+      
+      const result = await fetchServerFolders(page, 10);
+      if (result) {
+          renderFolderImportModal(result, loadServerFolders, async (folderId) => {
+              const success = await importFolderFromServer(folderId);
+              if (success) {
+                   document.getElementById('serverImportModal').classList.add('hidden');
+                   await refresh();
+              }
+          });
+      }
+  }
 
   // Quick create folder card
   const quickCreateBtn = document.getElementById('quickCreateGroup');
@@ -154,15 +261,7 @@ function initializeHeaderControls() {
       setTheme(themeToggle.checked ? 'dark' : 'light');
     });
   }
-  const settingsBtn = document.getElementById('settingsBtn');
-  if (settingsBtn) {
-    settingsBtn.addEventListener('click', () => {
-      const next = getTheme() === 'dark' ? 'light' : 'dark';
-      setTheme(next);
-      if (themeToggle) themeToggle.checked = next === 'dark';
-      flashStatus(`Theme: ${next}`, 'info');
-    });
-  }
+
 
   // Density
   const densityToggle = document.getElementById('densityToggle');
