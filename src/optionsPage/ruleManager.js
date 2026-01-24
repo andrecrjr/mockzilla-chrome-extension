@@ -177,6 +177,8 @@ async function exportRules() {
   linkElement.click();
   flashStatus('Rules and groups exported', 'success');
 
+}
+
 // Import rules functionality
 async function importRules(importText) {
   if (!importText) {
@@ -353,4 +355,4 @@ export {
   duplicateRule,
   autoSyncRule,
   syncToServer
-};
+}
