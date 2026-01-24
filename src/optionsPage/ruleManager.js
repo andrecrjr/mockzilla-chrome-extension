@@ -176,9 +176,7 @@ async function exportRules() {
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
   flashStatus('Rules and groups exported', 'success');
-}
-
-// Import rules functionality
+  try{
     await refresh();
     flashStatus(`Imported ${importedRules.length} rules and ${importedGroups.length} groups`, 'success');
   } catch (e) {
