@@ -1,9 +1,9 @@
 // Main module for options page - initializes the UI and handles event listeners
 
-import { addRule, addGroup, expandAll, collapseAll, exportRules, importRules, refresh } from './ruleManager.js';
+import { addRule, addGroup, expandAll, collapseAll, exportRules, importRules, refresh, syncToServer } from './ruleManager.js';
 import { setEnabled, getEnabled } from './storage.js';
 import { flashStatus, debounce } from './utils.js';
-import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped } from './state.js';
+import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped, getServerUrl, setServerUrl } from './state.js';
 
 // Initialize the page when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -57,6 +57,49 @@ function initializeEventListeners() {
   const exportIcon = document.getElementById('exportIconBtn');
   if (exportIcon) {
     exportIcon.addEventListener('click', async () => { await exportRules(); });
+  }
+
+  // Sync functionality
+  const syncIcon = document.getElementById('syncIconBtn');
+  const syncModal = document.getElementById('syncModal');
+  const cancelSync = document.getElementById('cancelSync');
+  const confirmSync = document.getElementById('confirmSync');
+  const serverUrlInput = document.getElementById('serverUrl');
+
+  if (syncIcon) {
+    syncIcon.addEventListener('click', () => {
+      serverUrlInput.value = getServerUrl() || '';
+      syncModal.classList.remove('hidden');
+    });
+  }
+
+  if (cancelSync) {
+    cancelSync.addEventListener('click', () => {
+      syncModal.classList.add('hidden');
+    });
+  }
+
+  if (confirmSync) {
+    confirmSync.addEventListener('click', async () => {
+      const url = serverUrlInput.value.trim();
+      if (!url) {
+        flashStatus('Server URL is required', 'error');
+        return;
+      }
+      setServerUrl(url); // Save preference
+      
+      const btnContent = confirmSync.innerHTML;
+      confirmSync.disabled = true;
+      confirmSync.textContent = 'Syncing...';
+      
+      try {
+        await syncToServer();
+        syncModal.classList.add('hidden');
+      } finally {
+        confirmSync.disabled = false;
+        confirmSync.innerHTML = btnContent;
+      }
+    });
   }
 
   // Import rules functionality

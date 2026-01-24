@@ -39,6 +39,7 @@ async function getRules() {
           body: (typeof bodyFromLocal === 'string') ? bodyFromLocal : (value.body || ''),
           variants,
           wildcardRequireMatch: (value.matchType === 'wildcard' && value.wildcardRequireMatch !== false),
+          syncConfig: value.syncConfig || { enabled: false, method: 'GET', autoSync: false },
         });
       }
     }

@@ -3,7 +3,7 @@
 import { renderRuleDetails, renderGroupDetails, renderRulesList } from './ui.js';
 import { setRuleMeta, setRuleBody, setGroup, deleteGroup, deleteRule, setEnabled, getRules, getGroups, setRule } from './storage.js';
 import { flashStatus, uid } from './utils.js';
-import { setSelectedRule as setInternalSelectedRule, setSelectedGroup as setInternalSelectedGroup, setSelectedId, setSelectedType, getSelectedType, getSelectedId, clearSelection, setGroupExpanded } from './state.js';
+import { setSelectedRule as setInternalSelectedRule, setSelectedGroup as setInternalSelectedGroup, setSelectedId, setSelectedType, getSelectedType, getSelectedId, clearSelection, setGroupExpanded, getServerUrl } from './state.js';
 
 function selectRule(ruleId) {
   setInternalSelectedRule(ruleId);
@@ -179,68 +179,110 @@ async function exportRules() {
 }
 
 // Import rules functionality
-async function importRules(importText) {
-  if (!importText) {
-    flashStatus('No data to import', 'error');
-    return;
-  }
-
-  try {
-    const importedData = JSON.parse(importText);
-    let importedRules = [];
-    let importedGroups = [];
-    
-    if (Array.isArray(importedData)) {
-      // Legacy format - just rules
-      importedRules = importedData;
-    } else if (importedData.rules) {
-      // New format with groups
-      importedRules = importedData.rules || [];
-      importedGroups = importedData.groups || [];
-    } else {
-      // Unknown format
-      throw new Error('Invalid import format');
-    }
-
-    // Import groups first
-    for (const group of importedGroups) {
-      if (
-        typeof group !== 'object' ||
-        typeof group.id !== 'string' ||
-        typeof group.name !== 'string'
-      ) {
-        throw new Error(`Invalid group structure: ${JSON.stringify(group)}`);
-      }
-      await setGroup(group);
-    }
-
-    // Import rules
-    for (const rule of importedRules) {
-      if (
-        typeof rule !== 'object' ||
-        typeof rule.id !== 'string' ||
-        typeof rule.matchType !== 'string' ||
-        typeof rule.pattern !== 'string' ||
-        typeof rule.bodyType !== 'string' ||
-        typeof rule.body !== 'string'
-      ) {
-        throw new Error(`Invalid rule structure: ${JSON.stringify(rule)}`);
-      }
-      
-      // Ensure default status code if not present in import
-      if (rule.statusCode === undefined) rule.statusCode = 200;
-      if (!Array.isArray(rule.variants)) rule.variants = [];
-      
-      // If rule already exists, update it; otherwise, create a new one
-      await setRule(rule);
-    }
-
     await refresh();
     flashStatus(`Imported ${importedRules.length} rules and ${importedGroups.length} groups`, 'success');
   } catch (e) {
     console.error('Import error:', e);
     flashStatus(`Import failed: ${e.message}`, 'error');
   }
+}
+
+// Auto-sync wrapper
+async function autoSyncRule(rule) {
+  if (rule?.syncConfig?.autoSync && rule.enabled && rule.matchType === 'substring' && rule.syncConfig.enabled) {
+    // Debounce or just fire? Fire for now.
+    // We need to fetch the latest groups to ensure we have the group name.
+    const ruleWithGroup = { ...rule };
+    await syncRules([ruleWithGroup]);
+  }
+}
+
+// Sync Logic
+
+async function syncRules(rules) {
+  const serverUrl = getServerUrl();
+  if (!serverUrl) {
+    console.warn('Cannot sync: No server URL configured');
+    return;
+  }
+
+  // Filter valid rules for sync
+  const rulesToSync = rules.filter(r => 
+    r.matchType === 'substring' && 
+    r.syncConfig?.enabled
+  );
+
+  if (rulesToSync.length === 0) return;
+
+  const groups = await getGroups();
+  const groupMap = new Map(groups.map(g => [g.id, g]));
+
+  const payloadGroups = {};
+
+  for (const rule of rulesToSync) {
+    const groupId = rule.group || 'ungrouped';
+    let groupName = 'Ungrouped Rules';
+    let groupDesc = '';
+
+    if (rule.group && groupMap.has(rule.group)) {
+      groupName = groupMap.get(rule.group).name;
+      groupDesc = groupMap.get(rule.group).description;
+    }
+
+    if (!payloadGroups[groupId]) {
+      payloadGroups[groupId] = {
+        id: groupId,
+        name: groupName,
+        description: groupDesc,
+        mocks: []
+      };
+    }
+
+    payloadGroups[groupId].mocks.push({
+      id: rule.id,
+      name: rule.name,
+      pattern: rule.pattern,
+      method: rule.syncConfig.method || 'GET',
+      body: rule.body,
+      response: rule.body,
+      statusCode: rule.statusCode,
+      matchType: 'substring',
+      enabled: rule.enabled
+    });
+  }
+
+  const payload = {
+    groups: Object.values(payloadGroups)
+  };
+
+  try {
+    const res = await fetch(`${serverUrl}/api/sync/extension`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+       throw new Error(`Server returned ${res.status}`);
+    }
+    const json = await res.json();
+    console.log('Sync success:', json);
+    flashStatus('Synced to Mockzilla Server', 'success');
+  } catch (e) {
+    console.error('Sync failed:', e);
+    flashStatus(`Sync failed: ${e.message}`, 'error');
+  }
+}
+
+async function syncToServer() {
+  const rules = await getRules();
+  // Filter for ONLY enabled sync rules
+  const syncable = rules.filter(r => r.matchType === 'substring' && r.syncConfig?.enabled);
+  if (syncable.length === 0) {
+    flashStatus('No rules enabled for sync', 'info');
+    return;
+  }
+  await syncRules(syncable);
 }
 
 export { 
@@ -253,5 +295,7 @@ export {
   collapseAll, 
   exportRules, 
   importRules,
-  duplicateRule
+  duplicateRule,
+  autoSyncRule,
+  syncToServer
 };

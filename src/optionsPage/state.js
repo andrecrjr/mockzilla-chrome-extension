@@ -14,7 +14,8 @@ let prefs = {
   sortOrder: 'recent', // 'recent' | 'az' | 'enabled'
   filterStatus: 'all', // 'all' | 'enabled' | 'disabled'
   showUngrouped: true,
-  searchQuery: ''
+  searchQuery: '',
+  serverUrl: 'http://localhost:3000' // Default Mockzilla URL
 };
 
 function loadPrefs() {
@@ -78,6 +79,8 @@ function getShowUngrouped() { return prefs.showUngrouped; }
 function setShowUngrouped(show) { prefs.showUngrouped = !!show; savePrefs(); }
 function getSearchQuery() { return prefs.searchQuery; }
 function setSearchQuery(q) { prefs.searchQuery = q || ''; savePrefs(); }
+function getServerUrl() { return prefs.serverUrl; }
+function setServerUrl(url) { prefs.serverUrl = url; savePrefs(); }
 
 // Initialize prefs on module import
 loadPrefs();
@@ -109,5 +112,7 @@ export {
   setShowUngrouped,
   getSearchQuery,
   setSearchQuery,
+  getServerUrl,
+  setServerUrl,
   applyPrefsToDOM
 };
