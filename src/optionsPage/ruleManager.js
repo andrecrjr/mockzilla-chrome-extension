@@ -254,6 +254,20 @@ async function autoSyncRule(rule) {
   }
 }
 
+async function manualSyncRule(rule) {
+    if (rule.matchType !== 'substring') {
+        flashStatus('Only substring rules can be synced', 'error');
+        return;
+    }
+    // We verify sync is enabled for the rule, but we don't check autoSync
+    if (!rule.syncConfig?.enabled) {
+         flashStatus('Enable sync for this rule first', 'error');
+         return;
+    }
+    const ruleWithGroup = { ...rule };
+    await syncRules([ruleWithGroup]);
+}
+
 // Sync Logic
 
 async function syncRules(rules) {
@@ -354,5 +368,6 @@ export {
   importRules,
   duplicateRule,
   autoSyncRule,
+  manualSyncRule,
   syncToServer
 }

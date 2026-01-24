@@ -1,7 +1,7 @@
 // UI rendering module for options page - handles all DOM rendering functions
 
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
-import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule } from './ruleManager.js';
+import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
 import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection } from './state.js';
 
@@ -377,12 +377,17 @@ function renderRuleDetails(rule) {
                 </select>
              </div>
              
-             <div class="sync-controls ${rule.syncConfig?.enabled ? '' : 'opacity-50 pointer-events-none'} transition-opacity md:col-span-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} class="checkbox rounded text-purple-600" />
-                  <span class="text-sm">Auto Sync on Save</span>
-                </label>
-                <p class="text-xs text-gray-500 mt-1 pl-6">Automatically push changes to server when you save this rule.</p>
+             <div class="sync-controls ${rule.syncConfig?.enabled ? '' : 'opacity-50 pointer-events-none'} transition-opacity md:col-span-2 flex items-center justify-between">
+                <div>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} class="checkbox rounded text-purple-600" />
+                      <span class="text-sm">Auto Sync on Save</span>
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1 pl-6">Automatically push changes to server when you save this rule.</p>
+                </div>
+                <button class="btn btn-sm btn-primary sync-now-btn" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+                   Sync Now
+                </button>
              </div>
           </div>
         </div>
@@ -641,6 +646,21 @@ function renderRuleDetails(rule) {
       flashStatus('Auto-sync settings updated', 'success');
       autoSyncRule(rule);
     });
+  }
+
+  const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
+  if (syncNowBtn) {
+     syncNowBtn.addEventListener('click', async () => {
+        const originalText = syncNowBtn.textContent;
+        syncNowBtn.disabled = true;
+        syncNowBtn.textContent = 'Syncing...';
+        try {
+            await manualSyncRule(rule);
+        } finally {
+            syncNowBtn.disabled = !rule.syncConfig?.enabled;
+            syncNowBtn.textContent = originalText;
+        }
+     });
   }
   
   // Also hook into other change events to trigger autoSync
