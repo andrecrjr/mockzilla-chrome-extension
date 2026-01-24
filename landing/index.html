@@ -1,103 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Mockzilla is a comprehensive API mocking platform with both an HTTP server for dynamic API mocking and a Chrome extension for real-time request interception. Perfect for prototyping, testing, and development.">
-    <meta name="keywords" content="API mocking, HTTP server, Chrome extension, REST, REST API, fetch interception, XMLHttpRequest, frontend development, testing, prototyping, API testing, stateful workflows, mock endpoints">
+    <meta name="description"
+        content="Mockzilla is a comprehensive API mocking platform with both an HTTP server for dynamic API mocking and a Chrome extension for real-time request interception. Perfect for prototyping, testing, and development.">
+    <meta name="keywords"
+        content="API mocking, HTTP server, Chrome extension, REST, REST API, fetch interception, XMLHttpRequest, frontend development, testing, prototyping, API testing, stateful workflows, mock endpoints">
     <meta name="author" content="Mockzilla Team">
     <meta property="og:title" content="Mockzilla - API Mocking Platform">
-    <meta property="og:description" content="A comprehensive API mocking solution with both HTTP server and Chrome extension for all your development needs.">
+    <meta property="og:description"
+        content="A comprehensive API mocking solution with both HTTP server and Chrome extension for all your development needs.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mockzilla.ac-jr.com/">
     <title>Mockzilla - API Mocking Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MNRG3E8GZ"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'G-6MNRG3E8GZ');
+        gtag('config', 'G-6MNRG3E8GZ');
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7e22ce',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        },
-                        secondary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e'
-                        },
-                        accent: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d'
-                        },
-                        dark: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827'
-                        },
-                        light: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="js/tailwind-config.js"></script>
 </head>
+
 <body class="bg-gray-50 font-sans dark:bg-gray-900 dark:text-gray-100" data-theme="light">
     <!-- Header -->
     <header class="bg-light-50 shadow-md py-4 dark:bg-[#0b0f1a] dark:border-b dark:border-[#1b2235]">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
+            <a href="index.html" class="flex items-center space-x-3">
                 <div class="bg-primary-100 rounded-xl dark:bg-purple-800/30 w-24">
                     <img src="./mockzilla.png" alt="Mockzilla Logo">
                 </div>
@@ -105,35 +41,42 @@
                     <span class="text-2xl font-bold text-dark-800 dark:text-white">Mockzilla</span>
                     <p class="text-xs text-dark-500 dark:text-purple-200">API Mocking Platform</p>
                 </div>
-            </div>
+            </a>
             <nav class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <a href="#http-server" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="#http-server"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>HTTP Server</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#chrome-extension" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="#chrome-extension"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>Chrome Extension</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="docs.html" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="docs.html"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>Documentation</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#features" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="#features"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>Features</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#how-it-works" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="#how-it-works"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>How It Works</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="https://ko-fi.com/andrecrjr" target="_blank" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                <a href="https://ko-fi.com/andrecrjr" target="_blank"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>Donate</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
             </nav>
             <div class="flex items-center gap-2">
-                <a href="https://github.com/andrecrjr/mockzilla" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+                <a href="https://github.com/andrecrjr/mockzilla"
+                    class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
                     <i class="fab fa-github mr-2"></i>
                     <span>Get Started</span>
                 </a>
@@ -142,23 +85,28 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="py-16 md:py-24 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
+    <section
+        class="py-16 md:py-24 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-12 md:mb-0">
                 <h1 class="text-4xl md:text-5xl font-bold text-dark-800 leading-tight mb-4 dark:text-white">
                     Next-Gen <span class="text-primary-600 dark:text-purple-400">API Mocking</span> Platform
                 </h1>
                 <p class="text-lg text-dark-600 mb-8 max-w-lg dark:text-gray-300">
-                    Mockzilla provides a comprehensive API mocking solution with both a Chrome Extension for real-time interception and a powerful HTTP Server for dynamic API mocking.
+                    Mockzilla provides a comprehensive API mocking solution with both a Chrome Extension for real-time
+                    interception and a powerful HTTP Server for dynamic API mocking.
                 </p>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="https://github.com/andrecrjr/mockzilla" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
+                    <a href="https://github.com/andrecrjr/mockzilla"
+                        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
                         <i class="fab fa-github mr-2"></i>Get HTTP Server
                     </a>
-                    <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0" class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300">
+                    <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0"
+                        class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium text-center transition duration-300">
                         <i class="fab fa-chrome mr-2"></i>Add to Chrome
                     </a>
-                    <a href="#http-server" class="border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-6 py-3 rounded-lg font-medium text-center transition duration-300 dark:border-purple-500 dark:text-purple-400 dark:hover:bg-purple-900/20">
+                    <a href="#http-server"
+                        class="border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-6 py-3 rounded-lg font-medium text-center transition duration-300 dark:border-purple-500 dark:text-purple-400 dark:hover:bg-purple-900/20">
                         Learn More
                     </a>
                 </div>
@@ -171,12 +119,15 @@
                             <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla HTTP Server</div>
+                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla HTTP Server
+                            </div>
                         </div>
-                        <div class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300">
+                        <div
+                            class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300">
                             <div class="mb-1 text-green-400 dark:text-green-400">GET /api/users → {"users": [...]}</div>
                             <div class="mb-1 text-green-400 dark:text-green-400">POST /api/products → {"id": 123}</div>
-                            <div class="text-green-400 dark:text-green-400">PUT /api/orders/123 → {"status": "shipped"}</div>
+                            <div class="text-green-400 dark:text-green-400">PUT /api/orders/123 → {"status": "shipped"}
+                            </div>
                         </div>
                         <div class="mt-4 text-center text-dark-600 dark:text-gray-400 text-sm">
                             <i class="fas fa-server mr-2"></i>Host your own mock endpoints
@@ -189,9 +140,11 @@
                             <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla Extension</div>
+                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla Extension
+                            </div>
                         </div>
-                        <div class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300">
+                        <div
+                            class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300">
                             <div class="mb-1 text-green-400 dark:text-green-400">GET /api/users → Mock Response</div>
                             <div class="mb-1 text-green-400 dark:text-green-400">GET /api/products → Mock Response</div>
                             <div class="text-green-400 dark:text-green-400">POST /api/login → Mock Response</div>
@@ -206,7 +159,8 @@
     </section>
 
     <!-- Quick Installation Section -->
-    <section class="py-12 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-purple-600 dark:to-purple-800 text-white">
+    <section
+        class="py-12 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-purple-600 dark:to-purple-800 text-white">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-10">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Quick Installation</h2>
@@ -224,7 +178,8 @@
                     <div class="bg-black/30 rounded-lg p-4 font-mono text-sm mb-4 overflow-x-auto">
                         <div class="text-green-300">docker run -p 36666:36666 andrecrjr/mockzilla:latest</div>
                     </div>
-                    <a href="https://github.com/andrecrjr/mockzilla" class="inline-block bg-white text-primary-600 hover:bg-primary-50 px-4 py-2 rounded-lg font-medium transition duration-300 text-center w-full">
+                    <a href="https://github.com/andrecrjr/mockzilla"
+                        class="inline-block bg-white text-primary-600 hover:bg-primary-50 px-4 py-2 rounded-lg font-medium transition duration-300 text-center w-full">
                         <i class="fab fa-github mr-2"></i>Get HTTP Server
                     </a>
                 </div>
@@ -239,14 +194,16 @@
                     <div class="bg-black/30 rounded-lg p-4 font-mono text-sm mb-4 overflow-x-auto">
                         <div class="text-green-300">Add to Chrome in one click</div>
                     </div>
-                    <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0" class="inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition duration-300 text-center w-full">
+                    <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0"
+                        class="inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition duration-300 text-center w-full">
                         <i class="fab fa-chrome mr-2"></i>Add to Chrome
                     </a>
                 </div>
             </div>
 
             <div class="text-center mt-8">
-                <p class="text-lg">Your server will be available at <a href="http://localhost:36666" class="underline hover:text-primary-200">http://localhost:36666</a></p>
+                <p class="text-lg">Your server will be available at <a href="http://localhost:36666"
+                        class="underline hover:text-primary-200">http://localhost:36666</a></p>
             </div>
         </div>
     </section>
@@ -257,15 +214,19 @@
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-dark-800 mb-4 dark:text-white">Mockzilla HTTP Server</h2>
                 <p class="text-lg text-dark-600 dark:text-gray-300">
-                    A powerful Next.js application with PostgreSQL database that provides dynamic API mocking with advanced features like stateful workflows and AI integration.
+                    A powerful Next.js application with PostgreSQL database that provides dynamic API mocking with
+                    advanced features like stateful workflows and AI integration.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <h3 class="text-2xl font-semibold text-dark-800 mb-4 dark:text-white">Dynamic Mocks & Stateful Workflows</h3>
+                    <h3 class="text-2xl font-semibold text-dark-800 mb-4 dark:text-white">Dynamic Mocks & Stateful
+                        Workflows</h3>
                     <p class="text-dark-600 mb-4 dark:text-gray-300">
-                        Generate realistic data using JSON Schema and Faker. Simulate complex user flows with persistent state and logic between requests. Each scenario gets a transient database to push, update, and query items during a session.
+                        Generate realistic data using JSON Schema and Faker. Simulate complex user flows with persistent
+                        state and logic between requests. Each scenario gets a transient database to push, update, and
+                        query items during a session.
                     </p>
 
                     <div class="space-y-4">
@@ -285,7 +246,8 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-dark-800 dark:text-white">MCP Integration</h4>
-                                <p class="text-dark-600 dark:text-gray-300">First-class support for AI agents to control your mocks</p>
+                                <p class="text-dark-600 dark:text-gray-300">First-class support for AI agents to control
+                                    your mocks</p>
                             </div>
                         </div>
 
@@ -295,18 +257,22 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-dark-800 dark:text-white">Workflow Scenarios</h4>
-                                <p class="text-dark-600 dark:text-gray-300">Complex stateful scenarios with transitions and conditions</p>
+                                <p class="text-dark-600 dark:text-gray-300">Complex stateful scenarios with transitions
+                                    and conditions</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-8">
                         <h3 class="text-xl font-semibold text-dark-800 mb-3 dark:text-white">Quick Installation</h3>
-                        <div class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300 overflow-x-auto">
-                            <div class="text-green-400 dark:text-green-400">docker run -p 36666:36666 andrecrjr/mockzilla:latest</div>
+                        <div
+                            class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-purple-300 overflow-x-auto">
+                            <div class="text-green-400 dark:text-green-400">docker run -p 36666:36666
+                                andrecrjr/mockzilla:latest</div>
                         </div>
                         <p class="mt-3 text-sm text-dark-600 dark:text-gray-300">
-                            Your mock server will be available at <a href="http://localhost:36666" class="text-primary-600 dark:text-purple-400 hover:underline">http://localhost:36666</a>
+                            Your mock server will be available at <a href="http://localhost:36666"
+                                class="text-primary-600 dark:text-purple-400 hover:underline">http://localhost:36666</a>
                         </p>
                     </div>
                 </div>
@@ -316,9 +282,11 @@
                         <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                         <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                        <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla HTTP Server UI</div>
+                        <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla HTTP Server UI
+                        </div>
                     </div>
-                    <div class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-green-400">
+                    <div
+                        class="bg-dark-800 rounded-lg p-4 font-mono text-sm text-primary-400 dark:bg-gray-800 dark:text-green-400">
                         <div class="mb-2 text-green-400 dark:text-green-400">{</div>
                         <div class="ml-4 text-green-400 dark:text-green-400">"users": [</div>
                         <div class="ml-8 text-green-400 dark:text-green-400">{</div>
@@ -345,12 +313,15 @@
     </section>
 
     <!-- Chrome Extension Section -->
-    <section id="chrome-extension" class="py-16 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
+    <section id="chrome-extension"
+        class="py-16 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-dark-800 mb-4 dark:text-white">Mockzilla Chrome Extension</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-dark-800 mb-4 dark:text-white">Mockzilla Chrome Extension
+                </h2>
                 <p class="text-lg text-dark-600 dark:text-gray-300">
-                    A browser extension that intercepts fetch() and XMLHttpRequest calls in real-time, replacing responses instantly with your mock data.
+                    A browser extension that intercepts fetch() and XMLHttpRequest calls in real-time, replacing
+                    responses instantly with your mock data.
                 </p>
             </div>
 
@@ -361,7 +332,8 @@
                             <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                             <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla Extension Popup</div>
+                            <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla Extension
+                                Popup</div>
                         </div>
                         <div class="space-y-3">
                             <div class="border border-light-200 rounded p-3 dark:border-[#1b2235]">
@@ -378,7 +350,8 @@
                                 <div class="text-xs mt-1 dark:text-gray-300">{"products": []}</div>
                                 <div class="text-xs text-primary-600 mt-1 dark:text-purple-400">Hits: 2</div>
                             </div>
-                            <button class="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 transition dark:bg-purple-600 dark:hover:bg-purple-700">
+                            <button
+                                class="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 transition dark:bg-purple-600 dark:hover:bg-purple-700">
                                 Add Rule
                             </button>
                         </div>
@@ -386,9 +359,12 @@
                 </div>
 
                 <div class="order-1 lg:order-2">
-                    <h3 class="text-2xl font-semibold text-dark-800 mb-4 dark:text-white">Real-time Request Interception</h3>
+                    <h3 class="text-2xl font-semibold text-dark-800 mb-4 dark:text-white">Real-time Request Interception
+                    </h3>
                     <p class="text-dark-600 mb-4 dark:text-gray-300">
-                        The Chrome Extension patches fetch() and XMLHttpRequest in the page context to intercept requests and replace responses with your defined mock data. Perfect for situations where you're working with an existing application but need different responses from external APIs.
+                        The Chrome Extension patches fetch() and XMLHttpRequest in the page context to intercept
+                        requests and replace responses with your defined mock data. Perfect for situations where you're
+                        working with an existing application but need different responses from external APIs.
                     </p>
 
                     <div class="space-y-4">
@@ -426,7 +402,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Features Section -->
     <section id="features" class="py-16 bg-light-50 dark:bg-gray-800">
         <div class="container mx-auto px-4">
@@ -437,57 +413,75 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-bolt text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Real-time Interception</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Intercepts fetch() and XMLHttpRequest calls in real-time as they happen on the page, replacing responses instantly with your mock data.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Intercepts fetch() and XMLHttpRequest calls in real-time
+                        as they happen on the page, replacing responses instantly with your mock data.</p>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-sliders-h text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Flexible Matching</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Choose between substring and exact URL matching to target specific API endpoints with precision.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Choose between substring and exact URL matching to
+                        target specific API endpoints with precision.</p>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-chart-line text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Hit Tracking</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Monitor per-tab hit counters and last matched URLs to verify your mocks are working correctly.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Monitor per-tab hit counters and last matched URLs to
+                        verify your mocks are working correctly.</p>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-code text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">JSON & Text Support</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Support for both JSON and plain text response bodies with appropriate Content-Type headers.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Support for both JSON and plain text response bodies
+                        with appropriate Content-Type headers.</p>
                 </div>
 
                 <!-- Feature 5 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-database text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Stateful Workflows</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Create complex user flows with persistent state and database between requests.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Create complex user flows with persistent state and
+                        database between requests.</p>
                 </div>
 
                 <!-- Feature 6 -->
-                <div class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
+                <div
+                    class="bg-light-50 p-6 rounded-xl border border-light-200 hover:shadow-lg transition duration-300 dark:bg-[#0f1424] dark:border-[#1b2235]">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 dark:bg-purple-700/30">
                         <i class="fas fa-robot text-primary-600 text-xl dark:text-purple-300"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">MCP Integration</h3>
-                    <p class="text-dark-600 dark:text-gray-300">First-class support for AI agents to control your mock endpoints.</p>
+                    <p class="text-dark-600 dark:text-gray-300">First-class support for AI agents to control your mock
+                        endpoints.</p>
                 </div>
             </div>
         </div>
@@ -505,62 +499,82 @@
                 <div class="md:w-2/5 mb-10 md:mb-0">
                     <div class="bg-white p-6 rounded-xl shadow-lg dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                         <div class="flex items-center mb-4">
-                            <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">1</div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">
+                                1</div>
                             <h3 class="text-xl font-semibold text-dark-800 dark:text-white">Choose Your Tool</h3>
                         </div>
-                        <p class="text-dark-600 mb-3 dark:text-gray-300">Select between HTTP Server for hosted endpoints or Extension for in-browser interception</p>
+                        <p class="text-dark-600 mb-3 dark:text-gray-300">Select between HTTP Server for hosted endpoints
+                            or Extension for in-browser interception</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-lg mt-6 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                    <div
+                        class="bg-white p-6 rounded-xl shadow-lg mt-6 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                         <div class="flex items-center mb-4">
-                            <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">2</div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">
+                                2</div>
                             <h3 class="text-xl font-semibold text-dark-800 dark:text-white">Configure Mocks</h3>
                         </div>
-                        <p class="text-dark-600 dark:text-gray-300">Define URL patterns, response bodies, and HTTP methods for your mock endpoints</p>
+                        <p class="text-dark-600 dark:text-gray-300">Define URL patterns, response bodies, and HTTP
+                            methods for your mock endpoints</p>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-lg mt-6 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                    <div
+                        class="bg-white p-6 rounded-xl shadow-lg mt-6 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                         <div class="flex items-center mb-4">
-                            <div class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">3</div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center mr-3 dark:bg-purple-600">
+                                3</div>
                             <h3 class="text-xl font-semibold text-dark-800 dark:text-white">Use in Development</h3>
                         </div>
-                        <p class="text-dark-600 dark:text-gray-300">Integrate with your development workflow to mock APIs during testing</p>
+                        <p class="text-dark-600 dark:text-gray-300">Integrate with your development workflow to mock
+                            APIs during testing</p>
                     </div>
                 </div>
 
                 <div class="md:w-1/2 flex justify-center">
                     <div class="relative">
-                        <div class="bg-white p-6 rounded-xl shadow-lg w-80 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                        <div
+                            class="bg-white p-6 rounded-xl shadow-lg w-80 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                             <div class="flex items-center mb-4">
                                 <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                                 <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                                 <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                                <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla Workflow</div>
+                                <div class="text-sm font-medium text-dark-700 ml-4 dark:text-gray-300">Mockzilla
+                                    Workflow</div>
                             </div>
                             <div class="space-y-3">
-                                <div class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
+                                <div
+                                    class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
                                     <span class="text-dark-800 dark:text-white">HTTP Server</span>
                                     <i class="fas fa-server text-primary-600 dark:text-purple-400"></i>
                                 </div>
-                                <div class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
+                                <div
+                                    class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
                                     <span class="text-dark-800 dark:text-white">Chrome Extension</span>
                                     <i class="fab fa-chrome text-primary-600 dark:text-purple-400"></i>
                                 </div>
-                                <div class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
+                                <div
+                                    class="flex items-center justify-between p-2 bg-primary-50 dark:bg-purple-900/20 rounded">
                                     <span class="text-dark-800 dark:text-white">Stateful Workflows</span>
                                     <i class="fas fa-project-diagram text-primary-600 dark:text-purple-400"></i>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="hidden md:block absolute -top-6 -right-6 w-32 h-32 bg-primary-200 rounded-full opacity-20"></div>
-                        <div class="hidden md:block absolute -bottom-6 -left-6 w-24 h-24 bg-secondary-200 rounded-full opacity-20"></div>
+                        <div
+                            class="hidden md:block absolute -top-6 -right-6 w-32 h-32 bg-primary-200 rounded-full opacity-20">
+                        </div>
+                        <div
+                            class="hidden md:block absolute -bottom-6 -left-6 w-24 h-24 bg-secondary-200 rounded-full opacity-20">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
+
     <!-- Footer -->
     <footer class="bg-dark-800 text-white pt-16 pb-8 dark:bg-gray-900">
         <div class="container mx-auto px-4">
@@ -570,9 +584,11 @@
                         <i class="fas fa-magic text-primary-400 text-2xl dark:text-purple-400"></i>
                         <span class="text-xl font-bold">Mockzilla</span>
                     </div>
-                    <p class="text-dark-400 mb-4 dark:text-gray-400">A comprehensive API mocking platform with both an HTTP server for dynamic endpoints and a Chrome extension for real-time request interception.</p>
+                    <p class="text-dark-400 mb-4 dark:text-gray-400">A comprehensive API mocking platform with both an
+                        HTTP server for dynamic endpoints and a Chrome extension for real-time request interception.</p>
                     <div class="flex space-x-4">
-                        <a href="https://github.com/andrecrjr/mockzilla" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">
+                        <a href="https://github.com/andrecrjr/mockzilla"
+                            class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">
                             <i class="fab fa-github text-xl"></i>
                         </a>
                     </div>
@@ -585,14 +601,16 @@
                             <i class="fas fa-server mr-2 mt-1 text-primary-400 dark:text-purple-400"></i>
                             <div>
                                 <h4 class="font-medium dark:text-gray-300">HTTP Server</h4>
-                                <p class="text-sm text-dark-400 dark:text-gray-400">Dynamic API mocking with stateful workflows</p>
+                                <p class="text-sm text-dark-400 dark:text-gray-400">Dynamic API mocking with stateful
+                                    workflows</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <i class="fab fa-chrome mr-2 mt-1 text-primary-400 dark:text-purple-400"></i>
                             <div>
                                 <h4 class="font-medium dark:text-gray-300">Chrome Extension</h4>
-                                <p class="text-sm text-dark-400 dark:text-gray-400">Real-time request interception in browser</p>
+                                <p class="text-sm text-dark-400 dark:text-gray-400">Real-time request interception in
+                                    browser</p>
                             </div>
                         </li>
                     </ul>
@@ -600,19 +618,25 @@
 
                 <div class="md:w-1/3">
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Support the Project</h3>
-                    <p class="text-dark-400 mb-4 dark:text-gray-400">Help us maintain and improve Mockzilla by supporting our work.</p>
-                    <a href="https://ko-fi.com/andrecrjr" target="_blank" class="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-300">
+                    <p class="text-dark-400 mb-4 dark:text-gray-400">Help us maintain and improve Mockzilla by
+                        supporting our work.</p>
+                    <a href="https://ko-fi.com/andrecrjr" target="_blank"
+                        class="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-300">
                         <i class="fas fa-coffee mr-2"></i>Buy Me a Coffee
                     </a>
                     <div class="space-y-2 mt-4">
-                        <a href="docs.html" class="block px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition duration-300">
+                        <a href="docs.html"
+                            class="block px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition duration-300">
                             <i class="fas fa-book mr-2"></i>Documentation
                         </a>
-                        <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-300">
+                        <a href="https://chromewebstore.google.com/detail/gpbfcijfelgnaabjodgifeopbmnbjpnk/preview?hl=pt-BR&authuser=0"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-300">
                             <i class="fab fa-chrome mr-2"></i>Add to Chrome
                         </a>
                     </div>
-                    <p class="text-dark-400 text-sm mt-4">Created by <a href="https://www.ac-jr.com" target="_blank" class="text-primary-400 hover:text-primary-300">AC-JR</a></p>
+                    <p class="text-dark-400 text-sm mt-4">Created by <a href="https://www.ac-jr.com" target="_blank"
+                            class="text-primary-400 hover:text-primary-300">AC-JR</a></p>
                 </div>
             </div>
 
@@ -658,7 +682,7 @@
         }
 
         // Initialize theme when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initTheme();
 
             // Add event listener to the theme toggle button
@@ -672,4 +696,5 @@
     <script src="dynamicHeadline.js"></script>
     <script src="testApi.js"></script>
 </body>
+
 </html>
