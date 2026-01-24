@@ -236,7 +236,6 @@ function renderRuleDetails(rule) {
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
            <h2 class="text-lg font-medium line-clamp-1">Rule Details</h2>
-           <span class="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded border border-purple-200">BETA</span>
         </div>
         <div class="flex items-center gap-2">
           <!-- Multi-Action Rule Header Controls -->
