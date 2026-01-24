@@ -276,7 +276,7 @@ async function syncRules(rules) {
 
   // Filter valid rules for sync
   const rulesToSync = rules.filter(r => 
-    r.syncConfig?.enabled
+    r.syncConfig?.enabled && r.group && r.group !== 'ungrouped'
   );
 
   if (rulesToSync.length === 0) return;
