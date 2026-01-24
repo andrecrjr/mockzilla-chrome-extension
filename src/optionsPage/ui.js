@@ -755,4 +755,87 @@ function renderGroupDetails(group) {
   });
 }
 
-export { renderRulesList, renderRuleDetails, renderGroupDetails, groupExpandedState };
+function renderFolderImportModal(foldersData, onPageChange, onImport) {
+  let modal = document.getElementById('serverImportModal');
+  if (!modal) {
+    // Create modal if it doesn't exist
+    modal = document.createElement('div');
+    modal.id = 'serverImportModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50';
+    modal.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Folder from Server</h3>
+          <button id="closeServerImport" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1" id="serverFoldersList">
+          <!-- Folders render here -->
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                 <button id="serverFolderPrev" class="btn btn-sm btn-ghost" disabled>Previous</button>
+                 <span id="serverFolderPageInfo" class="text-xs text-gray-500">Page 1</span>
+                 <button id="serverFolderNext" class="btn btn-sm btn-ghost" disabled>Next</button>
+            </div>
+          <button id="cancelServerImport" class="btn btn-ghost mr-2">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Bind close events
+    document.getElementById('closeServerImport').addEventListener('click', () => modal.classList.add('hidden'));
+    document.getElementById('cancelServerImport').addEventListener('click', () => modal.classList.add('hidden'));
+  }
+  
+  // Render Content
+  const listContainer = document.getElementById('serverFoldersList');
+  const prevBtn = document.getElementById('serverFolderPrev');
+  const nextBtn = document.getElementById('serverFolderNext');
+  const pageInfo = document.getElementById('serverFolderPageInfo');
+
+  if (!foldersData) {
+      listContainer.innerHTML = '<div class="text-center p-4 text-gray-500">Loading...</div>';
+      return;
+  }
+
+  // Clear old listeners by cloning (simple way to reset without complex cleanup)
+  const newPrev = prevBtn.cloneNode(true);
+  prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+  const newNext = nextBtn.cloneNode(true);
+  nextBtn.parentNode.replaceChild(newNext, nextBtn);
+
+  const { data, meta } = foldersData;
+  listContainer.innerHTML = '';
+  
+  if (data.length === 0) {
+      listContainer.innerHTML = '<div class="text-center p-4 text-gray-500">No folders found on server.</div>';
+  } else {
+      data.forEach(folder => {
+          const item = document.createElement('div');
+          item.className = 'p-3 border rounded border-gray-200 dark:border-gray-700 mb-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center group';
+          item.innerHTML = `
+            <div class="min-w-0">
+                <div class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">${escapeHtml(folder.name)}</div>
+                <div class="text-xs text-gray-500 truncate">${escapeHtml(folder.description || 'No description')}</div>
+            </div>
+            <button class="btn btn-sm btn-primary opacity-0 group-hover:opacity-100 transition-opacity">Import</button>
+          `;
+          item.addEventListener('click', () => onImport(folder.id));
+          listContainer.appendChild(item);
+      });
+  }
+
+  // Pagination Logic
+  pageInfo.textContent = `Page ${meta.page} of ${meta.totalPages}`;
+  newPrev.disabled = meta.page <= 1;
+  newNext.disabled = meta.page >= meta.totalPages;
+
+  newPrev.addEventListener('click', () => onPageChange(meta.page - 1));
+  newNext.addEventListener('click', () => onPageChange(meta.page + 1));
+}
+
+export { renderRulesList, renderRuleDetails, renderGroupDetails, groupExpandedState, renderFolderImportModal };
+

@@ -369,5 +369,77 @@ export {
   duplicateRule,
   autoSyncRule,
   manualSyncRule,
-  syncToServer
+  syncToServer,
+  fetchServerFolders,
+  importFolderFromServer
+}
+
+async function fetchServerFolders(page = 1, limit = 10) {
+    const serverUrl = getServerUrl();
+    if (!serverUrl) {
+      flashStatus('No server URL configured', 'error');
+      return null;
+    }
+
+    try {
+        const res = await fetch(`${serverUrl}/api/folders?page=${page}&limit=${limit}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server returned ${res.status}`);
+        }
+
+        const json = await res.json();
+        return json; // Expecting { data: [...], meta: { ... } }
+    } catch (e) {
+        console.error('Fetch server folders failed:', e);
+        flashStatus(`Fetch fail: ${e.message}`, 'error');
+        return null;
+    }
+}
+
+async function importFolderFromServer(folderId) {
+    const serverUrl = getServerUrl();
+    if (!serverUrl) {
+        flashStatus('No server URL configured', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${serverUrl}/api/folders/${folderId}/to-extension`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server returned ${res.status}`);
+        }
+
+        const json = await res.json();
+        // json should be { groups: [{ mocks: [...] }] } (SyncPayload)
+        
+        // Ensure default matchType is substring if missing
+        if (json.groups) {
+             json.groups.forEach(group => {
+                 if (group.mocks) {
+                     group.mocks.forEach(mock => {
+                         if (!mock.matchType) mock.matchType = 'substring';
+                     });
+                 }
+             });
+        }
+
+        // Reuse importRules logic
+        // We need to stringify it because importRules expects a JSON string
+        await importRules(JSON.stringify(json));
+        
+        flashStatus('Folder imported successfully', 'success');
+        return true;
+    } catch (e) {
+        console.error('Import folder failed:', e);
+        flashStatus(`Import failed: ${e.message}`, 'error');
+        return false;
+    }
 }

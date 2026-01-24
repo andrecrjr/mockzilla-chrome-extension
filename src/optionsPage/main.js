@@ -1,7 +1,8 @@
 // Main module for options page - initializes the UI and handles event listeners
 
-import { addRule, addGroup, expandAll, collapseAll, exportRules, refresh, syncToServer } from './ruleManager.js';
+import { addRule, addGroup, expandAll, collapseAll, exportRules, refresh, syncToServer, fetchServerFolders, importFolderFromServer } from './ruleManager.js';
 import { importRules } from './ruleManager.js';
+import { renderFolderImportModal } from './ui.js';
 import { setEnabled, getEnabled } from './storage.js';
 import { flashStatus, debounce } from './utils.js';
 import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped, getServerUrl, setServerUrl } from './state.js';
@@ -110,6 +111,36 @@ function initializeEventListeners() {
   const importIcon = document.getElementById('importIconBtn');
   if (importIcon) {
     importIcon.addEventListener('click', () => { document.getElementById('importModal').classList.remove('hidden'); });
+  }
+
+  // Server Import Functionality
+  const importServerIcon = document.getElementById('importFromServerIconBtn');
+  if (importServerIcon) {
+      importServerIcon.addEventListener('click', async () => {
+          const modal = document.getElementById('serverImportModal');
+          if (modal) modal.classList.remove('hidden');
+          
+          await loadServerFolders(1);
+      });
+  }
+
+  async function loadServerFolders(page) {
+      // Show loading state
+      renderFolderImportModal(null, null, null);
+      
+      const result = await fetchServerFolders(page, 10);
+      if (result) {
+          renderFolderImportModal(result, loadServerFolders, async (folderId) => {
+              const success = await importFolderFromServer(folderId);
+              if (success) {
+                   document.getElementById('serverImportModal').classList.add('hidden');
+                   await refresh();
+              }
+          });
+      } else {
+          // If fetch fails (null), perhaps render an error state or close?
+          // For now, renderFolderImportModal(null) shows Loading... but we might want an error state in UI or just flashStatus (handled in fetchServerFolders)
+      }
   }
 
   document.getElementById('cancelImport').addEventListener('click', () => {
