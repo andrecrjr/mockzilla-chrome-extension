@@ -125,16 +125,24 @@
                     <span>Overview</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
+                <a href="#installation" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Installation</span>
+                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
+                <a href="#mcp" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>MCP Integration</span>
+                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
+                <a href="#extension-sync" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Extension Sync</span>
+                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
                 <a href="#api" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>API Reference</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
                 <a href="#workflows" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
                     <span>Workflows</span>
-                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                </a>
-                <a href="#mcp" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>MCP Integration</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
             </nav>
@@ -233,6 +241,15 @@
                 </div>
             </div>
 
+        </section>
+
+        <!-- Installation Section -->
+        <section id="installation" class="mb-16">
+            <div class="flex items-center mb-8">
+                <i class="fas fa-download text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Installation</h2>
+            </div>
+
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Quick Start</h3>
                 
@@ -256,6 +273,33 @@
                     bun run db:push
                     <div class="text-green-400">// Start development server</div>
                     bun run dev
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Installing Agent Skills</h3>
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    Mockzilla provides specialized agent skills that enhance AI capabilities for mock management and workflow design.
+                </p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Available Skills</h4>
+                <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300 mb-4">
+                    <li><strong>mockzilla-mock-maker</strong> - Expert for creating high-quality, stateless mocks and dynamic schemas</li>
+                    <li><strong>mockzilla-workflow-architect</strong> - Specialized for designing complex, stateful workflows and transitions</li>
+                </ul>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Installation Steps</h4>
+                <ol class="list-decimal pl-6 space-y-2 text-dark-600 dark:text-gray-300">
+                    <li>Navigate to your project directory</li>
+                    <li>Copy the <code>.agent/skills</code> folder from the Mockzilla repository to your project's <code>.agent</code> directory</li>
+                    <li>The skills will automatically be available to your AI agent when using Mockzilla</li>
+                </ol>
+
+                <div class="mt-4 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">Pro Tip</h5>
+                    <p class="text-primary-700 dark:text-purple-300 text-sm">
+                        Skills are invoked automatically by your AI agent when working with Mockzilla. Use the mock-maker skill for data generation and the workflow-architect skill for stateful business logic.
+                    </p>
                 </div>
             </div>
         </section>
@@ -846,6 +890,23 @@
                     This enables AI-assisted development where AI agents can create and manage mocks programmatically.
                 </p>
                 
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">MCP Server Setup</h4>
+                <p class="text-dark-600 dark:text-gray-300 mb-3">
+                    Add this configuration to your AI agent's MCP settings (e.g., in <code>mcp.json</code> or IDE settings):
+                </p>
+                <div class="code-block mb-4">
+                    {
+                    &nbsp;&nbsp;"mockzilla": {
+                    &nbsp;&nbsp;&nbsp;&nbsp;"command": "npx",
+                    &nbsp;&nbsp;&nbsp;&nbsp;"args": [
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"-y",
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mcp-remote",
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"http://localhost:36666/api/mcp"
+                    &nbsp;&nbsp;&nbsp;&nbsp;]
+                    &nbsp;&nbsp;}
+                    }
+                </div>
+                
                 <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Available MCP Tools</h4>
                 <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
                     <li><code>create_mock</code> - Create new mock endpoints with specified responses</li>
@@ -858,88 +919,97 @@
                 </ul>
                 
                 <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
-                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">MCP Configuration</h4>
+                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">Quick Start</h4>
                     <p class="text-primary-700 dark:text-purple-300">
-                        To connect an AI agent to Mockzilla, configure the MCP client with the endpoint:
+                        Once configured, your AI agent can interact with Mockzilla using natural language commands like "Create a mock for GET /users" or "Set up a login workflow".
                     </p>
-                    <div class="code-block mt-2">
-                        http://localhost:36666/api/mcp
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Configuration Section -->
-        <section id="configuration" class="mb-16">
+        <!-- Extension Sync Section -->
+        <section id="extension-sync" class="mb-16">
             <div class="flex items-center mb-8">
-                <i class="fas fa-cog text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Configuration</h2>
+                <i class="fas fa-sync text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">Chrome Extension Sync</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Environment Variables</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4 text-dark-800 dark:text-white">Database Configuration</h4>
-                        <div class="code-block text-sm">
-                            POSTGRES_USER=mockzilla<br>
-                            POSTGRES_PASSWORD=mockzilla<br>
-                            POSTGRES_DB=mockzilla<br>
-                            DATABASE_URL=postgresql://mockzilla:mockzilla@postgres:5432/mockzilla
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Server-Extension Synchronization</h3>
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    Mockzilla provides seamless synchronization between the Mockzilla Chrome Extension and the server, allowing you to share mocks across your team and environments.
+                </p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">How It Works</h4>
+                <div class="space-y-3 text-dark-600 dark:text-gray-300">
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">1.</span>
+                        <div>
+                            <strong>Enable Sync in Extension:</strong> Navigate to the extension options page and enable "Mockzilla Server Sync" for any group you want to sync.
                         </div>
                     </div>
-
-                    <div>
-                        <h4 class="text-lg font-semibold mb-4 text-dark-800 dark:text-white">Application Configuration</h4>
-                        <div class="code-block text-sm">
-                            NODE_ENV=development<br>
-                            NEXT_TELEMETRY_DISABLED=1<br>
-                            PORT=36666
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">2.</span>
+                        <div>
+                            <strong>Configure Server URL:</strong> Set your Mockzilla server URL (default: <code>http://localhost:36666</code>).
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">3.</span>
+                        <div>
+                            <strong>Sync Your Mocks:</strong> Click "Sync Now" to push your extension mocks to the server. They will appear as folders with "-extension" suffix.
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">4.</span>
+                        <div>
+                            <strong>Share with Team:</strong> Team members can use the same Mockzilla server to access synced mocks and maintain consistency.
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">MCP Server Configuration</h3>
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-dark-800 dark:text-white">Sync API Endpoint</h4>
+                <div class="code-block mb-4">
+                    POST /api/sync/extension
+                </div>
+                <p class="text-dark-600 dark:text-gray-300 mb-3">
+                    The sync endpoint accepts a JSON payload with your extension groups and mocks. It automatically creates or updates folders and mocks on the server.
+                </p>
 
-                <div class="mb-6">
-                    <h4 class="text-xl font-semibold mb-2 text-dark-800 dark:text-white">Integration with AI Agents</h4>
-                    <p class="text-dark-600 dark:text-gray-300">
-                        Add this configuration to your project's settings to connect Mockzilla with the MCP server:
-                    </p>
-
-                    <div class="code-block mt-3">
-                        {<br>
-                        &nbsp;&nbsp;"mockzilla": {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"command": "npx",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;"args": [<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"-y",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mcp-remote",<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"http://localhost:36666/api/mcp" // MCP server endpoint<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;]<br>
-                        &nbsp;&nbsp;}<br>
-                        }
-                    </div>
-                    <p class="text-dark-600 dark:text-gray-300 mt-3">
-                        This configuration enables the MCP server to handle advanced tools with AI on port 36666 (locally) or using your own DNS.
-                    </p>
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Request Format</h4>
+                <div class="code-block text-sm">
+                    {<br>
+                    &nbsp;&nbsp;"groups": [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mocks": [<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pattern": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"response": "string",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"statusCode": "number",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"matchType": "exact|substring",<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"enabled": "boolean"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;]<br>
+                    }
                 </div>
 
-                <div>
-                    <h4 class="text-xl font-semibold mb-2 text-dark-800 dark:text-white">Available MCP Tools</h4>
-                    <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300">
-                        <li><code>create_mock</code> - Create new endpoints</li>
-                        <li><code>create_workflow_transition</code> - Define workflow rules</li>
-                        <li><code>inspect_workflow_state</code> - Read scenario state</li>
-                        <li><code>reset_workflow_state</code> - Clear scenario data</li>
-                        <li><code>create_schema_mock</code> - Create mocks with dynamic JSON schema</li>
-                        <li><code>update_mock</code> - Update existing mock configurations</li>
-                    </ul>
+                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">Auto Sync</h4>
+                    <p class="text-primary-700 dark:text-purple-300 text-sm">
+                        When auto-sync is enabled in the extension, changes are automatically synchronized to the server, ensuring your team always has the latest mock definitions.
+                    </p>
                 </div>
             </div>
         </section>
+
+    
     </main>
 
     <!-- Footer -->
@@ -963,9 +1033,11 @@
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Documentation Sections</h3>
                     <ul class="space-y-2">
                         <li><a href="#overview" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Overview</a></li>
+                        <li><a href="#installation" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Installation</a></li>
+                        <li><a href="#mcp" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">MCP Integration</a></li>
+                        <li><a href="#extension-sync" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Extension Sync</a></li>
                         <li><a href="#api" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">API Reference</a></li>
                         <li><a href="#workflows" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Workflow Scenarios</a></li>
-                        <li><a href="#mcp" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">MCP Integration</a></li>
                     </ul>
                 </div>
 
