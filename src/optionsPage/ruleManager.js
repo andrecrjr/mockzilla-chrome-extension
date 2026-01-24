@@ -418,22 +418,34 @@ async function importFolderFromServer(folderId) {
         }
 
         const json = await res.json();
-        // json should be { groups: [{ mocks: [...] }] } (SyncPayload)
+        // json is { groups: [{ mocks: [...] }] } (SyncPayload)
         
-        // Ensure default matchType is substring if missing
+        const rules = [];
+        const groups = [];
+
         if (json.groups) {
              json.groups.forEach(group => {
-                 if (group.mocks) {
-                     group.mocks.forEach(mock => {
+                 const { mocks, ...groupData } = group;
+                 groups.push(groupData);
+
+                 if (mocks) {
+                     mocks.forEach(mock => {
                          if (!mock.matchType) mock.matchType = 'substring';
+                         mock.groupId = group.id; // Link to parent group
+                         rules.push(mock);
                      });
                  }
              });
         }
 
+        const importPayload = {
+            rules: rules,
+            groups: groups
+        };
+
         // Reuse importRules logic
         // We need to stringify it because importRules expects a JSON string
-        await importRules(JSON.stringify(json));
+        await importRules(JSON.stringify(importPayload));
         
         flashStatus('Folder imported successfully', 'success');
         return true;
