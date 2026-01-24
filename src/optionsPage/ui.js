@@ -239,7 +239,7 @@ function renderRuleDetails(rule) {
         </div>
         <div class="flex items-center gap-2">
           <!-- Multi-Action Rule Header Controls -->
-          ${(rule.group && getServerUrl()) ? `
+          ${(rule.group && getServerUrl() && rule.syncConfig?.enabled) ? `
           <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
              <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
                 <label class="switch-sm flex items-center cursor-pointer">
@@ -275,7 +275,7 @@ function renderRuleDetails(rule) {
          <div class="flex-1 flex items-center justify-between">
            <div>
              <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
-             Preserve variants and status codes.
+             Store this extension mock data on the Mockzilla server.
            </div>
            <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
               <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
