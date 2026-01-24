@@ -352,7 +352,7 @@ function renderRuleDetails(rule) {
       </div>
 
       <!-- Mockzilla Server Sync -->
-      <details class="group/sync border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 ${rule.matchType === 'substring' ? '' : 'hidden'}" id="syncDetails">
+      <details class="group/sync border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800" id="syncDetails">
         <summary class="cursor-pointer p-3 font-medium text-sm flex items-center justify-between text-gray-700 dark:text-gray-200 hover:text-purple-600">
           <div class="flex items-center gap-2">
             <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>

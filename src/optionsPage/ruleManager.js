@@ -246,7 +246,7 @@ async function importRules(importText) {
 
 // Auto-sync wrapper
 async function autoSyncRule(rule) {
-  if (rule?.syncConfig?.autoSync && rule.enabled && rule.matchType === 'substring' && rule.syncConfig.enabled) {
+  if (rule?.syncConfig?.autoSync && rule.enabled && rule.syncConfig.enabled) {
     // Debounce or just fire? Fire for now.
     // We need to fetch the latest groups to ensure we have the group name.
     const ruleWithGroup = { ...rule };
@@ -255,10 +255,6 @@ async function autoSyncRule(rule) {
 }
 
 async function manualSyncRule(rule) {
-    if (rule.matchType !== 'substring') {
-        flashStatus('Only substring rules can be synced', 'error');
-        return;
-    }
     // We verify sync is enabled for the rule, but we don't check autoSync
     if (!rule.syncConfig?.enabled) {
          flashStatus('Enable sync for this rule first', 'error');
@@ -279,7 +275,6 @@ async function syncRules(rules) {
 
   // Filter valid rules for sync
   const rulesToSync = rules.filter(r => 
-    r.matchType === 'substring' && 
     r.syncConfig?.enabled
   );
 
@@ -317,7 +312,7 @@ async function syncRules(rules) {
       body: rule.body,
       response: rule.body,
       statusCode: rule.statusCode,
-      matchType: 'substring',
+      matchType: rule.matchType,
       enabled: rule.enabled
     });
   }
@@ -348,7 +343,7 @@ async function syncRules(rules) {
 async function syncToServer() {
   const rules = await getRules();
   // Filter for ONLY enabled sync rules
-  const syncable = rules.filter(r => r.matchType === 'substring' && r.syncConfig?.enabled);
+  const syncable = rules.filter(r => r.syncConfig?.enabled);
   if (syncable.length === 0) {
     flashStatus('No rules enabled for sync', 'info');
     return;
