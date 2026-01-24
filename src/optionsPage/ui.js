@@ -621,6 +621,9 @@ function renderRuleDetails(rule) {
         el.classList.toggle('opacity-50', !rule.syncConfig.enabled);
         el.classList.toggle('pointer-events-none', !rule.syncConfig.enabled);
       });
+      if (syncNowBtn) {
+        syncNowBtn.disabled = !rule.syncConfig.enabled;
+      }
       // Fire auto sync if enabled
       if (rule.syncConfig.enabled && rule.syncConfig.autoSync) {
          autoSyncRule(rule);
