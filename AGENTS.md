@@ -1,205 +1,71 @@
-# Mockzilla Chrome Extension - Technical Architecture
+# Project Context & Agent Guide
 
-## System Overview
+> **Note to Agents:** This document is your primary source of truth for understanding the architectural decisions, discovery patterns, and functional core of this project. Use this to orient yourself before making changes.
 
-Mockzilla is a Chrome extension implementing client-side request interception through monkeypatching of global web APIs. The system intercepts `fetch()` and `XMLHttpRequest` calls within the page context and returns user-defined mock responses. The extension operates at the page level rather than network level, ensuring all interception occurs within the DOM context of the target page.
+## 1. Project Identity
 
-The options page implements a modern modular architecture using ES6 modules (type="module") to improve code organization, maintainability, and development workflow.
+**Project Name:** Mockzilla
+**Type:** Chrome Extension (Manifest V3)
+**Core Purpose:** Client-side request interception and mocking.
+**Key Mechanism:** Monkeypatching global `fetch` and `XMLHttpRequest` objects in the browser's "Main World" (page context).
 
-## Component Architecture
+## Coding Standards & Conventions
 
-### Core Components
+- **Modules:** The options page uses native ES6 modules (`<script type="module">`). When analyzing the options page, expect a graph of small, focused files (e.g., `storage.js`, `ui.js`, `utils.js`) imported by a main entry point.
+- **Async/Await:** Preferred over raw promises/callbacks for storage and messaging.
+- **Validation:** JSON bodies are strictly validated before saving. Search for `JSON.parse` wrapped in try/catch blocks within the UI logic.
+- **Compatibility:** Avoid update the main data structure, must be careful with legacy data, if needs to update, **ALWAYS** must be backward compatible.
 
-1. **manifest.json** - Extension configuration defining permissions, content scripts, and background services
-2. **background.js** - Service worker managing per-tab rule hit counters using `chrome.storage.session`
-3. **content-script.js** - Coordinates communication between background and page context, injects runtime code
-4. **injected.js** - Executes in page context with DOM access, implements request interception mechanisms
-5. **popup.html/popup.js** - Frontend interface for rule management and hit monitoring
-6. **tailwind-v4.js** - Embedded CSS framework for UI rendering
-7. **src/optionsPage/** - Modular options page implementation with the following modules:
-   - **main.js** - Entry point for the options page application using ES6 modules
-   - **storage.js** - Handles all Chrome storage operations (getRules, setRule, etc.)
-   - **ui.js** - Manages UI rendering functions (renderRulesList, renderRuleDetails, etc.)
-   - **ruleManager.js** - Handles rule and group management, selection logic
-   - **state.js** - Centralized state management for the options page
-   - **utils.js** - Shared utility functions (uid, isValidJSON, escapeHtml, flashStatus)
+## 2. Architectural Discovery Strategy
 
-### Component Interaction Flow
+Instead of relying on a static file list, use the following logic to discover the relevant code components. This project follows standard Chrome Extension (MV3) architecture.
 
-```
-[User Interface (popup)] 
-    ↓ (Rule Configuration)
-[chrome.storage (sync/local)]
-    ↓ (Rule Sync)
-[content-script.js] 
-    ↓ (Code Injection)
-[injected.js (Page Context)]
-    ↓ (Request Interception)
-[fetch/XMLHttpRequest Patching]
-    ↓ (Response Mocking)
-[Background (Hit Tracking)]
-```
+### 🔍 How to Find: Extension Configuration
+- **Target:** The root configuration file.
+- **Search Logic:** Look for `manifest.json`.
+- **Why:** This file defines the entry points (`background`, `content_scripts`, `action`, `options_ui`) and permissions (`permissions`, `host_permissions`).
 
-## Modular Architecture
+### 🔍 How to Find: Background Logic
+- **Target:** The persistent (or event-driven) service worker.
+- **Search Logic:** Check `manifest.json` for the `background.service_worker` field.
+- **Responsibility:** Handles state that must exist outside of any specific tab (e.g., global badge state, installation events) and coordinates data that isn't page-specific. In this project, it specifically manages **hit counters** in `chrome.storage.session`.
 
-The options page implements a modular architecture using ES6 modules with `type="module"`:
+### 🔍 How to Find: Content Injection (The Bridge)
+- **Target:** Scripts injected into the page to facilitate communication.
+- **Search Logic:** Check `manifest.json` for `content_scripts`.
+- **Responsibility:** These scripts run in the **Isolated World**. They cannot touch the page's global variables (like `window.fetch`), but they CAN communicate with the extensions background page. Their primary job is to inject the *actual* intercepter code into the Main World.
 
-### Module Structure
-- **Main Module**: `src/optionsPage/main.js` - Initializes the application and sets up event listeners
-- **Storage Module**: `src/optionsPage/storage.js` - Handles all Chrome storage operations
-- **UI Module**: `src/optionsPage/ui.js` - Contains rendering functions for the UI
-- **Rule Manager Module**: `src/optionsPage/ruleManager.js` - Manages rule logic and selection
-- **State Module**: `src/optionsPage/state.js` - Centralized state management
-- **Utils Module**: `src/optionsPage/utils.js` - Shared utility functions
+### 🔍 How to Find: The Interceptor (Monkeypatching)
+- **Target:** The code that actually overwrites `fetch` and `XHR`.
+- **Search Logic:**
+    1.  Look for usage of `scripting.executeScript` or `document.createElement('script')` in the *Content Scripts* or *Background*.
+    2.  Look for a file that accesses `window.fetch` or `XMLHttpRequest.prototype`.
+- **Responsibility:** This code runs in the **Main World** (the same context as the user's web page). It intercepts calls, checks them against rules, and mocks the response if needed.
 
-### Benefits
-- Improved maintainability through separation of concerns
-- Better code organization with clear module responsibilities
-- Enhanced testability with isolated modules
-- Easier debugging with modular boundaries
+### 🔍 How to Find: User Interface (UI)
+- **Target:** The visual editors for rules (Popup/Options).
+- **Search Logic:** Check `manifest.json` for `action.default_popup` (small UI) or `options_ui` (full page settings).
+- **Styling:** The project uses functional CSS (Tailwind). Look for large JS files that might contain the CSS engine or standard Tailwind classes in HTML.
 
-## Request Interception Implementation
+## 3. Core Functional Patterns
 
-### Fetch API Interception
-The system implements fetch interception by:
-1. Backing up the original `window.fetch` function
-2. Replacing with a patched implementation that:
-   - Extracts URL from request parameters
-   - Normalizes URL to absolute form using `location.href`
-   - Matches against configured rule patterns
-   - Returns mock response if match found
-   - Calls original fetch if no match
+### Data Flow & Storage
+The project splits data storage to optimize for size and sync limits. When searching for data handling logic, look for these storage keys:
+- **Rule Metadata:** Stored in `chrome.storage.sync` (search for `chrome.storage.sync.get` or `.set`). This allows meaningful data (patterns, names) to roam across devices.
+- **Rule Bodies:** Stored in `chrome.storage.local` (search for `chrome.storage.local`). Large mock bodies are kept here to avoid the tiny quotas of Sync storage.
+- **Ephemeral State:** Stored in `chrome.storage.session`. Used for hit counters that should reset when the browser closes.
 
-### XMLHttpRequest Interception
-XHR interception is implemented by patching:
-- `XMLHttpRequest.prototype.open` - Captures request method and URL
-- `XMLHttpRequest.prototype.send` - Intercepts request execution
-- Response handling is patched to return mock data when patterns match
+### Interception Logic
+The interception logic follows this sequence:
+1.  **Backup:** Original `window.fetch` and `XMLHttpRequest` are saved.
+2.  **Patch:** New functions are assigned to these globals.
+3.  **Check:** Incoming requests are normalized (absolute URLs) and checked against active rules.
+4.  **Mock vs. Pass:**
+    - If **Match**: A `new Response()` is constructed and returned immediately.
+    - If **No Match**: The original backed-up function is called.
 
-### Pattern Matching Algorithm
-```
-For each request:
-1. Normalize URL to absolute form
-2. For each rule:
-   a. If matchType is "substring":
-      - Check if pattern exists within URL (case-insensitive)
-   b. If matchType is "exact":
-      - Compare normalized pattern with normalized URL
-3. Return first matching rule's response
-```
-
-## Storage Architecture
-
-### Data Segmentation Strategy
-The system implements a segmented storage approach:
-
-#### chrome.storage.sync
-- Stores rule metadata (pattern, matchType, bodyType)
-- Synchronized across user's Chrome profile
-- Limited to 8.192 bytes per item
-- Structure: `{rules: [{id, pattern, matchType, bodyType, enabled}]}`
-
-#### chrome.storage.local
-- Stores rule body content to avoid sync quotas
-- Local to individual browser instance
-- Structure: `{bodies: {ruleId: bodyContent}}`
-
-#### chrome.storage.session
-- Maintains per-tab hit counters
-- Cleared upon browser restart
-- Structure: `{hits: {tabId: {ruleId: count, lastMatchedUrl}}}`
-
-## Security and CSP Compliance
-
-### Content Security Policy Resilience
-The system implements multiple injection strategies:
-1. Standard script injection via `scripting.executeScript`
-2. Fallback to programmatic injection in DOM for CSP-restricted environments
-3. Uses immediate execution to ensure patching occurs before first requests
-
-### Isolation Boundaries
-- Content scripts operate in isolated world
-- Page context code has full DOM access
-- Communication uses secure Chrome extension APIs
-- No external network calls from injected code
-
-## Extension Permissions
-
-```
-permissions: [
-  "scripting",    // Runtime code injection
-  "storage",      // Rule and hit data persistence
-  "activeTab"     // Current tab information access
-]
-host_permissions: ["<all_urls>"] // Request interception capability
-```
-
-## Runtime Architecture
-
-### Initialization Sequence
-1. Content script loads and establishes storage listeners
-2. Retrieves rules from `chrome.storage.sync`
-3. Fetches rule bodies from `chrome.storage.local`
-4. Injects `injected.js` into page context
-5. `injected.js` applies fetch/XHR patches
-6. Background service registers tab hit tracking
-
-### Performance Considerations
-- Pattern matching occurs synchronously during request cycle
-- Rule evaluation stops at first match
-- Storage operations batched where possible
-- Memory usage optimized by separating metadata from body content
-
-## API Implementation Details
-
-### Mock Response Generation
-```javascript
-function createMockResponse(rule) {
-  const headers = new Headers();
-  headers.set('Content-Type', rule.bodyType === 'json' ? 'application/json' : 'text/plain');
-  
-  return new Response(rule.body, {
-    status: 200,
-    statusText: 'OK',
-    headers: headers
-  });
-}
-```
-
-### URL Normalization Logic
-- Relative URLs resolved against `location.href`
-- Query parameters preserved in matching
-- Protocol/hostname normalization for consistency
-- Automatic quote/backtick removal from patterns
-
-## Error Handling and Validation
-
-### JSON Validation
-- Performed in popup UI before storage
-- Invalid JSON returned as string response to prevent runtime errors
-- Validation feedback provided to user interface
-
-### Request Error Handling
-- Falls back to original request if patching fails
-- Preserves original error behaviors
-- Detailed logging for debugging
-
-## Debugging Infrastructure
-
-### Logging Mechanism
-- Console logging from `injected.js` for request tracing
-- Hit counter tracking in background service
-- Pattern match logging for debugging
-
-### Developer Tools Integration
-- Console messages identify Mockzilla origin
-- Network tab shows mock responses with distinguishing headers
-- Extension popup displays hit statistics per tab
-
-### Extension Subscription Model
-- User subscription required for full feature access
-- Subscription management with ExtPay
-- Free tier with limited features
-  - Basic rule creation and management
-  - Free Limited to 15 rules per subscription
+### Message Passing
+Communication crosses three boundaries:
+`Background` <-> `Content Script` <-> `Injected Script (Main World)`
+- **Search Logic:** Look for `chrome.runtime.sendMessage`, `chrome.runtime.onMessage`, and `window.postMessage` (for crossing the Isolated/Main world boundary).
 
