@@ -101,7 +101,7 @@
                     realistic mocks, stateful workflows, and AI integration.
                 </p>
                 <div class="flex justify-center flex-wrap gap-4">
-                    <a href="#overview"
+                    <a href="#getting-started"
                         class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
                         Deploy Now
                     </a>
@@ -434,6 +434,9 @@
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Server-Extension Synchronization
                 </h3>
+                <div class="flex items-start">
+                    <p class="text-red-600 dark:text-red-400">Mockzilla Server must be in >= 0.2.1</p>
+                </div>
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
                     Sync your Chrome Extension mocks to the Mockzilla server to share with your team and back up your
                     work.
@@ -442,16 +445,37 @@
                 <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Quick Setup</h4>
                 <div class="space-y-3 text-dark-600 dark:text-gray-300">
                     <div class="flex items-start">
-                        <span class="mr-3 text-primary-600 dark:text-purple-400">1.</span>
-                        <div>Open extension options and enable "Mockzilla Server Sync" for your groups</div>
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">0.</span>
+                        <div>Install the extension from the Chrome Web Store</div>
                     </div>
                     <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">1.</span>
+                        <div>After that can follow the <a href="#getting-started">#getting-started</a> section to
+                            install
+                            the server</div>
+                    </div>
+                    <div></div>
+                    <div class="flex items-start">
                         <span class="mr-3 text-primary-600 dark:text-purple-400">2.</span>
-                        <div>Set server URL (default: <code>http://localhost:36666</code>)</div>
+                        <div>Open extension rule manager then enable "Mockzilla Server Sync" for your rules</div>
                     </div>
                     <div class="flex items-start">
                         <span class="mr-3 text-primary-600 dark:text-purple-400">3.</span>
-                        <div>Click "Sync Now" - mocks appear on server with "-extension" suffix</div>
+                        <div>Each rule has your own sync button</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">4.</span>
+                        <div>Set server URL: <code>http://localhost:36666</code> or use your VPS server URL</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">3.</span>
+                        <div>Click "Sync Now" - mocks appear on server in "Extension" section</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-3 text-primary-600 dark:text-purple-400">4.</span>
+                        <div>Click "AUTO" - extension will sync that rule to server automatically (every rule update in
+                            extension)
+                        </div>
                     </div>
                 </div>
 

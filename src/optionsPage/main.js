@@ -6,6 +6,7 @@ import { renderFolderImportModal } from './ui.js';
 import { setEnabled, getEnabled } from './storage.js';
 import { flashStatus, debounce } from './utils.js';
 import { getTheme, setTheme, getDensity, setDensity, setSearchQuery, setSortOrder, setFilterStatus, setShowUngrouped, applyPrefsToDOM, getSearchQuery, getFilterStatus, getShowUngrouped, getServerUrl, setServerUrl } from './state.js';
+import { initChangelog } from './changelogUI.js';
 
 // Initialize the page when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeHeaderControls();
   applyPrefsToDOM();
   await handleAutoCreateRule();
+  await initChangelog();
 });
 
 function initializeEventListeners() {

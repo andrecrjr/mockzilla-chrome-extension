@@ -16,7 +16,8 @@ let prefs = {
   showUngrouped: true,
   searchQuery: '',
   serverUrl: '', // Default Mockzilla URL
-  showServerSyncBanner: true
+  showServerSyncBanner: true,
+  lastShownChangelogVersion: ''
 };
 
 function loadPrefs() {
@@ -84,6 +85,8 @@ function getServerUrl() { return prefs.serverUrl; }
 function setServerUrl(url) { prefs.serverUrl = url; savePrefs(); }
 function getShowServerSyncBanner() { return prefs.showServerSyncBanner; }
 function setShowServerSyncBanner(show) { prefs.showServerSyncBanner = !!show; savePrefs(); }
+function getLastShownChangelogVersion() { return prefs.lastShownChangelogVersion; }
+function setLastShownChangelogVersion(version) { prefs.lastShownChangelogVersion = version; savePrefs(); }
 
 // Initialize prefs on module import
 loadPrefs();
@@ -119,5 +122,7 @@ export {
   setServerUrl,
   getShowServerSyncBanner,
   setShowServerSyncBanner,
+  getLastShownChangelogVersion,
+  setLastShownChangelogVersion,
   applyPrefsToDOM
 };

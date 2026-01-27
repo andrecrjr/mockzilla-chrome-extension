@@ -798,16 +798,16 @@ function renderGroupDetails(group) {
   const descriptionEl = detailsContainer.querySelector('.group-description');
 
   nameEl.addEventListener('blur', async (e) => {
-    group.name = e.target.value;
+    group.name = nameEl.value;
     await setGroup(group);
-    renderRulesList(window.currentRules || [], window.currentGroups || []); // Update the sidebar
-    flashStatus('Group name updated', 'success');
+    renderRulesList(window.currentRules || [], window.currentGroups || []);
+    flashStatus('Group name saved', 'success');
   });
 
   descriptionEl.addEventListener('blur', async (e) => {
-    group.description = e.target.value;
+    group.description = descriptionEl.value;
     await setGroup(group);
-    flashStatus('Group description updated', 'success');
+    flashStatus('Group description saved', 'success');
   });
 }
 
