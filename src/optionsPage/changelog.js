@@ -8,7 +8,9 @@ export const changelogData = {
         title: "🚀 New Features",
         items: [
           "**Server Sync (BETA)**: Sync your rules to a Mockzilla server for team collaboration. [Learn more here](https://mockzilla.dev/docs#extension-sync)",
-          "**Settings Modal**: Created a new Settings Modal UI to import and export rules and sync to server!",        ]
+          "**Settings**: Created a new Settings Modal UI to import and export rules and sync to server!",
+          "**Contact Form**: Created a new Contact Form to send feedback to the developer aside Settings",
+      ]
       },
       // {
       //   title: "🛠️ Improvements",
