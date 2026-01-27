@@ -106,11 +106,24 @@ function initializeEventListeners() {
 
   // Sync functionality (New Modal)
   const confirmSync = document.getElementById('confirmSync');
+  const setServerBtn = document.getElementById('setServerBtn');
   const serverUrlInput = document.getElementById('serverUrl');
 
   // Pre-fill server URL
   if (serverUrlInput) {
       serverUrlInput.value = getServerUrl() || '';
+  }
+
+  if (setServerBtn) {
+    setServerBtn.addEventListener('click', () => {
+      const url = serverUrlInput.value.trim();
+      if (!url) {
+        flashStatus('Server URL is required', 'error');
+        return;
+      }
+      setServerUrl(url); // Save preference
+      flashStatus('Server URL saved', 'success');
+    });
   }
 
   if (confirmSync) {

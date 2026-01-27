@@ -275,7 +275,7 @@ function renderRuleDetails(rule) {
          <div class="flex-1 flex items-center justify-between">
            <div>
              <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
-             Store this extension mock data on the Mockzilla server.
+             Store this mock data on your server. (Need to configure server URL in Settings)
            </div>
            <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
               <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />

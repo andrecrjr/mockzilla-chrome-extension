@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,83 +9,14 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MNRG3E8GZ"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'G-6MNRG3E8GZ');
+        gtag('config', 'G-6MNRG3E8GZ');
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7e22ce',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        },
-                        secondary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e'
-                        },
-                        accent: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d'
-                        },
-                        dark: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827'
-                        },
-                        light: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="js/tailwind-config.js"></script>
     <style>
         .code-block {
             background-color: #1e293b;
@@ -94,24 +26,28 @@
             overflow-x: auto;
             color: #f8f8f2;
         }
+
         .section-divider {
             height: 1px;
             background: linear-gradient(to right, transparent, #a855f7, transparent);
         }
+
         .card-hover {
             transition: all 0.3s ease;
         }
+
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
+
 <body class="bg-gray-50 font-sans dark:bg-gray-900 dark:text-gray-100" data-theme="light">
     <!-- Header -->
     <header class="bg-light-50 shadow-md py-4 dark:bg-[#0b0f1a] dark:border-b dark:border-[#1b2235]">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
+            <a href="index.html" class="flex items-center space-x-3">
                 <div class="bg-primary-100 rounded-xl dark:bg-purple-800/30 w-24">
                     <img src="mockzilla.png" alt="Mockzilla Logo">
                 </div>
@@ -119,54 +55,59 @@
                     <span class="text-2xl font-bold text-dark-800 dark:text-white">Mockzilla</span>
                     <p class="text-xs text-dark-500 dark:text-purple-200">HTTP Server Documentation</p>
                 </div>
-            </div>
-            <nav class="flex flex-wrap justify-center gap-4 md:gap-6">
-                <a href="#getting-started" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Getting Started</span>
+            </a>
+            <nav class="flex flex-wrap justify-center gap-6 md:gap-8">
+                <a href="#getting-started"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Docs</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#deployment" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Deployment</span>
+                <a href="https://github.com/andrecrjr/mockzilla" target="_blank"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>GitHub</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#using-mockzilla" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Using Mockzilla</span>
+                <a href="https://ko-fi.com/andrecrjr" target="_blank"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Support</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
-                <a href="#ai-integration" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>AI Integration</span>
-                    <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                </a>
-                <a href="#extension-sync" class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
-                    <span>Extension Sync</span>
+                <a href="https://acjr.notion.site/2f3b5e58148c801194e9f3a41e7227d7?pvs=105" target="_blank"
+                    class="text-dark-700 hover:text-primary-600 font-medium flex items-center group dark:text-gray-300 dark:hover:text-purple-400">
+                    <span>Contact</span>
                     <span class="ml-1 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </a>
             </nav>
             <div class="flex items-center gap-2">
-                <a href="https://github.com/andrecrjr/mockzilla" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+                <a href="https://github.com/andrecrjr/mockzilla"
+                    class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
                     <i class="fab fa-github mr-2"></i>
-                    <span>View on GitHub</span>
+                    <span>Star on GitHub</span>
                 </a>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="py-16 md:py-24 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
+    <section
+        class="py-16 md:py-24 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h1 class="text-4xl md:text-5xl font-bold text-dark-800 mb-4 dark:text-white">
                     Self-Host Your Own <span class="text-primary-600 dark:text-purple-400">Mockzilla</span> Server
                 </h1>
                 <p class="text-lg text-dark-600 mb-8 max-w-2xl mx-auto dark:text-gray-300">
-                    Deploy your own private API mocking platform with Docker. Perfect for development teams who need realistic mocks, stateful workflows, and AI integration.
+                    Deploy your own private API mocking platform with Docker. Perfect for development teams who need
+                    realistic mocks, stateful workflows, and AI integration.
                 </p>
                 <div class="flex justify-center flex-wrap gap-4">
-                    <a href="#overview" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
-                        Get Started
+                    <a href="#overview"
+                        class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 dark:bg-purple-600 dark:hover:bg-purple-700">
+                        Deploy Now
                     </a>
-                    <a href="https://github.com/andrecrjr/mockzilla" class="border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-6 py-3 rounded-lg font-medium transition duration-300 dark:border-purple-500 dark:text-purple-400 dark:hover:bg-purple-900/20">
-                        View Source
+                    <a href="https://github.com/andrecrjr/mockzilla"
+                        class="border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-6 py-3 rounded-lg font-medium transition duration-300 dark:border-purple-500 dark:text-purple-400 dark:hover:bg-purple-900/20">
+                        View on GitHub
                     </a>
                 </div>
             </div>
@@ -175,19 +116,22 @@
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
                     <i class="fas fa-docker text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Easy Docker Deploy</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Single command to run your private mock server. No complex setup required.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Single command to run your private mock server. No
+                        complex setup required.</p>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
                     <i class="fas fa-database text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Flexible Storage</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Choose in-memory (fast) or PostgreSQL (persistent) based on your needs.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Choose in-memory (fast) or PostgreSQL (persistent) based
+                        on your needs.</p>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-xl shadow-lg card-hover dark:bg-[#0f1424]">
                     <i class="fas fa-users text-primary-600 text-3xl mb-4 dark:text-purple-400"></i>
                     <h3 class="text-xl font-semibold text-dark-800 mb-2 dark:text-white">Team Collaboration</h3>
-                    <p class="text-dark-600 dark:text-gray-300">Share mocks across your team with Chrome Extension sync.</p>
+                    <p class="text-dark-600 dark:text-gray-300">Share mocks across your team with Chrome Extension sync.
+                    </p>
                 </div>
             </div>
         </div>
@@ -205,19 +149,21 @@
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Quick Start with Docker</h3>
-                
+
                 <p class="mb-6 text-dark-600 dark:text-gray-300">
-                    Mockzilla is designed for easy self-hosting with Docker. Choose between fast in-memory storage or persistent PostgreSQL based on your needs.
+                    Mockzilla is designed for easy self-hosting with Docker. Choose between fast in-memory storage or
+                    persistent PostgreSQL based on your needs.
                 </p>
 
-                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🚀 Option 1: Fast Start (In-Memory)</h4>
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🚀 Option 1: Fast Start
+                    (In-Memory)</h4>
                 <p class="mb-3 text-dark-600 dark:text-gray-300">
                     Perfect for development and testing. Data is stored in memory by default.
                 </p>
                 <div class="code-block mb-4">
                     <div class="text-green-400">// Pull the latest image</div>
                     docker pull andrecrjr/mockzilla:latest
-                    
+
                     <div class="text-green-400 mt-2">// Start Mockzilla</div>
                     docker run -p 36666:36666 andrecrjr/mockzilla:latest
                 </div>
@@ -225,31 +171,27 @@
                     Access your mock server at <code>http://localhost:36666</code>
                 </p>
 
-                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">💾 Option 2: With Volume Persistence</h4>
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">💾 Option 2: With Volume
+                    Persistence</h4>
                 <p class="mb-3 text-dark-600 dark:text-gray-300">
                     Keep your mocks between container restarts while using fast in-memory database.
                 </p>
                 <div class="code-block mb-4">
-                    docker run -d \
-                      --name mockzilla \
-                      -p 36666:36666 \
-                      -v mockzilla-data:/data \
-                      andrecrjr/mockzilla:latest
+                    docker run -d --name mockzilla -p 36666:36666 -v mockzilla-data:/data andrecrjr/mockzilla:latest
                 </div>
 
-                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🗄️ Option 3: With PostgreSQL (Production)</h4>
+                <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">🗄️ Option 3: With PostgreSQL
+                    (Production)</h4>
                 <p class="mb-3 text-dark-600 dark:text-gray-300">
                     For production environments with external PostgreSQL database.
                 </p>
                 <div class="code-block mb-4">
-                    docker run -d \
-                      --name mockzilla \
-                      -p 36666:36666 \
-                      -e DATABASE_URL=postgresql://user:pass@host:5432/mockzilla \
-                      andrecrjr/mockzilla:latest
+                    docker run -d --name mockzilla -p 36666:36666 -e
+                    DATABASE_URL=postgresql://user:pass@host:5432/mockzilla andrecrjr/mockzilla:latest
                 </div>
 
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                <div
+                    class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
                     <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">📍 Next Steps</h5>
                     <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
                         <li>• Visit <code>http://localhost:36666</code> to access the UI</li>
@@ -269,17 +211,13 @@
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Running in Background</h3>
-                
+
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
                     For long-running deployments, use the <code>-d</code> flag to run in detached mode:
                 </p>
-                
+
                 <div class="code-block mb-4">
-                    docker run -d \
-                      --name mockzilla \
-                      -p 36666:36666 \
-                      -v mockzilla-data:/data \
-                      andrecrjr/mockzilla:latest
+                    docker run -d --name mockzilla -p 36666:36666 -v mockzilla-data:/data andrecrjr/mockzilla:latest
                 </div>
 
                 <h4 class="text-lg font-semibold mt-6 mb-3 text-dark-800 dark:text-white">Container Management</h4>
@@ -305,12 +243,13 @@
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Environment Variables</h3>
-                
+
                 <div class="space-y-4">
                     <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
                         <p class="font-semibold text-dark-800 dark:text-white"><code>DATABASE_URL</code></p>
                         <p class="text-sm text-dark-600 dark:text-gray-300">PostgreSQL connection string (optional)</p>
-                        <code class="text-xs text-dark-500 dark:text-gray-400">postgresql://user:pass@host:5432/database</code>
+                        <code
+                            class="text-xs text-dark-500 dark:text-gray-400">postgresql://user:pass@host:5432/database</code>
                     </div>
                     <div class="border-l-4 border-primary-500 pl-4 py-2 dark:border-purple-500">
                         <p class="font-semibold text-dark-800 dark:text-white"><code>PORT</code></p>
@@ -329,7 +268,7 @@
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Creating Mocks</h3>
-                
+
                 <div class="space-y-6">
                     <div>
                         <h4 class="font-semibold text-dark-800 dark:text-white mb-2">1. Create a Folder</h4>
@@ -356,26 +295,29 @@
                     <div>
                         <h4 class="font-semibold text-dark-800 dark:text-white mb-2">4. Test Your Mock</h4>
                         <p class="text-dark-600 dark:text-gray-300 text-sm">
-                            Use the built-in preview or make requests to <code>http://localhost:36666/mock/[your-endpoint]</code>
+                            Use the built-in preview or make requests to
+                            <code>http://localhost:36666/mock/[your-endpoint]</code>
                         </p>
                     </div>
                 </div>
 
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                <div
+                    class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
                     <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 Pro Tip</h5>
                     <p class="text-primary-700 dark:text-purple-300 text-sm">
-                        Use JSON Schema with Faker for realistic mock data. For example, use <code>faker.person.fullName</code> for names or <code>faker.internet.email</code> for emails.
+                        Use JSON Schema with Faker for realistic mock data. For example, use
+                        <code>faker.person.fullName</code> for names or <code>faker.internet.email</code> for emails.
                     </p>
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Stateful Workflows</h3>
-                
+
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
                     Create complex multi-step flows with persistent state. Perfect for simulating:
                 </p>
-                
+
                 <ul class="list-disc pl-6 space-y-2 text-dark-600 dark:text-gray-300 mb-4">
                     <li>Login/logout flows with session tracking</li>
                     <li>Shopping carts with add/remove operations</li>
@@ -389,92 +331,25 @@
             </div>
         </section>
 
-        <!-- AI Integration Section -->
+        <!-- AI/MCP Integration Section -->
         <section id="ai-integration" class="mb-16">
             <div class="flex items-center mb-8">
                 <i class="fas fa-robot text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">AI Integration</h2>
+                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">AI/MCP Integration</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
                 <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Model Context Protocol (MCP)</h3>
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Let AI agents create and manage your mocks. Mockzilla exposes 24 tools via MCP for complete automation.
+                    Let AI agents create and manage your mocks. Mockzilla exposes 24 specialized tools via MCP for
+                    complete
+                    automation. Connect your private server to modern AI agents like Claude Desktop or Cursor.
                 </p>
-                
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Setup</h4>
-                
-                <div class="mb-4">
-                    <p class="text-dark-600 dark:text-gray-300 mb-2">
-                        <strong>Option 1 (Recommended):</strong> Direct connection for modern MI clients:
-                    </p>
-                    <div class="code-block">
-                        http://localhost:36666/api/mcp
-                    </div>
-                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-dark-800 dark:text-white">Connection Options</h4>
 
                 <div class="mb-4">
-                    <p class="text-dark-600 dark:text-gray-300 mb-2">
-                        <strong>Option 2:</strong> For Claude Desktop, add to MCP settings:
-                    </p>
-                    <div class="code-block text-sm">
-                        {
-                          "mcpServers": {
-                            "mockzilla": {
-                              "command": "npx",
-                              "args": ["-y", "mcp-remote", "http://localhost:36666/api/mcp"]
-                            }
-                          }
-                        }
-                    </div>
-                </div>
-
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
-                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">What AI Can Do</h5>
-                    <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
-                        <li>• Create realistic mocks with dynamic data</li>
-                        <li>• Build complex stateful workflows</li>
-                        <li>• Manage folders and organization</li>
-                        <li>• Test and debug mock responses</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Agent Skills (Optional)</h3>
-                
-                <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Install specialized skills for your AI agent:
-                </p>
-                
-                <div class="code-block mb-4">
-                    npx add-skill https://github.com/andrecrjr/mockzilla
-                </div>
-
-                <p class="text-dark-600 dark:text-gray-300 text-sm">
-                    This installs expert patterns for creating mocks (<code>mockzilla-mock-maker</code>) and designing workflows (<code>mockzilla-workflow-architect</code>).
-                </p>
-            </div>
-        </section>
-
-        <!-- MCP Integration Section -->
-        <section id="mcp" class="mb-16">
-            <div class="flex items-center mb-8">
-                <i class="fas fa-robot text-purple-600 text-3xl mr-3 dark:text-purple-400"></i>
-                <h2 class="text-3xl font-bold text-dark-800 dark:text-white">MCP Integration</h2>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Model Context Protocol (MCP)</h3>
-                <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Mockzilla exposes a Model Context Protocol server, allowing AI agents to fully control mocking capabilities. 
-                    This enables AI-assisted development where AI agents can create and manage mocks programmatically.
-                </p>
-                
-                <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Connection Options</h4>
-                
-                <div class="mb-4">
-                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 1: Direct URL (Preferred)</h5>
+                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 1: Direct URL (Recommended)</h5>
                     <p class="text-dark-600 dark:text-gray-300 mb-2">
                         Modern MCP clients (Cursor, custom agents) can connect directly:
                     </p>
@@ -484,68 +359,67 @@
                 </div>
 
                 <div class="mb-6">
-                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 2: Stdio Bridge (For Claude Desktop)</h5>
+                    <h5 class="font-semibold text-dark-800 dark:text-white mb-2">Option 2: Claude Desktop Settings</h5>
                     <p class="text-dark-600 dark:text-gray-300 mb-2">
-                        If your client only supports local stdio servers, use <code>mcp-remote</code> as a bridge:
+                        Add the following to your <code>claude_desktop_config.json</code>:
                     </p>
-                    <div class="code-block">
-                        {
-                        &nbsp;&nbsp;"mcpServers": {
-                        &nbsp;&nbsp;&nbsp;&nbsp;"mockzilla": {
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"command": "npx",
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"args": ["-y", "mcp-remote", "http://localhost:36666/api/mcp"]
-                        &nbsp;&nbsp;&nbsp;&nbsp;}
-                        &nbsp;&nbsp;}
-                        }
-                    </div>
+                    <pre class="code-block text-sm">
+{
+  "mcpServers": {
+    "mockzilla": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:36666/api/mcp"]
+    }
+  }
+}</pre>
                 </div>
-                
+
                 <h4 class="text-lg font-semibold mt-6 mb-2 text-dark-800 dark:text-white">24 Available Tools</h4>
-                <p class="text-dark-600 dark:text-gray-300 mb-3">
-                    Mockzilla exposes 24 specialized tools organized into 4 categories:
-                </p>
-                
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
                     <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
                         <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">📁 Folders (5 tools)</h5>
                         <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
                             <li>• List, create, get, update, delete</li>
                         </ul>
                     </div>
-                    
                     <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
                         <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">🎯 Mocks (7 tools)</h5>
                         <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
-                            <li>• <code>create_schema_mock</code> (recommended)</li>
                             <li>• List, create, get, update, delete, preview</li>
                         </ul>
                     </div>
-                    
                     <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
-                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">🔄 Workflow Scenarios (5 tools)</h5>
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">🔄 Scenarios (5 tools)</h5>
                         <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
-                            <li>• List, create, delete scenarios</li>
-                            <li>• Export/import for backup</li>
+                            <li>• Manage workflow scenarios</li>
                         </ul>
                     </div>
-                    
                     <div class="border border-primary-200 dark:border-purple-700/30 rounded-lg p-4">
-                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">⚡ Transitions & State (7 tools)</h5>
+                        <h5 class="font-semibold text-primary-700 dark:text-purple-300 mb-2">⚡ State (7 tools)</h5>
                         <ul class="text-sm text-dark-600 dark:text-gray-300 space-y-1">
-                            <li>• <code>inspect_workflow_state</code> (powerful)</li>
-                            <li>• Create, update, delete, test transitions</li>
-                            <li>• Reset state</li>
+                            <li>• Inspect and control workflow state</li>
                         </ul>
                     </div>
                 </div>
-                
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
-                    <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 Pro Tips</h4>
+
+                <div
+                    class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                    <h5 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 Pro Tips</h5>
                     <ul class="text-primary-700 dark:text-purple-300 text-sm space-y-1">
-                        <li>• Use <code>create_schema_mock</code> for data-heavy mocks with realistic data</li>
-                        <li>• Use <code>inspect_workflow_state</code> when debugging stateful workflows</li>
-                        <li>• Leverage Agent Skills for proven patterns (see Installation section)</li>
+                        <li>• Use <code>create_schema_mock</code> for realistic data mocks</li>
+                        <li>• Use <code>inspect_workflow_state</code> when debugging workflows</li>
+                        <li>• Install Agent Skills for specialized patterns</li>
                     </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Agent Skills (Optional)</h3>
+                <p class="mb-4 text-dark-600 dark:text-gray-300">
+                    Install expert patterns for your AI agent to build complex mocks and architectures:
+                </p>
+                <div class="code-block mb-4">
+                    npx add-skill https://github.com/andrecrjr/mockzilla
                 </div>
             </div>
         </section>
@@ -558,11 +432,13 @@
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-8 mb-8 dark:bg-[#0f1424] dark:border dark:border-[#1b2235]">
-                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Server-Extension Synchronization</h3>
+                <h3 class="text-2xl font-semibold mb-4 text-dark-800 dark:text-white">Server-Extension Synchronization
+                </h3>
                 <p class="mb-4 text-dark-600 dark:text-gray-300">
-                    Sync your Chrome Extension mocks to the Mockzilla server to share with your team and back up your work.
+                    Sync your Chrome Extension mocks to the Mockzilla server to share with your team and back up your
+                    work.
                 </p>
-                
+
                 <h4 class="text-lg font-semibold mt-4 mb-2 text-dark-800 dark:text-white">Quick Setup</h4>
                 <div class="space-y-3 text-dark-600 dark:text-gray-300">
                     <div class="flex items-start">
@@ -579,16 +455,18 @@
                     </div>
                 </div>
 
-                <div class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
+                <div
+                    class="mt-6 bg-primary-50 border border-primary-200 rounded-lg p-4 dark:bg-purple-900/10 dark:border-purple-700/30">
                     <h4 class="font-medium text-primary-800 dark:text-purple-200 mb-2">💡 High-Fidelity Storage</h4>
                     <p class="text-primary-700 dark:text-purple-300 text-sm">
-                        Extension-specific features (like variants) are preserved on the server even if not displayed in the UI. When you import back to the extension, all features are restored.
+                        Extension-specific features (like variants) are preserved on the server even if not displayed in
+                        the UI. When you import back to the extension, all features are restored.
                     </p>
                 </div>
             </div>
         </section>
 
-    
+
     </main>
 
     <!-- Footer -->
@@ -600,9 +478,11 @@
                         <i class="fas fa-magic text-primary-400 text-2xl dark:text-purple-400"></i>
                         <span class="text-xl font-bold">Mockzilla</span>
                     </div>
-                    <p class="text-dark-400 mb-4 dark:text-gray-400">A comprehensive API mocking platform with both an HTTP server for dynamic endpoints and a Chrome extension for real-time request interception.</p>
+                    <p class="text-dark-400 mb-4 dark:text-gray-400">A comprehensive API mocking platform with both an
+                        HTTP server for dynamic endpoints and a Chrome extension for real-time request interception.</p>
                     <div class="flex space-x-4">
-                        <a href="https://github.com/andrecrjr/mockzilla" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">
+                        <a href="https://github.com/andrecrjr/mockzilla"
+                            class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">
                             <i class="fab fa-github text-xl"></i>
                         </a>
                     </div>
@@ -611,21 +491,39 @@
                 <div class="md:w-1/3">
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Documentation Sections</h3>
                     <ul class="space-y-2">
-                        <li><a href="#overview" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Overview</a></li>
-                        <li><a href="#installation" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Installation</a></li>
-                        <li><a href="#mcp" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">MCP Integration</a></li>
-                        <li><a href="#extension-sync" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Extension Sync</a></li>
-                        <li><a href="#api" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">API Reference</a></li>
-                        <li><a href="#workflows" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Workflow Scenarios</a></li>
+                        <li><a href="#overview"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Overview</a>
+                        </li>
+                        <li><a href="#installation"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Installation</a>
+                        </li>
+                        <li><a href="#ai-integration"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">AI/MCP
+                                Integration</a></li>
+                        <li><a href="#extension-sync"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Extension
+                                Sync</a></li>
+                        <li><a href="#api"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">API
+                                Reference</a></li>
+                        <li><a href="#workflows"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Workflow
+                                Scenarios</a></li>
                     </ul>
                 </div>
 
                 <div class="md:w-1/3">
                     <h3 class="text-lg font-semibold mb-4 dark:text-white">Resources</h3>
                     <ul class="space-y-2">
-                        <li><a href="https://github.com/andrecrjr/mockzilla" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">GitHub Repository</a></li>
-                        <li><a href="https://github.com/andrecrjr/mockzilla/issues" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Report Issues</a></li>
-                        <li><a href="https://ko-fi.com/andrecrjr" class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Support the Project</a></li>
+                        <li><a href="https://github.com/andrecrjr/mockzilla"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">GitHub
+                                Repository</a></li>
+                        <li><a href="https://github.com/andrecrjr/mockzilla/issues"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Report
+                                Issues</a></li>
+                        <li><a href="https://ko-fi.com/andrecrjr"
+                                class="text-dark-400 hover:text-white dark:text-gray-400 dark:hover:text-purple-400">Support
+                                the Project</a></li>
                     </ul>
                 </div>
             </div>
@@ -673,7 +571,7 @@
         }
 
         // Initialize theme when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initTheme();
 
             // Add event listener to the theme toggle button
@@ -684,4 +582,5 @@
         });
     </script>
 </body>
+
 </html>

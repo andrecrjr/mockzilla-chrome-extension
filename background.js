@@ -39,10 +39,11 @@ async function getTabHits(tabId) {
   return hitsByTab[tabId] ?? {};
 }
 
-// Function to determine and set the appropriate icon for a tab
+// Function to determine and set the appropriate icon and badge for a tab
 async function updateTabIcon(tabId) {
   const hits = await getTabHits(tabId);
-  const hasHits = Object.keys(hits).some(ruleId => hits[ruleId].count > 0);
+  const uniqueRulesWithHits = Object.values(hits).filter(hit => hit.count > 0).length;
+  const hasHits = uniqueRulesWithHits > 0;
   
   const iconPath = hasHits ? {
     "16": "assets/mockzila-active.png",
@@ -58,23 +59,31 @@ async function updateTabIcon(tabId) {
   
   // Update the icon for the specific tab (if available) or globally
   try {
-    // First try to set for the specific tab
     if (tabId) {
-      chrome.action.setIcon({
-        tabId: tabId,
-        path: iconPath
+      chrome.action.setIcon({ tabId: tabId, path: iconPath });
+      
+      // Update badge text for the specific tab
+      chrome.action.setBadgeText({
+        text: hasHits ? uniqueRulesWithHits.toString() : "",
+        tabId: tabId
       });
+      
+      if (hasHits) {
+        chrome.action.setBadgeBackgroundColor({
+          color: '#4CAF50', // A nice green
+          tabId: tabId
+        });
+      }
     } else {
-      // If no specific tab, set globally
-      chrome.action.setIcon({
-        path: iconPath
-      });
+      chrome.action.setIcon({ path: iconPath });
+      chrome.action.setBadgeText({ text: hasHits ? uniqueRulesWithHits.toString() : "" });
+      if (hasHits) {
+        chrome.action.setBadgeBackgroundColor({ color: '#4CAF50' });
+      }
     }
   } catch (error) {
-    // If tab-specific icon fails (tab might not be active), set global icon
-    chrome.action.setIcon({
-      path: iconPath
-    });
+    console.error('Error updating icon/badge:', error);
+    chrome.action.setIcon({ path: iconPath });
   }
 }
 
