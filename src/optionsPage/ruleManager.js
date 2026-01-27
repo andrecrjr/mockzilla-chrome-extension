@@ -384,7 +384,7 @@ async function fetchServerFolders(page = 1, limit = 10) {
     }
 
     try {
-        const res = await fetch(`${serverUrl}/api/folders?page=${page}&limit=${limit}`, {
+        const res = await fetch(`${serverUrl}/api/folders?page=${page}&limit=${limit}&type=extension`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
