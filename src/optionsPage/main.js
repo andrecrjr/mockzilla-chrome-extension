@@ -118,11 +118,13 @@ function initializeEventListeners() {
     setServerBtn.addEventListener('click', () => {
       const url = serverUrlInput.value.trim();
       if (!url) {
-        flashStatus('Server URL is required', 'error');
+        flashStatus('Server URL is empty', 'sucess');
+        setServerUrl("")
         return;
       }
       setServerUrl(url); // Save preference
-      flashStatus('Server URL saved', 'success');
+      flashStatus('Server URL saved - Now you can sync', 'success');
+
     });
   }
 

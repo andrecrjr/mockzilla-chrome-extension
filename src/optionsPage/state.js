@@ -15,7 +15,8 @@ let prefs = {
   filterStatus: 'all', // 'all' | 'enabled' | 'disabled'
   showUngrouped: true,
   searchQuery: '',
-  serverUrl: 'http://localhost:3000' // Default Mockzilla URL
+  serverUrl: '', // Default Mockzilla URL
+  showServerSyncBanner: true
 };
 
 function loadPrefs() {
@@ -81,6 +82,8 @@ function getSearchQuery() { return prefs.searchQuery; }
 function setSearchQuery(q) { prefs.searchQuery = q || ''; savePrefs(); }
 function getServerUrl() { return prefs.serverUrl; }
 function setServerUrl(url) { prefs.serverUrl = url; savePrefs(); }
+function getShowServerSyncBanner() { return prefs.showServerSyncBanner; }
+function setShowServerSyncBanner(show) { prefs.showServerSyncBanner = !!show; savePrefs(); }
 
 // Initialize prefs on module import
 loadPrefs();
@@ -114,5 +117,7 @@ export {
   setSearchQuery,
   getServerUrl,
   setServerUrl,
+  getShowServerSyncBanner,
+  setShowServerSyncBanner,
   applyPrefsToDOM
 };

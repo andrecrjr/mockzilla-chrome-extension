@@ -3,7 +3,7 @@
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
 import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
-import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection, getServerUrl } from './state.js';
+import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection, getServerUrl, getShowServerSyncBanner, setShowServerSyncBanner } from './state.js';
 
 function renderRulesList(rules, groups) {
   const root = document.getElementById('rulesList');
@@ -266,21 +266,30 @@ function renderRuleDetails(rule) {
         </div>
       </div>
       
-      <!-- Mockzilla Server Sync Bio -->
-      ${(rule.group && getServerUrl()) ? `
-      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center">
+      <!-- Mockzilla Server Sync Banner (BETA) -->
+      ${(getShowServerSyncBanner() || (getServerUrl() && getServerUrl().trim() !== "")) ? `
+      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center relative">
          <div class="p-1.5 bg-white dark:bg-gray-800 rounded shadow-sm border border-purple-50 dark:border-purple-800/40">
            <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
          </div>
          <div class="flex-1 flex items-center justify-between">
            <div>
              <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
-             Store this mock data on your server. (Need to configure server URL in Settings)
+             Store this mock data on your server. <span>(Need to configure server URL in Settings)</span>
            </div>
-           <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
-              <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
-              <span>Enable Sync</span>
-           </label>
+           <div class="flex items-center gap-3">
+             <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
+                <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
+                <span>Enable Sync</span>
+             </label>
+             ${(!getServerUrl() || getServerUrl().trim() === "") ? `
+             <button class="hide-banner-btn text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1" title="Hide introduction">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+             </button>
+             ` : ''}
+           </div>
          </div>
       </div>
       ` : ''}
@@ -419,6 +428,7 @@ function renderRuleDetails(rule) {
   const syncEnabledEl = detailsContainer.querySelector('.sync-enabled');
   const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
   const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
+  const hideBannerBtn = detailsContainer.querySelector('.hide-banner-btn');
 
   const updateMatchTypeHelp = () => {
     const helpPattern = detailsContainer.querySelector('.matchType-help-pattern');
@@ -707,6 +717,13 @@ function renderRuleDetails(rule) {
             syncNowBtn.innerHTML = originalText;
         }
      });
+  }
+
+  if (hideBannerBtn) {
+    hideBannerBtn.addEventListener('click', () => {
+      setShowServerSyncBanner(false);
+      renderRuleDetails(rule);
+    });
   }
   
   // Also hook into other change events to trigger autoSync
