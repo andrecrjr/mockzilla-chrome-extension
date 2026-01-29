@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrecrjr/fastmock.git"
+    "url": "git+https://github.com/andrecrjr/mockzilla.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andrecrjr/fastmock/issues"
+    "url": "https://github.com/andrecrjr/mockzilla/issues"
   },
-  "homepage": "https://github.com/andrecrjr/fastmock#readme",
+  "homepage": "https://github.com/andrecrjr/mockzilla#readme",
   "dependencies": {
     "@mswjs/interceptors": "^0.40.0"
   },

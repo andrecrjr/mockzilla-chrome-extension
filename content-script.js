@@ -158,6 +158,9 @@ async function loadRulesAndInject() {
           sendRulesToPage([]); 
       }
   }
+  
+  // Cache rules for UI usage
+  _cachedRules = matchingRules;
 }
 
 // Listen for changes to rules in storage and notify the page
@@ -209,6 +212,17 @@ window.addEventListener('message', (ev) => {
   if (!msg || !msg.__rr) return;
   if (msg.type === 'RULE_HIT') {
     safeSendRuleHit(msg.ruleId, msg.url);
+    
+    // Update UI
+    _hitHistory.push({ ruleId: msg.ruleId, url: msg.url, timestamp: Date.now() });
+    
+    // "Show once" logic: auto-expand on first hit of the session
+    if (!_hasShownInitialOpen) {
+      _hasShownInitialOpen = true;
+      _isExpanded = true;
+    }
+    
+    renderOverlay();
   }
   if (msg.type === 'REQUEST_RULES') {
     (async () => {
@@ -221,3 +235,211 @@ window.addEventListener('message', (ev) => {
 
 // Initial load
 loadRulesAndInject();
+
+// ---------------------------------------------------------------------------
+// UI / Overlay Logic
+// ---------------------------------------------------------------------------
+
+let _cachedRules = [];
+let _hitHistory = [];
+let _overlayHost = null;
+let _overlayRoot = null;
+let _isExpanded = false;
+let _hasShownInitialOpen = false;
+
+function getRuleById(id) {
+  return _cachedRules.find(r => r.id === id);
+}
+
+function setupOverlay() {
+  if (_overlayHost) return;
+
+  _overlayHost = document.createElement('div');
+  _overlayHost.id = 'mockzilla-overlay-host';
+  _overlayHost.style.position = 'fixed';
+  _overlayHost.style.zIndex = '2147483647'; // Max z-index
+  _overlayHost.style.bottom = '20px';
+  _overlayHost.style.right = '20px';
+  _overlayHost.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+  
+  _overlayRoot = _overlayHost.attachShadow({ mode: 'open' });
+  
+  document.body.appendChild(_overlayHost);
+}
+
+function toggleExpand() {
+  _isExpanded = !_isExpanded;
+  renderOverlay();
+}
+
+function clearHistory() {
+  _hitHistory = [];
+  renderOverlay();
+}
+
+function renderOverlay() {
+  if (!_overlayHost) setupOverlay();
+  
+  if (_hitHistory.length === 0) {
+    _overlayHost.style.display = 'none';
+    return;
+  }
+  _overlayHost.style.display = 'block';
+
+  // Styles
+  const style = `
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+      }
+      .pill {
+        background: #0f172a;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s;
+        border: 1px solid #334155;
+      }
+      .pill:hover {
+        transform: scale(1.02);
+        background: #1e293b;
+      }
+      .pill-badge {
+        background: #ef4444;
+        color: white;
+        border-radius: 999px;
+        padding: 2px 6px;
+        font-size: 12px;
+        min-width: 16px;
+        text-align: center;
+      }
+      .panel {
+        background: #0f172a;
+        color: #e2e8f0;
+        width: 320px;
+        max-height: 500px;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .panel-header {
+        padding: 12px 16px;
+        background: #1e293b;
+        border-bottom: 1px solid #334155;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .panel-body {
+        padding: 0;
+        overflow-y: auto;
+      }
+      .hit-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid #1e293b;
+        font-size: 13px;
+      }
+      .hit-item:last-child {
+        border-bottom: none;
+      }
+      .hit-url {
+        color: #38bdf8;
+        word-break: break-all;
+        margin-bottom: 4px;
+        font-family: monospace;
+      }
+      .hit-meta {
+        color: #94a3b8;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .method-badge {
+        background: #334155;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        color: #f1f5f9;
+        text-transform: uppercase;
+      }
+      .status-badge {
+        color: #4ade80;
+        font-weight: 600;
+      }
+      .clear-btn {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 12px;
+        text-decoration: underline;
+      }
+      .clear-btn:hover {
+        color: #f1f5f9;
+      }
+    </style>
+  `;
+
+  // Content
+  const pill = `
+    <div class="pill" id="toggle-btn">
+      <span>⚡ Mockzilla</span>
+      <span class="pill-badge">${_hitHistory.length}</span>
+    </div>
+  `;
+
+  let panel = '';
+  if (_isExpanded) {
+    const items = [..._hitHistory].reverse().map(hit => {
+      const rule = getRuleById(hit.ruleId);
+      const ruleName = rule ? (rule.pattern || 'Unknown Rule') : 'Unknown Rule';
+      const statusCode = rule ? (rule.statusCode || 200) : 200;
+      return `
+        <div class="hit-item">
+          <div class="hit-url">${new URL(hit.url).pathname}</div>
+           <div class="hit-meta">
+            <span class="method-badge">MATCH</span>
+            <span>${ruleName}</span>
+            <span class="status-badge">${statusCode}</span>
+            <span style="margin-left:auto; opacity:0.6;text-align:center;">${new Date().toLocaleTimeString()}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    panel = `
+      <div class="panel">
+        <div class="panel-header">
+          <span>Captured Rules</span>
+          <button class="clear-btn" id="clear-btn">Clear</button>
+        </div>
+        <div class="panel-body">
+          ${items.length ? items : '<div style="padding:16px; text-align:center; color:#64748b;">No Rules yet</div>'}
+        </div>
+      </div>
+    `;
+  }
+
+  _overlayRoot.innerHTML = `${style}<div class="container">${panel}${pill}</div>`;
+
+  // Event Listeners
+  _overlayRoot.getElementById('toggle-btn').addEventListener('click', toggleExpand);
+  if (_isExpanded) {
+      _overlayRoot.getElementById('clear-btn')?.addEventListener('click', clearHistory);
+  }
+}
