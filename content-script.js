@@ -1,9 +1,5 @@
 // Content script: injects the page script and syncs rules from storage
 
-// Helper: Convert wildcard pattern to Regex (e.g., "*://example.com/*")
-// (Removed unused wildcardToRegex and ruleMatchesPage)
-
-// Safe helper: consider injected as present to avoid runtime errors
 function isInjected() {
   // We cannot reliably read page-world globals from the content script due to
   // isolated worlds. Treat injection as successful after appending the tag.
@@ -398,7 +394,7 @@ function renderOverlay() {
   // Content
   const pill = `
     <div class="pill" id="toggle-btn">
-      <span>⚡ Mockzilla</span>
+      <span>🦖 Mockzilla</span>
       <span class="pill-badge">${_hitHistory.length}</span>
     </div>
   `;

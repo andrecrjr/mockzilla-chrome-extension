@@ -5,10 +5,15 @@ export const changelogData = {
     date: "January 2026",
     sections: [
       {
+        title: "🚀 New Features",
+        items: [
+          "**New Overlay**: Now it's easier to debug the mock rules that was used directly in the page.",
+        ]
+      },
+      {
         title: "🚀 Improvements",
         items: [
-          "**Under the Hood**: Now using [MSW (Mock Service Worker)](https://mswjs.io/) interceptors for more reliable request handling.",
-          "**Credits**: Big thanks to the MSW team for their amazing library."
+          "**Under the hood**: Now using [MSW (Mock Service Worker)](https://mswjs.io/) interceptors for more reliable request handling.",
         ]
       }
     ]
