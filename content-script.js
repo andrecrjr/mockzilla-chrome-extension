@@ -17,7 +17,7 @@ function isInjected() {
 
     const script = document.createElement('script');
     script.src = chrome.runtime.getURL('injected.js');
-    script.type = 'text/javascript';
+    script.type = 'module';
     script.dataset.source = 'response-replacer';
     // Ensure synchronous execution order with page scripts
     script.async = false;
