@@ -1,5 +1,23 @@
 // Changelog data for Mockzilla
 export const changelogData = {
+  "0.4": {
+    title: "Version 0.4: Capture Panel",
+    date: "January 2026",
+    sections: [
+      {
+        title: "🚀 New Features",
+        items: [
+          "**Capture Panel**: Now it's easier to debug the mock rules that was used directly in your page.",
+        ]
+      },
+      {
+        title: "🚀 Improvements",
+        items: [
+          "**Under the hood**: Now using [MSW (Mock Service Worker)](https://mswjs.io/) interceptors for more reliable request handling.",
+        ]
+      }
+    ]
+  },
   "0.3": {
     title: "Version 0.3: Server Sync & UI Refresh",
     date: "January 2026",
@@ -11,12 +29,7 @@ export const changelogData = {
           "**Settings**: Created a new Settings Modal UI to import, export rules and sync to server!",
           "**Contact Form**: Created a new Contact Form to send feedback to the developer aside Settings",
       ]
-      },
-      // {
-      //   title: "🛠️ Improvements",
-      //   items: [
-      //   ]
-      // }
+      }
     ]
   }
 };

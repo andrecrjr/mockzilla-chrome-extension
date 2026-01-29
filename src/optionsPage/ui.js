@@ -330,6 +330,8 @@ function renderRuleDetails(rule) {
           <label class="label block mb-1">URL Pattern</label>
           <input class="pattern input w-full" placeholder="URL pattern" value="${escapeHtml(rule.pattern)}" aria-label="URL pattern" />
         </div>
+
+
         
         <div>
           <label class="label block mb-1">Response Type</label>
@@ -414,6 +416,7 @@ function renderRuleDetails(rule) {
   const groupSelectEl = detailsContainer.querySelector('.group-select');
   const matchTypeEl = detailsContainer.querySelector('.matchType');
   const patternEl = detailsContainer.querySelector('.pattern');
+
   const bodyTypeEl = detailsContainer.querySelector('.bodyType');
   const statusCodeEl = detailsContainer.querySelector('.statusCode');
   const bodyEl = detailsContainer.querySelector('.body');
@@ -536,6 +539,10 @@ function renderRuleDetails(rule) {
   patternEl.addEventListener('input', () => {
     updateMatchTypeHelp();
   });
+
+
+  
+
 
   statusCodeEl.addEventListener('change', async () => {
     rule.statusCode = parseInt(statusCodeEl.value, 10);
@@ -776,6 +783,8 @@ function renderGroupDetails(group) {
           <textarea class="group-description textarea" placeholder="Group description">${escapeHtml(group.description)}</textarea>
         </div>
         
+
+        
         <div>
           <label class="label block mb-1">Rules in this Group</label>
           <div class="border rounded p-2 bg-gray-800 max-h-60 overflow-y-auto">
@@ -797,6 +806,7 @@ function renderGroupDetails(group) {
   const nameEl = detailsContainer.querySelector('.group-name');
   const descriptionEl = detailsContainer.querySelector('.group-description');
 
+
   nameEl.addEventListener('blur', async (e) => {
     group.name = nameEl.value;
     await setGroup(group);
@@ -809,6 +819,8 @@ function renderGroupDetails(group) {
     await setGroup(group);
     flashStatus('Group description saved', 'success');
   });
+
+
 }
 
 function renderFolderImportModal(foldersData, onPageChange, onImport) {

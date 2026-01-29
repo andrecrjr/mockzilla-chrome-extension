@@ -122,3 +122,7 @@ Mockzilla is a Chrome extension that intercepts page-level `fetch` and `XMLHttpR
 - Responses always return `200 OK` with the designated `Content-Type`.
 - This extension patches page context only. Network-level interception (`chrome.webRequest`) is not used.
 - Patterns may include quotes; they’re stripped for matching.
+
+## Credits
+- **Made by AC-JR**: [Sponsor / Website](https://github.com/andrecrjr) (Link to be updated if specific site provided)
+- **Powered by MSW**: Special thanks to [Mock Service Worker](https://mswjs.io/) for their incredible interception library.

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Mockzilla - Request Interceptor for HTTP APIs",
-  "version": "0.3",
+  "version": "0.4",
   "description": "Intercept multiple API endpoints and replace responses with custom mock data.",
   "permissions": [
     "scripting",
@@ -40,7 +40,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "injected.js"
+        "injected.bundle.js",
+        "options.html"
       ],
       "matches": [
         "<all_urls>"
