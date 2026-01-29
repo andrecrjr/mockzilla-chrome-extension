@@ -1,4 +1,8 @@
-import { BatchInterceptor, FetchInterceptor, XMLHttpRequestInterceptor } from 'https://esm.sh/@mswjs/interceptors@0.37.0';
+import { BatchInterceptor } from '@mswjs/interceptors';
+import { FetchInterceptor } from '@mswjs/interceptors/fetch';
+import { XMLHttpRequestInterceptor } from '@mswjs/interceptors/XMLHttpRequest';
+
+
 
 console.log('Mockzilla RR injected script running (MSW Mode)');
 

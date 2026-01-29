@@ -1,0 +1,28 @@
+{
+  "name": "fastmock",
+  "version": "1.0.0",
+  "description": "Mockzilla is a Chrome extension that intercepts page-level `fetch` and `XMLHttpRequest` calls and returns mocked responses based on rules you define. It’s ideal for prototyping, isolating frontend work from unstable APIs, and reproducing edge cases without changing backend services.",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild injected.js --bundle --outfile=injected.bundle.js --format=esm --minify",
+    "zip": "powershell -ExecutionPolicy Bypass -File build-zip.ps1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrecrjr/fastmock.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrecrjr/fastmock/issues"
+  },
+  "homepage": "https://github.com/andrecrjr/fastmock#readme",
+  "dependencies": {
+    "@mswjs/interceptors": "^0.40.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2"
+  }
+}

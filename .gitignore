@@ -1,3 +1,5 @@
 .trae
 .windsurf
 *.zip
+node_modules
+injected.bundle.js
