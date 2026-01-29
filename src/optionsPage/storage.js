@@ -87,6 +87,7 @@ async function setRule(rule) {
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
     syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
+
   };
   const bodyKey = `rr_body_${rule.id}`;
   const bodyValue = rule.body ?? '';
@@ -120,6 +121,7 @@ async function setRuleMeta(rule) {
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: String(v.key || ''), bodyType: v.bodyType || rule.bodyType, statusCode: v.statusCode || rule.statusCode || 200 })) : [],
     wildcardRequireMatch: rule.wildcardRequireMatch === true,
     syncConfig: rule.syncConfig || { enabled: false, method: 'GET', autoSync: false },
+
   };
   await chrome.storage.sync.set({ [metaKey]: metaValue });
 }

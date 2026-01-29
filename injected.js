@@ -135,9 +135,32 @@ const interceptor = new BatchInterceptor({
   ],
 });
 
-interceptor.apply();
+let _interceptorApplied = false;
+
+function applyInterceptor() {
+  if (_interceptorApplied) return;
+  try {
+    interceptor.apply();
+    _interceptorApplied = true;
+    console.log('Mockzilla: Interceptor applied');
+  } catch (e) {
+    console.warn('Mockzilla: Failed to apply interceptor', e);
+  }
+}
+
+function disposeInterceptor() {
+  if (!_interceptorApplied) return;
+  try {
+    interceptor.dispose();
+    _interceptorApplied = false;
+    console.log('Mockzilla: Interceptor disposed');
+  } catch (e) {
+    console.warn('Mockzilla: Failed to dispose interceptor', e);
+  }
+}
 
 interceptor.on('request', async ({ request, controller }) => {
+  console.log('Mockzilla Interceptor Request:', request.url);
   try {
     const url = request.url;
     const absUrl = normalizeUrl(url);
@@ -185,7 +208,7 @@ interceptor.on('request', async ({ request, controller }) => {
 // ---------------------------------------------------------
 
 function updateRules(newRules) {
-  state.rules = Array.isArray(newRules) ? 
+  const rules = Array.isArray(newRules) ? 
     newRules.filter(Boolean).map(rule => ({
       ...rule,
       // Ensure defaults are set, similar to original logic
@@ -194,6 +217,16 @@ function updateRules(newRules) {
       variants: Array.isArray(rule.variants) ? rule.variants : [],
       wildcardRequireMatch: (rule.matchType === 'wildcard' && rule.wildcardRequireMatch !== false)
     })) : [];
+  
+  state.rules = rules;
+
+  // Lifecycle management
+  if (rules.length > 0) {
+    applyInterceptor();
+  } else {
+    // If no rules (or globally disabled which sends empty rules), dispose.
+    disposeInterceptor();
+  }
 }
 
 window.addEventListener('message', (ev) => {

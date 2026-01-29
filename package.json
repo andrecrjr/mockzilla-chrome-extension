@@ -1,6 +1,6 @@
 {
-  "name": "fastmock",
-  "version": "1.0.0",
+  "name": "mockzilla",
+  "version": "0.4",
   "description": "Mockzilla is a Chrome extension that intercepts page-level `fetch` and `XMLHttpRequest` calls and returns mocked responses based on rules you define. It’s ideal for prototyping, isolating frontend work from unstable APIs, and reproducing edge cases without changing backend services.",
   "main": "background.js",
   "scripts": {

@@ -7,7 +7,7 @@
 **Project Name:** Mockzilla
 **Type:** Chrome Extension (Manifest V3)
 **Core Purpose:** Client-side request interception and mocking.
-**Key Mechanism:** Monkeypatching global `fetch` and `XMLHttpRequest` objects in the browser's "Main World" (page context).
+**Key Mechanism:** Uses [`@mswjs/interceptors`](https://github.com/mswjs/interceptors) to reliably patch global `fetch` and `XMLHttpRequest` in the browser's "Main World" (page context).
 
 ## Coding Standards & Conventions
 
