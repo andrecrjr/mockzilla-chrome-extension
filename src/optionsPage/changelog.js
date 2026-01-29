@@ -7,7 +7,7 @@ export const changelogData = {
       {
         title: "🚀 New Features",
         items: [
-          "**New Overlay**: Now it's easier to debug the mock rules that was used directly in the page.",
+          "**New Panel**: Now it's easier to debug the mock rules that was used directly in your page.",
         ]
       },
       {

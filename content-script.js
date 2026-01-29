@@ -104,6 +104,7 @@ async function loadRulesAndInject() {
         
         const rule = {
           id,
+          name: value.name || '',
           matchType: value.matchType || 'substring',
           pattern: value.pattern || '',
           enabled: value.enabled !== false, // default to true when unset
@@ -203,16 +204,40 @@ function safeSendRuleHit(ruleId, url) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// UI / Overlay Logic
+// ---------------------------------------------------------------------------
+
+let _cachedRules = [];
+let _hitHistory = [];
+let _overlayHost = null;
+let _overlayRoot = null;
+let _isExpanded = false;
+let _hasShownInitialOpen = false;
+
 window.addEventListener('message', (ev) => {
   const msg = ev.data;
   if (!msg || !msg.__rr) return;
   if (msg.type === 'RULE_HIT') {
-    safeSendRuleHit(msg.ruleId, msg.url);
+    const hit = msg.hit;
+    if (!hit) {
+      // Fallback for old injected script format if not rebuilt yet
+      const ruleId = msg.ruleId;
+      const url = msg.url;
+      if (ruleId) {
+        safeSendRuleHit(ruleId, url);
+        // Minimal UI update for backwards compatibility
+        _hitHistory.push({ ruleId, url, ruleName: 'Updated Rule', statusCode: 200, method: '???', timestamp: Date.now(), _expanded: false });
+        renderOverlay();
+      }
+      return;
+    }
+    safeSendRuleHit(hit.ruleId, hit.url);
     
     // Update UI
-    _hitHistory.push({ ruleId: msg.ruleId, url: msg.url, timestamp: Date.now() });
+    _hitHistory.push({ ...hit, _expanded: false });
     
-    // "Show once" logic: auto-expand on first hit of the session
+    // "Show once" logic
     if (!_hasShownInitialOpen) {
       _hasShownInitialOpen = true;
       _isExpanded = true;
@@ -232,31 +257,16 @@ window.addEventListener('message', (ev) => {
 // Initial load
 loadRulesAndInject();
 
-// ---------------------------------------------------------------------------
-// UI / Overlay Logic
-// ---------------------------------------------------------------------------
-
-let _cachedRules = [];
-let _hitHistory = [];
-let _overlayHost = null;
-let _overlayRoot = null;
-let _isExpanded = false;
-let _hasShownInitialOpen = false;
-
-function getRuleById(id) {
-  return _cachedRules.find(r => r.id === id);
-}
-
 function setupOverlay() {
   if (_overlayHost) return;
 
   _overlayHost = document.createElement('div');
   _overlayHost.id = 'mockzilla-overlay-host';
   _overlayHost.style.position = 'fixed';
-  _overlayHost.style.zIndex = '2147483647'; // Max z-index
+  _overlayHost.style.zIndex = '2147483647';
   _overlayHost.style.bottom = '20px';
   _overlayHost.style.right = '20px';
-  _overlayHost.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+  _overlayHost.style.fontFamily = 'Inter, system-ui, -apple-system, sans-serif';
   
   _overlayRoot = _overlayHost.attachShadow({ mode: 'open' });
   
@@ -273,6 +283,13 @@ function clearHistory() {
   renderOverlay();
 }
 
+function toggleHitDetails(index) {
+  if (_hitHistory[index]) {
+    _hitHistory[index]._expanded = !_hitHistory[index]._expanded;
+    renderOverlay();
+  }
+}
+
 function renderOverlay() {
   if (!_overlayHost) setupOverlay();
   
@@ -282,112 +299,195 @@ function renderOverlay() {
   }
   _overlayHost.style.display = 'block';
 
-  // Styles
+  // Advanced Styles
   const style = `
     <style>
+      :host {
+        --bg-main: #0f172a;
+        --bg-panel: #1e293b;
+        --bg-hover: #334155;
+        --border: #334155;
+        --accent: #8b5cf6;
+        --text-main: #f1f5f9;
+        --text-dim: #94a3b8;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --error: #ef4444;
+      }
       .container {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 10px;
+        gap: 12px;
+        perspective: 1000px;
       }
       .pill {
-        background: #0f172a;
-        color: #fff;
-        padding: 8px 12px;
+        background: var(--bg-main);
+        color: white;
+        padding: 10px 16px;
         border-radius: 999px;
         cursor: pointer;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 8px;
-        transition: transform 0.2s;
-        border: 1px solid #334155;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid var(--border);
+        user-select: none;
       }
       .pill:hover {
-        transform: scale(1.02);
-        background: #1e293b;
+        transform: translateY(-2px);
+        background: var(--bg-panel);
+        border-color: var(--accent);
       }
       .pill-badge {
-        background: #ef4444;
+        background: var(--accent);
         color: white;
         border-radius: 999px;
-        padding: 2px 6px;
-        font-size: 12px;
-        min-width: 16px;
+        padding: 2px 8px;
+        font-size: 11px;
+        min-width: 18px;
         text-align: center;
       }
       .panel {
-        background: #0f172a;
-        color: #e2e8f0;
-        width: 320px;
-        max-height: 500px;
-        border-radius: 12px;
-        border: 1px solid #334155;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(12px);
+        color: var(--text-main);
+        width: 380px;
+        max-height: 600px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        flex-shrink: 1;
+        min-height: 0;
+        animation: slideIn 0.3s ease-out;
+      }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
       .panel-header {
-        padding: 12px 16px;
-        background: #1e293b;
-        border-bottom: 1px solid #334155;
+        padding: 14px 18px;
+        background: rgba(30, 41, 59, 0.5);
+        border-bottom: 1px solid var(--border);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: 600;
-        font-size: 14px;
+        font-weight: 700;
+        font-size: 15px;
+        flex-shrink: 0;
       }
       .panel-body {
-        padding: 0;
+        padding: 8px;
         overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+        flex: 1 1 auto;
+        min-height: 0;
+        overscroll-behavior: contain;
       }
-      .hit-item {
-        padding: 12px 16px;
-        border-bottom: 1px solid #1e293b;
-        font-size: 13px;
+      /* Custom Scrollbar */
+      .panel-body::-webkit-scrollbar {
+        width: 6px;
       }
-      .hit-item:last-child {
-        border-bottom: none;
+      .panel-body::-webkit-scrollbar-track {
+        background: transparent;
       }
-      .hit-url {
-        color: #38bdf8;
-        word-break: break-all;
-        margin-bottom: 4px;
-        font-family: monospace;
+      .panel-body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
       }
-      .hit-meta {
-        color: #94a3b8;
+      .panel-body::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .hit-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.2s;
+        margin-bottom: 8px;
+      }
+      .hit-card:hover { border-color: #475569; }
+      .hit-header {
+        padding: 12px;
+        cursor: pointer;
         display: flex;
-        gap: 8px;
-        align-items: center;
+        align-items: flex-start;
+        gap: 10px;
       }
-      .method-badge {
-        background: #334155;
-        padding: 2px 6px;
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 5px;
+        flex-shrink: 0;
+      }
+      .hit-content { flex: 1; min-width: 0; }
+      .hit-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+        gap: 8px;
+      }
+      .hit-rule-name { font-weight: 700; font-size: 13px; truncate; }
+      .hit-status { font-family: monospace; font-size: 12px; font-weight: 800; }
+      .hit-url-summary { 
+        color: var(--text-dim); 
+        font-size: 11px; 
+        font-family: monospace; 
+        word-break: break-all;
+        background: rgba(0,0,0,0.2);
+        padding: 4px 6px;
         border-radius: 4px;
-        font-size: 11px;
-        color: #f1f5f9;
+      }
+      .hit-details {
+        padding: 0 12px 12px 12px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        font-size: 12px;
+        background: rgba(0,0,0,0.1);
+      }
+      .detail-item { margin-top: 10px; }
+      .detail-label { color: var(--text-dim); font-size: 10px; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; }
+      .detail-value { font-family: monospace; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 4px; line-height: 1.4; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; }
+      
+      .tag {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 800;
         text-transform: uppercase;
       }
-      .status-badge {
-        color: #4ade80;
-        font-weight: 600;
+      .tag-method { background: var(--accent); color: white; }
+      .tag-match { background: #334155; color: #cbd5e1; }
+      
+      .footer-actions {
+        padding: 10px 18px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(30, 41, 59, 0.3);
+        flex-shrink: 0;
       }
-      .clear-btn {
-        background: transparent;
-        border: none;
-        color: #94a3b8;
-        cursor: pointer;
+      .clear-btn, .options-link {
+        color: var(--text-dim);
         font-size: 12px;
-        text-decoration: underline;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s;
+        background: none;
+        border: none;
+        padding: 0;
       }
-      .clear-btn:hover {
-        color: #f1f5f9;
-      }
+      .clear-btn:hover, .options-link:hover { color: white; }
     </style>
   `;
 
@@ -401,19 +501,50 @@ function renderOverlay() {
 
   let panel = '';
   if (_isExpanded) {
-    const items = [..._hitHistory].reverse().map(hit => {
-      const rule = getRuleById(hit.ruleId);
-      const ruleName = rule ? (rule.pattern || 'Unknown Rule') : 'Unknown Rule';
-      const statusCode = rule ? (rule.statusCode || 200) : 200;
+    const items = [..._hitHistory].reverse().map((hit, idx) => {
+      const actualIdx = _hitHistory.length - 1 - idx;
+      const statusColor = hit.statusCode >= 200 && hit.statusCode < 300 ? 'var(--success)' : 
+                         hit.statusCode >= 400 ? 'var(--error)' : 'var(--warning)';
+      const timeStr = new Date(hit.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
       return `
-        <div class="hit-item">
-          <div class="hit-url">${new URL(hit.url).pathname}</div>
-           <div class="hit-meta">
-            <span class="method-badge">MATCH</span>
-            <span>${ruleName}</span>
-            <span class="status-badge">${statusCode}</span>
-            <span style="margin-left:auto; opacity:0.6;text-align:center;">${new Date().toLocaleTimeString()}</span>
+        <div class="hit-card">
+          <div class="hit-header" data-idx="${actualIdx}">
+            <div class="status-dot" style="background: ${statusColor}; box-shadow: 0 0 8px ${statusColor}"></div>
+            <div class="hit-content">
+              <div class="hit-title-row">
+                <div class="hit-rule-name">${escapeHtml(hit.ruleName)}</div>
+                <div class="hit-status" style="color: ${statusColor}">${hit.statusCode}</div>
+              </div>
+              <div class="hit-title-row" style="margin-top: 2px;">
+                <div style="display: flex; gap: 4px; align-items: center;">
+                  <span class="tag tag-method">${hit.method}</span>
+                  <span class="tag tag-match">${hit.ruleMatchType}</span>
+                  ${hit.variantKey ? `<span class="tag" style="background: #10b981; color: white;">#${hit.variantKey}</span>` : ''}
+                </div>
+                <span style="font-size: 10px; color: var(--text-dim);">${timeStr}</span>
+              </div>
+              <div class="hit-url-summary">${escapeHtml(hit.url)}</div>
+            </div>
           </div>
+          ${hit._expanded ? `
+            <div class="hit-details">
+              <div class="detail-item">
+                <div class="detail-label">Match Pattern</div>
+                <div class="detail-value">${escapeHtml(hit.rulePattern)}</div>
+              </div>
+              ${hit.variantKey ? `
+              <div class="detail-item">
+                <div class="detail-label">Variant Key</div>
+                <div class="detail-value">${escapeHtml(hit.variantKey)}</div>
+              </div>
+              ` : ''}
+              <div class="detail-item">
+                <div class="detail-label">Response Body (${hit.bodyType})</div>
+                <div class="detail-value">${escapeHtml(hit.body)}</div>
+              </div>
+            </div>
+          ` : ''}
         </div>
       `;
     }).join('');
@@ -421,11 +552,18 @@ function renderOverlay() {
     panel = `
       <div class="panel">
         <div class="panel-header">
-          <span>Captured Rules</span>
-          <button class="clear-btn" id="clear-btn">Clear</button>
+          <span>Captured Requests</span>
+          <button class="clear-btn" id="clear-btn">Clear All</button>
         </div>
         <div class="panel-body">
-          ${items.length ? items : '<div style="padding:16px; text-align:center; color:#64748b;">No Rules yet</div>'}
+          ${items || '<div style="padding:40px; text-align:center; color:var(--text-dim); font-size:13px;">No requests captured yet</div>'}
+        </div>
+        <div class="footer-actions">
+           <a href="${chrome.runtime.getURL('options.html')}" rel="noreferrer" target="_blank" class="options-link">Open Dashboard</a>
+           <div style="display:flex; gap:4px;">
+           <a href="https://ac-jr.com" rel="noreferrer" target="_blank" class="options-link">AC-JR</a>
+           <a href="https://ko-fi.com/andrecrjr" rel="noreferrer" target="_blank" style="font-size: 14px; color: var(--text-dim); opacity: 0.5; text-decoration:none;">☕🦖</a>
+           </div>
         </div>
       </div>
     `;
@@ -436,6 +574,17 @@ function renderOverlay() {
   // Event Listeners
   _overlayRoot.getElementById('toggle-btn').addEventListener('click', toggleExpand);
   if (_isExpanded) {
-      _overlayRoot.getElementById('clear-btn')?.addEventListener('click', clearHistory);
+    _overlayRoot.getElementById('clear-btn')?.addEventListener('click', clearHistory);
+    _overlayRoot.querySelectorAll('.hit-header').forEach(el => {
+      el.addEventListener('click', () => {
+        toggleHitDetails(parseInt(el.dataset.idx));
+      });
+    });
   }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }

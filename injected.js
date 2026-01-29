@@ -82,19 +82,25 @@ function matchWildcard(url, pattern) {
   return { ok: true, captures: caps };
 }
 
-function selectVariant(rule, url) {
+function getCaptureKey(rule, url) {
   if (rule.matchType !== 'wildcard') return null;
   const rawPattern = sanitizePattern(rule.pattern);
   const absPattern = normalizeUrl(rawPattern);
   const mAbs = matchWildcard(url, absPattern);
   const mRaw = mAbs.ok ? mAbs : matchWildcard(url, rawPattern);
-  const m = mRaw;
-  if (!m.ok) return null;
-  const key = m.captures.join('|');
+  if (!mRaw.ok) return null;
+  return mRaw.captures.join('|');
+}
+
+function selectVariant(rule, url) {
+  const key = getCaptureKey(rule, url);
+  if (key === null) return null;
+  
   const variants = Array.isArray(rule.variants) ? rule.variants : [];
   const v = variants.find(x => String(x.key) === key);
   if (!v) return null;
   return {
+    key: key,
     bodyType: v.bodyType || rule.bodyType,
     statusCode: v.statusCode || rule.statusCode || 200,
     body: v.body ?? ''
@@ -118,9 +124,9 @@ function safeParseJSON(text) {
   }
 }
 
-function notifyRuleHit(ruleId, url) {
-  window.postMessage({ __rr: true, type: 'RULE_HIT', ruleId, url }, '*');
-  console.log('Mockzilla Rule HIT:', ruleId, url);
+function notifyRuleHit(hit) {
+  window.postMessage({ __rr: true, type: 'RULE_HIT', hit }, '*');
+  console.log('Mockzilla Rule HIT:', hit.ruleName || hit.ruleId, hit.url);
 }
 
 // ---------------------------------------------------------
@@ -169,24 +175,37 @@ interceptor.on('request', async ({ request, controller }) => {
     const rule = state.rules.find((r) => matchesRule(absUrl, r));
     
     if (rule) {
+      const variant = selectVariant(rule, absUrl);
+      
       // Logic for wildcard variants matching requirement
       if (rule.matchType === 'wildcard' && rule.wildcardRequireMatch === true) {
-        const v = selectVariant(rule, absUrl);
-        if (!v) {
+        if (!variant) {
           return; // Passthrough
         }
       }
       
-      notifyRuleHit(rule.id, absUrl);
-      
       // Determine response details
-      const variant = selectVariant(rule, absUrl);
       const bodyType = variant ? variant.bodyType : rule.bodyType;
       const statusCode = variant ? variant.statusCode : (rule.statusCode || 200);
       const bodyRaw = variant ? variant.body : rule.body;
       
       const body = bodyType === 'json' ? JSON.stringify(safeParseJSON(bodyRaw)) : String(bodyRaw ?? '');
       const statusText = getStatusCodeText(statusCode);
+      
+      // Notify content script with full data
+      notifyRuleHit({
+        ruleId: rule.id,
+        ruleName: rule.name || 'Untitled Rule',
+        rulePattern: rule.pattern,
+        ruleMatchType: rule.matchType,
+        url: absUrl,
+        method: request.method,
+        statusCode: statusCode,
+        bodyType: bodyType,
+        body: body.length > 5000 ? body.substring(0, 5000) + '... (truncated)' : body,
+        variantKey: getCaptureKey(rule, absUrl),
+        timestamp: Date.now()
+      });
       
       const response = new Response(body, {
         status: statusCode,
