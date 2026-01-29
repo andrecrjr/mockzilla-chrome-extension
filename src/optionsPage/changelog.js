@@ -1,13 +1,13 @@
 // Changelog data for Mockzilla
 export const changelogData = {
   "0.4": {
-    title: "Version 0.4: MSW Integration",
+    title: "Version 0.4: Capture Panel",
     date: "January 2026",
     sections: [
       {
         title: "🚀 New Features",
         items: [
-          "**New Panel**: Now it's easier to debug the mock rules that was used directly in your page.",
+          "**Capture Panel**: Now it's easier to debug the mock rules that was used directly in your page.",
         ]
       },
       {

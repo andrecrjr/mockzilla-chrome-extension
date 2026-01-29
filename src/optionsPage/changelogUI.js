@@ -23,6 +23,7 @@ export async function initChangelog() {
   const changelogModal = document.getElementById('changelogModal');
   const closeChangelogTop = document.getElementById('closeChangelogTop');
   const closeChangelogBtn = document.getElementById('closeChangelogBtn');
+  const feedbackChangelogBtn = document.getElementById('feedbackChangelogBtn');
 
   const closeChangelog = () => {
     if (changelogModal) {
