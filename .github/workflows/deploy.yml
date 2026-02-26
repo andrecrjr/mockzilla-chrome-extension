@@ -22,8 +22,8 @@ jobs:
         run: npm ci
 
       - name: Build and Package Extension
-        shell: pwsh
-        run: npm run zip
+        shell: bash
+        run: npm run bash-zip
 
       - name: Extract version from package.json
         id: extract_version

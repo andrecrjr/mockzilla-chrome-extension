@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "esbuild injected.js --bundle --outfile=injected.bundle.js --format=esm --minify",
-    "zip": "powershell -ExecutionPolicy Bypass -File build-zip.ps1"
+    "zip": "powershell -ExecutionPolicy Bypass -File build-zip.ps1",
+    "bash-zip": "bash build-zip.sh"
   },
   "repository": {
     "type": "git",
