@@ -300,15 +300,15 @@ function initializeHeaderControls() {
   const filterEnabled = document.getElementById('filterEnabled');
   const filterDisabled = document.getElementById('filterDisabled');
   const filterUngrouped = document.getElementById('filterUngrouped');
-  // Centralized, theme-aware chip active toggle using CSS class defined in options.html
+  // Centralized, theme-aware filter active toggle using CSS classes defined in options.html
   function setFilterChipActive(activeEl) {
     [filterAll, filterEnabled, filterDisabled].forEach(el => {
       if (!el) return;
       const isActive = el === activeEl;
-      el.classList.toggle('chip-active', isActive);
+      el.classList.toggle('filter-item-active', isActive);
     });
   }
-  // Initialize chip state
+  // Initialize filter state
   const currentStatus = getFilterStatus && getFilterStatus();
   if (typeof currentStatus === 'string') {
     if (currentStatus === 'all' && filterAll) setFilterChipActive(filterAll);
@@ -317,13 +317,13 @@ function initializeHeaderControls() {
   } else if (filterAll) { setFilterChipActive(filterAll); }
   const showUngrouped = getShowUngrouped && getShowUngrouped();
   if (filterUngrouped) {
-    filterUngrouped.classList.toggle('chip-active', !!showUngrouped);
+    filterUngrouped.classList.toggle('filter-toggle-active', !!showUngrouped);
   }
   if (filterAll) filterAll.addEventListener('click', () => { setFilterStatus('all'); setFilterChipActive(filterAll); refresh(); });
   if (filterEnabled) filterEnabled.addEventListener('click', () => { setFilterStatus('enabled'); setFilterChipActive(filterEnabled); refresh(); });
   if (filterDisabled) filterDisabled.addEventListener('click', () => { setFilterStatus('disabled'); setFilterChipActive(filterDisabled); refresh(); });
   if (filterUngrouped) filterUngrouped.addEventListener('click', () => { 
-    const active = filterUngrouped.classList.toggle('chip-active');
+    const active = filterUngrouped.classList.toggle('filter-toggle-active');
     setShowUngrouped(active); 
     refresh(); 
   });

@@ -42,7 +42,8 @@ function renderRulesList(rules, groups) {
     
     const groupItem = document.createElement('div');
     const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-    groupItem.className = `group-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'group' && getSelectedId() === group.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
+    const isSelected = getSelectedType() === 'group' && getSelectedId() === group.id;
+    groupItem.className = `group sidebar-item ${densityPad} ${isSelected ? 'sidebar-item-active' : ''}`;
     groupItem.dataset.groupId = group.id;
 
     // Get rules in this group to show count
@@ -63,7 +64,7 @@ function renderRulesList(rules, groups) {
         <div class="text-xs text-gray-500 truncate">${escapeHtml(group.description)}</div>
       </div>
       <div class="flex items-center gap-2">
-        <button class="delete-group-btn text-red-500 hover:text-red-700" title="Delete group">
+        <button class="delete-group-btn delete-icon-btn" title="Delete group">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
           </svg>
@@ -101,17 +102,18 @@ function renderRulesList(rules, groups) {
       groupRules.forEach(rule => {
         const ruleItem = document.createElement('div');
         const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ml-4 ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
+        const isSelected = getSelectedType() === 'rule' && getSelectedId() === rule.id;
+        ruleItem.className = `group rule-item sidebar-item ${densityPad} ml-4 ${isSelected ? 'sidebar-item-active' : ''}`;
         ruleItem.dataset.ruleId = rule.id;
 
         ruleItem.innerHTML = `
-          <div class="flex-1 min-w-0 ml-4">
+          <div class="flex-1 min-w-0">
             <div class="font-medium text-sm truncate">${escapeHtml(rule.name || 'Untitled rule')}</div>
-            <div class="text-xs text-gray-500 truncate">${escapeHtml(rule.pattern)}</div>
+            <div class="text-xs font-mono text-muted-foreground truncate">${escapeHtml(rule.pattern)}</div>
           </div>
           <div class="flex items-center gap-2">
             <span class="badge ${rule.enabled ? 'badge-green' : 'badge-gray'}">${rule.enabled ? 'ON' : 'OFF'}</span>
-            <button class="delete-btn text-red-500 hover:text-red-700" title="Delete rule">
+            <button class="delete-btn delete-icon-btn" title="Delete rule">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
@@ -150,12 +152,13 @@ function renderRulesList(rules, groups) {
     // Add toggle for ungrouped rules
     const ungroupedExpanded = getGroupExpanded('ungrouped');
     const ungroupedHeader = document.createElement('div');
-    ungroupedHeader.className = 'p-2 font-medium text-gray-700 text-xs uppercase tracking-wider flex items-center cursor-pointer';
+    ungroupedHeader.className = 'sidebar-section-label flex items-center cursor-pointer gap-2';
     ungroupedHeader.innerHTML = `
-      <svg class="w-4 h-4 mr-1 expand-icon ${ungroupedExpanded ? '' : 'rotate-180'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <svg class="w-4 h-4 expand-icon ${ungroupedExpanded ? '' : 'rotate-180'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
       </svg>
-      Ungrouped Rules <span class="ml-1 badge badge-gray">${ungroupedRules.length}</span>
+      <span>Ungrouped Rules</span>
+      <span class="badge badge-gray">${ungroupedRules.length}</span>
     `;
     
     ungroupedHeader.addEventListener('click', () => {
@@ -170,17 +173,18 @@ function renderRulesList(rules, groups) {
       ungroupedRules.forEach(rule => {
         const ruleItem = document.createElement('div');
         const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
+        const isSelected = getSelectedType() === 'rule' && getSelectedId() === rule.id;
+        ruleItem.className = `group rule-item sidebar-item ${densityPad} ${isSelected ? 'sidebar-item-active' : ''}`;
         ruleItem.dataset.ruleId = rule.id;
 
         ruleItem.innerHTML = `
           <div class="flex-1 min-w-0">
             <div class="font-medium text-sm truncate">${escapeHtml(rule.name || 'Untitled rule')}</div>
-            <div class="text-xs text-gray-500 truncate">${escapeHtml(rule.pattern)}</div>
+            <div class="text-xs font-mono text-muted-foreground truncate">${escapeHtml(rule.pattern)}</div>
           </div>
           <div class="flex items-center gap-2">
             <span class="badge ${rule.enabled ? 'badge-green' : 'badge-gray'}">${rule.enabled ? 'ON' : 'OFF'}</span>
-            <button class="delete-btn text-red-500 hover:text-red-700" title="Delete rule">
+            <button class="delete-btn delete-icon-btn" title="Delete rule">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
@@ -232,12 +236,12 @@ function renderRuleDetails(rule) {
   }
 
   detailsContainer.innerHTML = `
-    <div class="space-y-4">
+    <div class="space-y-6">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-           <h2 class="text-lg font-medium line-clamp-1">Rule Details</h2>
+           <h2 class="text-lg font-semibold line-clamp-1">Rule Details</h2>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <!-- Multi-Action Rule Header Controls -->
           ${(rule.group && getServerUrl() && rule.syncConfig?.enabled) ? `
           <div class="flex items-center bg-secondary rounded-lg p-1 border border-border gap-1">
@@ -268,19 +272,19 @@ function renderRuleDetails(rule) {
       
       <!-- Mockzilla Server Sync Banner (BETA) -->
       ${(getShowServerSyncBanner() || (getServerUrl() && getServerUrl().trim() !== "")) ? `
-      <div class="bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/10 rounded-lg p-2 text-[11px] leading-tight text-foreground/70 flex gap-2.5 items-center relative">
-         <div class="p-1.5 bg-card rounded shadow-sm border border-border">
+      <div class="bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/10 rounded-lg p-3 text-[11px] leading-tight text-foreground/70 flex gap-2.5 items-center relative">
+         <div class="p-1.5 bg-card rounded shadow-sm border border-border flex-shrink-0">
            <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
          </div>
          <div class="flex-1 flex items-center justify-between">
            <div>
              <strong class="text-primary">Server Sync (BETA):</strong>
-             Store this mock data on your server. <span>(Need to configure server URL in Settings)</span>
+             Store this mock data on your server. <span>(Configure server URL in Settings)</span>
            </div>
            <div class="flex items-center gap-3">
              <label class="flex items-center gap-1.5 cursor-pointer hover:text-primary transition-colors font-medium">
                 <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
-                <span>Enable Sync</span>
+                <span>Enable</span>
              </label>
              ${(!getServerUrl() || getServerUrl().trim() === "") ? `
              <button class="hide-banner-btn text-foreground/40 hover:text-foreground transition-colors p-1" title="Hide introduction">
@@ -294,14 +298,15 @@ function renderRuleDetails(rule) {
       </div>
       ` : ''}
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="label block mb-1">Rule Name</label>
-          <input class="name input w-full" placeholder="Rule name" value="${escapeHtml(rule.name || '')}" aria-label="Rule name" />
+      <!-- Form Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="form-field">
+          <label class="field-label">Rule Name</label>
+          <input class="name input w-full" placeholder="Enter rule name" value="${escapeHtml(rule.name || '')}" aria-label="Rule name" />
         </div>
         
-        <div>
-          <label class="label block mb-1">Group</label>
+        <div class="form-field">
+          <label class="field-label">Group</label>
           <select class="group-select select w-full" aria-label="Select group">
             <option value="" ${rule.group === '' ? 'selected' : ''}>No Group</option>
             ${window.currentGroups?.map(group => 
@@ -309,40 +314,40 @@ function renderRuleDetails(rule) {
             ).join('')}
           </select>
         </div>
-        
-        <div class="col-span-3">
-          <label class="label block mb-1">Match Type</label>
-          <select class="matchType select w-full" aria-label="Match type">
-            <option value="substring" ${rule.matchType === 'substring' ? 'selected' : ''}>Substring</option>
-            <option value="exact" ${rule.matchType === 'exact' ? 'selected' : ''}>Exact</option>
-            <option value="wildcard" ${rule.matchType === 'wildcard' ? 'selected' : ''}>Wildcard</option>
-          </select>
-          <div class="matchType-help text-xs text-foreground/60 mt-2 space-y-1">
-            <div class="matchType-help-pattern"></div>
-            <div class="matchType-help-substring hidden"><strong>Substring</strong>: match any URL containing this text. Example: <span class="font-mono">/todos/1</span> matches <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
-            <div class="matchType-help-exact hidden"><strong>Exact</strong>: match only this full URL. Example: <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
-            <div class="matchType-help-wildcard hidden"><strong>Wildcard</strong>: each <span class="font-mono">*</span> captures a part of the URL and builds a <strong>variant key</strong> by joining captures with <span class="font-mono">|</span>. Example: <span class="font-mono">.../todos/*</span> + <span class="font-mono">.../todos/1</span> → key <span class="font-mono">1</span>. Great for multiple query params: <span class="font-mono">.../search?user=*&amp;status=*</span> → key <span class="font-mono">alice|open</span></div>
-            <div class="matchType-help-wildcard-require hidden"><strong>Require variant</strong> ON: if no variant key matches, the request passes through</div>
-          </div>
-        </div>
-        
-        <div class="md:col-span-2">
-          <label class="label block mb-1">URL Pattern</label>
-          <input class="pattern input w-full" placeholder="URL pattern" value="${escapeHtml(rule.pattern)}" aria-label="URL pattern" />
-        </div>
+      </div>
 
+      <div class="form-field">
+        <label class="field-label">Match Type</label>
+        <select class="matchType select w-full" aria-label="Match type">
+          <option value="substring" ${rule.matchType === 'substring' ? 'selected' : ''}>Substring</option>
+          <option value="exact" ${rule.matchType === 'exact' ? 'selected' : ''}>Exact</option>
+          <option value="wildcard" ${rule.matchType === 'wildcard' ? 'selected' : ''}>Wildcard</option>
+        </select>
+        <div class="matchType-help text-xs text-foreground/60 mt-2 space-y-1.5">
+          <div class="matchType-help-pattern"></div>
+          <div class="matchType-help-substring hidden"><strong>Substring</strong>: match any URL containing this text. Example: <span class="font-mono text-[10px]">/todos/1</span> matches <span class="font-mono text-[10px]">https://jsonplaceholder.typicode.com/todos/1</span></div>
+          <div class="matchType-help-exact hidden"><strong>Exact</strong>: match only this full URL. Example: <span class="font-mono text-[10px]">https://jsonplaceholder.typicode.com/todos/1</span></div>
+          <div class="matchType-help-wildcard hidden"><strong>Wildcard</strong>: each <span class="font-mono text-[10px]">*</span> captures a part of the URL and builds a <strong>variant key</strong> by joining captures with <span class="font-mono text-[10px]">|</span>. Example: <span class="font-mono text-[10px]">.../todos/*</span> + <span class="font-mono text-[10px]">.../todos/1</span> → key <span class="font-mono text-[10px]">1</span>. Great for multiple query params: <span class="font-mono text-[10px]">.../search?user=*&amp;status=*</span> → key <span class="font-mono text-[10px]">alice|open</span></div>
+          <div class="matchType-help-wildcard-require hidden"><strong>Require variant</strong> ON: if no variant key matches, the request passes through</div>
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <label class="field-label">URL Pattern</label>
+        <input class="pattern input w-full" placeholder="https://api.example.com/users/..." value="${escapeHtml(rule.pattern)}" aria-label="URL pattern" />
+      </div>
 
-        
-        <div>
-          <label class="label block mb-1">Response Type</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="form-field">
+          <label class="field-label">Response Type</label>
           <select class="bodyType select w-full" aria-label="Body type">
             <option value="text" ${rule.bodyType === 'text' ? 'selected' : ''}>Text</option>
             <option value="json" ${rule.bodyType === 'json' ? 'selected' : ''}>JSON</option>
           </select>
         </div>
         
-        <div>
-          <label class="label block mb-1">Status Code</label>
+        <div class="form-field">
+          <label class="field-label">Status Code</label>
           <select class="statusCode select w-full" aria-label="Status code">
             <option value="200" ${rule.statusCode === 200 ? 'selected' : ''}>200 OK</option>
             <option value="201" ${rule.statusCode === 201 ? 'selected' : ''}>201 Created</option>
@@ -357,26 +362,24 @@ function renderRuleDetails(rule) {
             <option value="503" ${rule.statusCode === 503 ? 'selected' : ''}>503 Service Unavailable</option>
           </select>
         </div>
-        
-
       </div>
       
-      <div>
-        <label class="label block mb-1">Response Body</label>
-        <textarea class="body textarea" placeholder="Replacement body" aria-label="Replacement body">${escapeHtml(rule.body)}</textarea>
+      <div class="form-field">
+        <label class="field-label">Response Body</label>
+        <textarea class="body textarea" placeholder="Response body JSON or text" aria-label="Replacement body">${escapeHtml(rule.body)}</textarea>
         <div class="validation text-xs text-red-600 mt-1 hidden" data-error="json" role="alert"></div>
       </div>
       <div class="wildcard-section ${rule.matchType === 'wildcard' ? '' : 'hidden'}">
-        <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3">
-            <label class="label">Wildcard Variants</label>
+            <label class="field-label">Wildcard Variants</label>
             <label class="switch flex items-center cursor-pointer">
               <input type="checkbox" class="wildcard-require-match" ${rule.wildcardRequireMatch ? 'checked' : ''} aria-label="Require variant match" />
               <span class="slider ml-2"></span>
             </label>
-            <span class="text-xs text-gray-500">Require variant to intercept (no key → pass through)</span>
+            <span class="text-xs text-muted-foreground">Pass through if no match</span>
           </div>
-          <button class="add-variant btn btn-sm">Add Variant</button>
+          <button class="add-variant btn btn-sm">+ Add Variant</button>
         </div>
         <div class="variants-list space-y-3">
           ${(Array.isArray(rule.variants) ? rule.variants : []).map(v => `
