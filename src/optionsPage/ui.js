@@ -42,7 +42,7 @@ function renderRulesList(rules, groups) {
     
     const groupItem = document.createElement('div');
     const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-    groupItem.className = `group-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'group' && getSelectedId() === group.id ? 'bg-purple-900 border border-blue-200' : 'hover:bg-gray-800'}`;
+    groupItem.className = `group-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'group' && getSelectedId() === group.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
     groupItem.dataset.groupId = group.id;
 
     // Get rules in this group to show count
@@ -101,7 +101,7 @@ function renderRulesList(rules, groups) {
       groupRules.forEach(rule => {
         const ruleItem = document.createElement('div');
         const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ml-4 ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-purple-900 border border-blue-200' : 'hover:bg-gray-800'}`;
+        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ml-4 ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
         ruleItem.dataset.ruleId = rule.id;
 
         ruleItem.innerHTML = `
@@ -170,7 +170,7 @@ function renderRulesList(rules, groups) {
       ungroupedRules.forEach(rule => {
         const ruleItem = document.createElement('div');
         const densityPad = getDensity() === 'compact' ? 'p-1' : 'p-2';
-        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-purple-900 border border-blue-200' : 'hover:bg-gray-800'}`;
+        ruleItem.className = `rule-item ${densityPad} rounded cursor-pointer flex items-center justify-between ${getSelectedType() === 'rule' && getSelectedId() === rule.id ? 'bg-primary/20 border border-primary' : 'hover:bg-secondary/50'}`;
         ruleItem.dataset.ruleId = rule.id;
 
         ruleItem.innerHTML = `
@@ -224,7 +224,7 @@ function renderRuleDetails(rule) {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-1">Select a rule to manage</h3>
+        <h3 class="text-lg font-medium text-foreground mb-1">Select a rule to manage</h3>
         <p class="text-gray-500">Choose a rule from the sidebar to view and edit its details</p>
       </div>
     `;
@@ -240,16 +240,16 @@ function renderRuleDetails(rule) {
         <div class="flex items-center gap-2">
           <!-- Multi-Action Rule Header Controls -->
           ${(rule.group && getServerUrl() && rule.syncConfig?.enabled) ? `
-          <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700 gap-1">
-             <div class="flex items-center px-2 py-1 gap-2 border-r border-gray-200 dark:border-gray-700 mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
+          <div class="flex items-center bg-secondary rounded-lg p-1 border border-border gap-1">
+             <div class="flex items-center px-2 py-1 gap-2 border-r border-border mr-1 tooltip-container" title="Auto Sync: Pushes changes to server automatically on every edit">
                 <label class="switch-sm flex items-center cursor-pointer">
                   <input type="checkbox" class="sync-autosync" ${rule.syncConfig?.autoSync ? 'checked' : ''} />
                   <span class="slider-sm"></span>
                 </label>
-                <span class="text-[10px] font-medium text-gray-500 uppercase tracking-tight">Auto</span>
+                <span class="text-[10px] font-medium text-foreground/60 uppercase tracking-tight">Auto</span>
              </div>
              
-             <button class="btn btn-xs btn-ghost text-purple-600 hover:bg-purple-50 flex items-center gap-1.5 sync-now-btn" title="Sync Now" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+             <button class="btn btn-xs btn-ghost text-primary hover:bg-primary/10 flex items-center gap-1.5 sync-now-btn" title="Sync Now" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 <span class="text-[10px] font-bold">SYNC NOW</span>
              </button>
@@ -268,22 +268,22 @@ function renderRuleDetails(rule) {
       
       <!-- Mockzilla Server Sync Banner (BETA) -->
       ${(getShowServerSyncBanner() || (getServerUrl() && getServerUrl().trim() !== "")) ? `
-      <div class="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 border border-purple-100 dark:border-purple-800/20 rounded-lg p-2 text-[11px] leading-tight text-gray-600 dark:text-gray-400 flex gap-2.5 items-center relative">
-         <div class="p-1.5 bg-white dark:bg-gray-800 rounded shadow-sm border border-purple-50 dark:border-purple-800/40">
-           <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+      <div class="bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/10 rounded-lg p-2 text-[11px] leading-tight text-foreground/70 flex gap-2.5 items-center relative">
+         <div class="p-1.5 bg-card rounded shadow-sm border border-border">
+           <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
          </div>
          <div class="flex-1 flex items-center justify-between">
            <div>
-             <strong class="text-purple-700 dark:text-purple-300">Server Sync (BETA):</strong>
+             <strong class="text-primary">Server Sync (BETA):</strong>
              Store this mock data on your server. <span>(Need to configure server URL in Settings)</span>
            </div>
            <div class="flex items-center gap-3">
-             <label class="flex items-center gap-1.5 cursor-pointer hover:text-purple-600 transition-colors font-medium">
+             <label class="flex items-center gap-1.5 cursor-pointer hover:text-primary transition-colors font-medium">
                 <input type="checkbox" class="sync-enabled" ${rule.syncConfig?.enabled ? 'checked' : ''} />
                 <span>Enable Sync</span>
              </label>
              ${(!getServerUrl() || getServerUrl().trim() === "") ? `
-             <button class="hide-banner-btn text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1" title="Hide introduction">
+             <button class="hide-banner-btn text-foreground/40 hover:text-foreground transition-colors p-1" title="Hide introduction">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -317,7 +317,7 @@ function renderRuleDetails(rule) {
             <option value="exact" ${rule.matchType === 'exact' ? 'selected' : ''}>Exact</option>
             <option value="wildcard" ${rule.matchType === 'wildcard' ? 'selected' : ''}>Wildcard</option>
           </select>
-          <div class="matchType-help text-xs text-gray-500 mt-2 space-y-1">
+          <div class="matchType-help text-xs text-foreground/60 mt-2 space-y-1">
             <div class="matchType-help-pattern"></div>
             <div class="matchType-help-substring hidden"><strong>Substring</strong>: match any URL containing this text. Example: <span class="font-mono">/todos/1</span> matches <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>
             <div class="matchType-help-exact hidden"><strong>Exact</strong>: match only this full URL. Example: <span class="font-mono">https://jsonplaceholder.typicode.com/todos/1</span></div>

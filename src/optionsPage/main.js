@@ -270,16 +270,6 @@ function initializeToggleRuleButton() {
 }
 
 function initializeHeaderControls() {
-  // Theme toggle
-  const themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    themeToggle.checked = getTheme() === 'dark';
-    themeToggle.addEventListener('change', () => {
-      setTheme(themeToggle.checked ? 'dark' : 'light');
-    });
-  }
-
-
   // Density
   const densityToggle = document.getElementById('densityToggle');
   if (densityToggle) {
@@ -345,15 +335,6 @@ function initializeKeyboardShortcuts() {
     if ((e.key === '/' && !e.ctrlKey && !e.metaKey) || (e.ctrlKey && e.key.toLowerCase() === 'k')) {
       const search = document.getElementById('globalSearch');
       if (search) { e.preventDefault(); search.focus(); }
-      return;
-    }
-    // Toggle theme with 'd'
-    if (e.key.toLowerCase() === 'd' && !e.ctrlKey && !e.metaKey) {
-      const next = getTheme() === 'dark' ? 'light' : 'dark';
-      setTheme(next);
-      const toggle = document.getElementById('themeToggle');
-      if (toggle) toggle.checked = next === 'dark';
-      flashStatus(`Theme: ${next}`, 'info');
       return;
     }
   });

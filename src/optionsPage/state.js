@@ -9,7 +9,7 @@ let selectedType = null; // 'rule' or 'group'
 
 // UI preference state (persisted)
 let prefs = {
-  theme: 'light', // 'light' | 'dark'
+  theme: 'dark', // 'light' | 'dark'
   density: 'comfortable', // 'comfortable' | 'compact'
   sortOrder: 'recent', // 'recent' | 'az' | 'enabled'
   filterStatus: 'all', // 'all' | 'enabled' | 'disabled'
@@ -37,11 +37,10 @@ function savePrefs() {
 
 function applyPrefsToDOM() {
   const html = document.documentElement;
-  // Theme
-  html.setAttribute('data-theme', prefs.theme);
-  html.classList.toggle('dark', prefs.theme === 'dark');
-  // Some Tailwind dark-mode setups look for the class on body; add it for safety
-  document.body.classList.toggle('dark', prefs.theme === 'dark');
+  // Theme: always dark
+  html.setAttribute('data-theme', 'dark');
+  html.classList.add('dark');
+  document.body.classList.add('dark');
   // Density: toggle a class on body for easy targeting if needed
   document.body.classList.toggle('density-compact', prefs.density === 'compact');
 }
@@ -69,8 +68,8 @@ function getGroupExpanded(groupId) { return groupExpandedState[groupId] !== fals
 function clearGroupExpandedState() { for (const key in groupExpandedState) delete groupExpandedState[key]; }
 
 // Preferences API
-function getTheme() { return prefs.theme; }
-function setTheme(theme) { prefs.theme = theme; savePrefs(); applyPrefsToDOM(); }
+function getTheme() { return 'dark'; }
+function setTheme(theme) { applyPrefsToDOM(); }
 function getDensity() { return prefs.density; }
 function setDensity(density) { prefs.density = density; savePrefs(); applyPrefsToDOM(); }
 function getSortOrder() { return prefs.sortOrder; }

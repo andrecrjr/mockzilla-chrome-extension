@@ -1,60 +1,124 @@
 <!doctype html>
-<html class="h-[400px] overflow-y-hidden" data-theme="light">
+<html class="h-[400px] overflow-y-hidden dark" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <title>Mockzilla · Request Interceptor</title>
     <script src="tailwind-v4.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+      * {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
     <!-- Tailwind v4 runtime compiles this style block -->
     <style type="text/tailwindcss">
+      @layer base {
+        :root {
+          --background: oklch(0.08 0.02 265);
+          --foreground: oklch(0.98 0.01 265);
+          --card: oklch(0.12 0.015 265);
+          --card-foreground: oklch(0.98 0.01 265);
+          --popover: oklch(0.12 0.015 265);
+          --popover-foreground: oklch(0.98 0.01 265);
+          --primary: oklch(0.65 0.25 280);
+          --primary-foreground: oklch(0.08 0.02 265);
+          --secondary: oklch(0.25 0.04 280);
+          --secondary-foreground: oklch(0.98 0.01 265);
+          --muted: oklch(0.22 0.02 265);
+          --muted-foreground: oklch(0.65 0.03 265);
+          --accent: oklch(0.7 0.28 270);
+          --accent-foreground: oklch(0.08 0.02 265);
+          --destructive: oklch(0.55 0.22 25);
+          --destructive-foreground: oklch(0.98 0.01 265);
+          --border: oklch(0.18 0.025 265);
+          --input: oklch(0.18 0.025 265);
+          --ring: oklch(0.65 0.25 280);
+          --radius: 0.625rem;
+        }
+      }
+
       @theme {
-        --color-brand: #7c3aed; /* purple-600 */
-        --color-brand-700: #6d28d9;
-        --color-brand-50: #f5f3ff;
-        --color-accent: #22c55e; /* green-500 */
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-accent: var(--accent);
+        --color-accent-foreground: var(--accent-foreground);
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-popover: var(--popover);
+        --color-popover-foreground: var(--popover-foreground);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-destructive: var(--destructive);
+        --color-destructive-foreground: var(--destructive-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --radius-xl: calc(var(--radius) + 4px);
+
         --shadow-soft: 0 1px 2px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-        --radius-md: 0.5rem;
       }
 
       /* Design system tokens: colors, spacing, radii, shadows */
       @layer components {
         button { @apply cursor-pointer; }
-        .btn { @apply inline-flex items-center justify-center rounded-md border text-xs font-medium px-3 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500; }
-        .btn-primary { @apply bg-purple-600 border-purple-700 text-white hover:bg-purple-700; }
-        .btn-neutral { @apply bg-white border-gray-300 text-gray-800 hover:bg-gray-100; }
-        .btn-danger { @apply bg-red-600 border-red-700 text-white hover:bg-red-700; }
-        .btn-success { @apply bg-green-600 border-green-700 text-white hover:bg-green-700; }
-        .input { @apply text-xs rounded px-2 py-1 bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-[#0b0f1a] dark:border-[#1b2235] dark:text-purple-100 dark:placeholder-purple-300/60; }
-        .select { @apply text-xs rounded px-2 py-1 bg-white border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-[#0b0f1a] dark:border-[#1b2235] dark:text-purple-100; }
-        .textarea { @apply w-full text-xs rounded p-2 min-h-[120px] bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-[#0b0f1a] dark:border-[#1b2235] dark:text-purple-100 dark:placeholder-purple-300/60; }
-        .card { @apply block rounded-md border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow dark:border-[#1b2235] dark:bg-[#0f1424]; }
-        .label { @apply text-xs font-medium text-gray-700 dark:text-gray-300; }
+        .btn { @apply inline-flex items-center justify-center rounded-md text-xs font-medium px-3 py-1 transition-colors focus:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50; }
+        .btn-primary { @apply bg-primary text-primary-foreground hover:bg-primary/90; }
+        .btn-neutral { @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border; }
+        .btn-danger { @apply bg-destructive text-destructive-foreground hover:bg-destructive/90; }
+        .btn-success { @apply bg-green-600 border border-green-700 text-white hover:bg-green-700; }
+        .input { @apply text-xs rounded-md px-2 py-1 bg-background border border-border text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary; }
+        .select { @apply text-xs rounded-md px-2 py-1 bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary; }
+        .textarea { @apply w-full text-xs rounded-md p-2 min-h-[120px] bg-background border border-border text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary; }
+        .card { @apply block rounded-xl border border-border bg-card shadow-sm transition-shadow; @apply transition-all hover:shadow-md hover:border-primary/50; }
+        .label { @apply text-xs font-medium text-foreground; }
         .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #22c55e; }
+        input:checked + .slider { @apply bg-green-500; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .chip { @apply inline-flex items-center gap-1 rounded-full border border-gray-300 bg-gray-50 px-2 py-1 text-[10px] text-gray-700 hover:bg-purple-50 dark:border-[#1b2235] dark:bg-[#0b0f1a] dark:text-purple-200 dark:hover:bg-purple-700/20; }
-        /* Active state for filter chips respects light/dark theme */
-        .chip-active { @apply border-purple-300 bg-purple-100 text-purple-700 dark:border-purple-700/40 dark:bg-purple-700/30 dark:text-purple-200; }
+        .chip { @apply inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-2 py-1 text-[10px] text-foreground hover:bg-secondary/80; }
+        /* Active state for filter chips respects dark theme */
+        .chip-active { @apply border-primary bg-primary/10 text-primary; }
         .badge { @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium; }
         .badge-green { @apply bg-green-100 text-green-700; }
         .badge-gray { @apply bg-gray-100 text-gray-700; }
-        .kbd { @apply inline-flex items-center rounded border border-gray-300 bg-gray-50 px-1 text-[10px] font-mono text-gray-600; }
-        .skeleton { @apply animate-pulse bg-gray-200 rounded; }
-        .toast { @apply pointer-events-auto rounded-md shadow-lg border bg-white px-3 py-2 text-xs; box-shadow: var(--shadow-soft); }
-        .toast-success { @apply border-green-200 text-green-700 bg-green-50; }
-        .toast-error { @apply border-red-200 text-red-700 bg-red-50; }
-        .toast-info { @apply border-blue-200 text-blue-700 bg-blue-50; }
-        .icon-btn { @apply inline-flex items-center justify-center rounded-md border border-purple-300 bg-purple-100 text-purple-700 hover:bg-purple-200 px-3 py-1 text-xs dark:border-purple-700/40 dark:bg-purple-700/20 dark:text-purple-200 dark:hover:bg-purple-700/30; }
-        .pill { @apply inline-flex items-center rounded-full bg-purple-100 text-purple-700 border border-purple-300 px-2 py-0.5 text-[10px] dark:bg-purple-700/20 dark:text-purple-200 dark:border-purple-700/40; }
+        .kbd { @apply inline-flex items-center rounded border border-border bg-background px-1 text-[10px] font-mono text-foreground; }
+        .skeleton { @apply animate-pulse bg-secondary rounded; }
+        .toast { @apply pointer-events-auto rounded-md shadow-lg border bg-card px-3 py-2 text-xs; box-shadow: var(--shadow-soft); }
+        .icon-btn { @apply inline-flex items-center justify-center rounded-md border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 text-xs; }
+        .pill { @apply inline-flex items-center rounded-full bg-primary/10 text-primary border border-primary/30 px-2 py-0.5 text-[10px]; }
+
+        /* Custom design system classes */
+        .mockzilla-glow { @apply shadow-lg shadow-primary/30; }
+        .mockzilla-border { @apply border border-primary/40; }
+        .mockzilla-card-hover { @apply transition-all hover:shadow-md hover:border-primary/50; }
+        .mockzilla-gradient { @apply bg-gradient-to-br from-background via-background to-secondary/20; }
+
+        .glass-header {
+          background-color: oklch(var(--card) / 0.4) !important;
+          backdrop-filter: blur(20px) saturate(150%) !important;
+          -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+        }
+        .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+        .scrollbar-thin::-webkit-scrollbar-track { @apply bg-secondary/30; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-border rounded-full hover:bg-foreground/20; }
       }
+
     </style>
   </head>
-  <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-w-[465px] h-[400px]">
+  <body class="bg-background text-foreground min-w-[465px] h-[400px]">
     <!-- Header -->
-    <header class="bg-white dark:bg-[#0b0f1a] border-b border-gray-200 dark:border-[#1b2235] shadow-sm">
+    <header class="glass-header sticky top-0 z-10 border-b border-border shadow-sm">
       <div class="gap-3 p-2">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -67,12 +131,6 @@
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <button id="settingsBtn" class="icon-btn" title="Theme">
-              <!-- Heroicon: sun -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zm0 16.5a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zm9.75-6.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM4.5 12a.75.75 0 01-.75.75H2.25a.75.75 0 010-1.5H3.75A.75.75 0 014.5 12zm13.09 6.84a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 111.06-1.06l1.06 1.06zM8.53 6.16a.75.75 0 01-1.06 0L6.41 5.1a.75.75 0 111.06-1.06l1.06 1.06a.75.75 0 010 1.06zm9.19-2.12a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 11-1.06-1.06l1.06-1.06zM6.16 15.47a.75.75 0 010 1.06L5.1 17.59a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0z"/>
-              </svg>
-            </button>
             <button id="toggleRules" class="toggle on btn btn-primary rounded-full" role="switch" aria-label="Toggle data processing rules" aria-checked="true" tabindex="0">Disable Rules</button>
             <div id="statusMessage" class="text-xs text-gray-600 dark:text-gray-400" aria-live="polite" aria-atomic="true"></div>
           </div>
@@ -86,16 +144,16 @@
     </header>
 
     <!-- Rules list -->
-    <main class="px-2 pt-2 overflow-y-scroll h-[400px]">
+    <main class="px-2 pt-2 overflow-y-scroll h-[400px] scrollbar-thin">
       <div id="rules" class="space-y-2 overflow-y-auto pr-1 card p-3"></div>
   </main>
-    <footer class="bg-white dark:bg-[#0b0f1a] mt-auto border-t border-gray-200 dark:border-[#1b2235]">
+    <footer class="bg-card mt-auto border-t border-border">
       <div class="px-3 py-2 flex items-center justify-between">
         <a href="https://ko-fi.com/andrecrjr" target="_blank" class="btn btn-neutral flex items-center gap-1">
           <span>☕</span>
           <span>Donate</span>
         </a>
-        <div class="text-xs text-gray-600 dark:text-gray-400">Made with 💓 by <a href="https://www.ac-jr.com/" target="_blank" class="text-purple-700 dark:text-purple-200">AC-JR</a></div>
+        <div class="text-xs text-foreground/60">Made with 💓 by <a href="https://www.ac-jr.com/" target="_blank" class="text-primary">AC-JR</a></div>
       </div>
     </footer>
 

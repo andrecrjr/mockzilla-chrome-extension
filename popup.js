@@ -4,7 +4,7 @@ const defaults = { rr_rules: [] };
 
 // Theme management
 let themePrefs = {
-  theme: 'light' // 'light' | 'dark'
+  theme: 'dark' // 'light' | 'dark'
 };
 
 // Load theme preferences
@@ -30,21 +30,18 @@ function saveThemePrefs() {
 function applyThemeToDOM() {
   const html = document.documentElement;
   // Theme
-  html.setAttribute('data-theme', themePrefs.theme);
-  html.classList.toggle('dark', themePrefs.theme === 'dark');
-  // Some Tailwind dark-mode setups look for the class on body; add it for safety
-  document.body.classList.toggle('dark', themePrefs.theme === 'dark');
+  html.setAttribute('data-theme', 'dark');
+  html.classList.add('dark');
+  document.body.classList.add('dark');
 }
 
 // Get current theme
 function getTheme() { 
-  return themePrefs.theme; 
+  return 'dark'; 
 }
 
-// Set theme
+// Set theme (no-op since we only want dark)
 function setTheme(theme) { 
-  themePrefs.theme = theme; 
-  saveThemePrefs(); 
   applyThemeToDOM(); 
 }
 
@@ -367,15 +364,6 @@ document.getElementById('addRule').addEventListener('click', async () => {
   } catch {}
 });
 
-// Theme toggle button
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  const next = getTheme() === 'dark' ? 'light' : 'dark';
-  setTheme(next);
-  flashStatus(`Theme: ${next}`, 'info');
-});
-
-
-
 async function refresh() {
   try {
     const rules = await getRules();
@@ -463,8 +451,8 @@ async function refresh() {
     }
   });
 
-  applyInitial();
+applyInitial();
 })();
 
-loadThemePrefs();
+applyThemeToDOM();
 refresh();
