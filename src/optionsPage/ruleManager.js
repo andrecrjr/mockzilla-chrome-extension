@@ -270,8 +270,16 @@ async function manualSyncRule(rule) {
 async function syncRules(rules) {
   const serverUrl = getServerUrl();
   if (!serverUrl) {
-    console.warn('Cannot sync: No server URL configured');
+    console.warn('[SYNC] Cannot sync: No server URL configured');
     flashStatus('Configure server URL in Cloud Actions first', 'error');
+    return;
+  }
+
+  // PHASE 1 FIX: Explicit validation - rules WITHOUT groups must show error
+  const ungroupedRules = rules.filter(r => r.syncConfig?.enabled && (!r.group || r.group === 'ungrouped'));
+  if (ungroupedRules.length > 0) {
+    console.warn(`[SYNC] ERROR: ${ungroupedRules.length} rule(s) have no group assigned. Assign groups before syncing.`);
+    flashStatus(`${ungroupedRules.length} rule(s) need to be assigned to a group first`, 'error');
     return;
   }
 
@@ -280,7 +288,18 @@ async function syncRules(rules) {
     r.syncConfig?.enabled && r.group && r.group !== 'ungrouped'
   );
 
-  if (rulesToSync.length === 0) return;
+  if (rulesToSync.length === 0) {
+    console.warn('[SYNC] No rules to sync after filtering');
+    flashStatus('No rules configured for sync', 'info');
+    return;
+  }
+
+  // PHASE 1 FIX: Warn if any rule has empty body
+  const emptyBodyRules = rulesToSync.filter(r => !r.body || r.body.trim() === '');
+  if (emptyBodyRules.length > 0) {
+    console.warn(`[SYNC] Warning: ${emptyBodyRules.length} rule(s) have empty response body`);
+    flashStatus(`⚠️ ${emptyBodyRules.length} rule(s) have empty response body — continuing`, 'warning');
+  }
 
   const groups = await getGroups();
   const groupMap = new Map(groups.map(g => [g.id, g]));
@@ -288,13 +307,13 @@ async function syncRules(rules) {
   const payloadGroups = {};
 
   for (const rule of rulesToSync) {
-    const groupId = rule.group || 'ungrouped';
+    const groupId = rule.group;
     let groupName = 'Ungrouped Rules';
     let groupDesc = '';
 
-    if (rule.group && groupMap.has(rule.group)) {
-      groupName = groupMap.get(rule.group).name;
-      groupDesc = groupMap.get(rule.group).description;
+    if (groupMap.has(groupId)) {
+      groupName = groupMap.get(groupId).name;
+      groupDesc = groupMap.get(groupId).description;
     }
 
     if (!payloadGroups[groupId]) {
@@ -306,20 +325,23 @@ async function syncRules(rules) {
       };
     }
 
+    // PHASE 1 FIX: Include missing fields: bodyType, wildcardRequireMatch
+    // PHASE 1 FIX: Remove redundant 'response' field (keep only 'body')
     payloadGroups[groupId].mocks.push({
       id: rule.id,
       name: rule.name,
       pattern: rule.pattern,
-      body: rule.body,
-      response: rule.body,
+      body: rule.body || '',
       statusCode: rule.statusCode,
       matchType: rule.matchType,
       enabled: rule.enabled,
+      bodyType: rule.bodyType || 'text',
+      wildcardRequireMatch: rule.wildcardRequireMatch || false,
       variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({
         key: v.key,
-        bodyType: v.bodyType,
+        bodyType: v.bodyType || 'text',
         statusCode: v.statusCode,
-        body: v.body
+        body: v.body || ''
       })) : []
     });
   }
@@ -328,7 +350,19 @@ async function syncRules(rules) {
     groups: Object.values(payloadGroups)
   };
 
+  // PHASE 1 FIX: Log payload structure for debugging
+  console.log('[SYNC] Payload structure:', {
+    groupCount: payload.groups.length,
+    totalMocks: payload.groups.reduce((sum, g) => sum + g.mocks.length, 0),
+    groups: payload.groups.map(g => ({ 
+      id: g.id, 
+      name: g.name, 
+      mockCount: g.mocks.length 
+    }))
+  });
+
   try {
+    console.log('[SYNC] Starting POST to', `${serverUrl}/api/sync/extension`);
     const res = await fetch(`${serverUrl}/api/sync/extension`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -336,13 +370,18 @@ async function syncRules(rules) {
     });
 
     if (!res.ok) {
-       throw new Error(`Server returned ${res.status}`);
+       const errText = await res.text();
+       throw new Error(`Server returned ${res.status}: ${errText}`);
     }
     const json = await res.json();
-    console.log('Sync success:', json);
-    flashStatus('Synced to Mockzilla Server', 'success');
+    console.log('[SYNC] Success response:', json);
+    
+    const msg = json.results ? 
+      `Synced: ${json.results.foldersCreated || 0} folder(s) created, ${json.results.foldersUpdated || 0} updated, ${json.results.mocksSynced || 0} mock(s)` :
+      'Synced to Mockzilla Server';
+    flashStatus(msg, 'success');
   } catch (e) {
-    console.error('Sync failed:', e);
+    console.error('[SYNC] Failed:', e);
     flashStatus(`Sync failed: ${e.message}`, 'error');
   }
 }
@@ -352,9 +391,19 @@ async function syncToServer() {
   // Filter for ONLY enabled sync rules
   const syncable = rules.filter(r => r.syncConfig?.enabled);
   if (syncable.length === 0) {
-    flashStatus('No rules enabled for sync', 'info');
+    flashStatus('No rules have sync active — enable sync on a rule first', 'warning');
     return;
   }
+  
+  // PHASE 1 FIX: Pre-flight validation - ensure at least one rule has a group
+  const withGroups = syncable.filter(r => r.group && r.group !== 'ungrouped');
+  if (withGroups.length === 0) {
+    console.warn('[SYNC] Pre-flight check: No rules have groups assigned');
+    flashStatus('No rules have groups assigned — assign groups before syncing', 'error');
+    return;
+  }
+  
+  console.log(`[SYNC] Pre-flight passed: ${withGroups.length}/${syncable.length} rules have groups, starting sync...`);
   await syncRules(syncable);
 }
 
