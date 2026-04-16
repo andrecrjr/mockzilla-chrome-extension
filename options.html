@@ -31,7 +31,7 @@
         --accent-foreground: oklch(0.08 0.02 265);
         --destructive: oklch(0.55 0.22 25);
         --destructive-foreground: oklch(0.98 0.01 265);
-        --border: oklch(0.18 0.025 265);
+        --border: oklch(19.268% 0.07577 301.366);
         --input: oklch(0.18 0.025 265);
         --ring: oklch(0.65 0.25 280);
         --radius: 0.625rem;
@@ -203,12 +203,6 @@
             <option value="az">A → Z</option>
             <option value="enabled">Enabled first</option>
           </select>
-          <div class="chip"><span class="hidden sm:inline">Density</span>
-            <select id="densityToggle" class="select">
-              <option value="comfortable">Comfort</option>
-              <option value="compact">Compact</option>
-            </select>
-          </div>
         </div>
         <div class="flex items-center gap-2">
           <button id="addGroup" class="btn btn-success flex items-center gap-1"><svg class="w-4 h-4" fill="none"
@@ -223,7 +217,6 @@
           <div id="statusMessage" class="ml-auto text-xs text-gray-600" aria-live="polite" aria-atomic="true"></div>
         </div>
         <div class="flex items-center gap-3">
-          <span class="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Filter</span>
           <!-- Segmented Control: Status Filters -->
           <div class="filter-group">
             <button id="filterAll" class="filter-item">
@@ -288,6 +281,7 @@
 
       <!-- Quick Create Folder Input -->
       <div class="p-3 border-b border-border/50">
+        
         <div class="flex items-center gap-2">
           <input id="quickGroupName" class="input flex-1 text-xs" placeholder="New folder name" />
           <button id="quickCreateGroup" class="btn btn-success px-2 py-1 text-xs h-9 whitespace-nowrap" title="Create folder">

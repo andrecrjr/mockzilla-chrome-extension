@@ -772,7 +772,7 @@ function renderGroupDetails(group) {
   detailsContainer.innerHTML = `
     <div class="space-y-4">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-medium text-gray-900">Group Details</h2>
+        <h2 class="text-lg font-medium">Group Details</h2>
       </div>
       
       <div class="space-y-4">
