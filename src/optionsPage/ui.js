@@ -317,6 +317,11 @@ function renderRuleDetails(rule) {
       </div>
 
       <div class="form-field">
+        <label class="field-label">URL Pattern</label>
+        <input class="pattern input w-full" placeholder="https://api.example.com/users/..." value="${escapeHtml(rule.pattern)}" aria-label="URL pattern" />
+      </div>
+
+      <div class="form-field">
         <label class="field-label">Match Type</label>
         <select class="matchType select w-full" aria-label="Match type">
           <option value="substring" ${rule.matchType === 'substring' ? 'selected' : ''}>Substring</option>
@@ -330,11 +335,6 @@ function renderRuleDetails(rule) {
           <div class="matchType-help-wildcard hidden"><strong>Wildcard</strong>: each <span class="font-mono text-[10px]">*</span> captures a part of the URL and builds a <strong>variant key</strong> by joining captures with <span class="font-mono text-[10px]">|</span>. Example: <span class="font-mono text-[10px]">.../todos/*</span> + <span class="font-mono text-[10px]">.../todos/1</span> → key <span class="font-mono text-[10px]">1</span>. Great for multiple query params: <span class="font-mono text-[10px]">.../search?user=*&amp;status=*</span> → key <span class="font-mono text-[10px]">alice|open</span></div>
           <div class="matchType-help-wildcard-require hidden"><strong>Require variant</strong> ON: if no variant key matches, the request passes through</div>
         </div>
-      </div>
-      
-      <div class="form-field">
-        <label class="field-label">URL Pattern</label>
-        <input class="pattern input w-full" placeholder="https://api.example.com/users/..." value="${escapeHtml(rule.pattern)}" aria-label="URL pattern" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -364,11 +364,6 @@ function renderRuleDetails(rule) {
         </div>
       </div>
       
-      <div class="form-field">
-        <label class="field-label">Response Body</label>
-        <textarea class="body textarea" placeholder="Response body JSON or text" aria-label="Replacement body">${escapeHtml(rule.body)}</textarea>
-        <div class="validation text-xs text-red-600 mt-1 hidden" data-error="json" role="alert"></div>
-      </div>
       <div class="wildcard-section ${rule.matchType === 'wildcard' ? '' : 'hidden'}">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3">
@@ -379,13 +374,15 @@ function renderRuleDetails(rule) {
             </label>
             <span class="text-xs text-muted-foreground">Pass through if no match</span>
           </div>
-          <button class="add-variant btn btn-sm">+ Add Variant</button>
+          <button class="add-variant btn btn-sm btn-primary">+ Add Variant</button>
         </div>
         <div class="variants-list space-y-3">
           ${(Array.isArray(rule.variants) ? rule.variants : []).map(v => `
-            <div class="variant-item border rounded p-2" data-key="${escapeHtml(v.key)}">
+            <div class="variant-item border rounded p-2 bg-secondary/30" data-key="${escapeHtml(v.key)}">
               <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-                <input class="variant-key input w-full" placeholder="Variant key (captures joined by |, e.g. alice|open)" value="${escapeHtml(v.key)}" />
+                <div class="relative">
+                  <input class="variant-key input w-full" placeholder="Variant key (e.g. 1)" value="${escapeHtml(v.key)}" />
+                </div>
                 <select class="variant-bodyType select w-full">
                   <option value="text" ${v.bodyType === 'text' ? 'selected' : ''}>Text</option>
                   <option value="json" ${v.bodyType === 'json' ? 'selected' : ''}>JSON</option>
@@ -405,11 +402,17 @@ function renderRuleDetails(rule) {
                 </select>
                 <button class="variant-delete btn btn-sm btn-danger">Delete</button>
               </div>
-              <textarea class="variant-body textarea" placeholder="Variant body">${escapeHtml(v.body || '')}</textarea>
+              <textarea class="variant-body textarea h-24" placeholder="Variant body">${escapeHtml(v.body || '')}</textarea>
             </div>
           `).join('')}
-          ${(!Array.isArray(rule.variants) || rule.variants.length === 0) ? '<div class="text-xs text-gray-500">No variants. Use Add Variant.</div>' : ''}
+          ${(!Array.isArray(rule.variants) || rule.variants.length === 0) ? '<div class="text-xs text-gray-500 italic p-4 text-center border-2 border-dashed rounded-lg">No variants. Use "Add Variant" to create response variations.</div>' : ''}
         </div>
+      </div>
+      
+      <div class="form-field response-body-section">
+        <label class="field-label">Default Response Body</label>
+        <textarea class="body textarea" placeholder="Response body JSON or text" aria-label="Replacement body">${escapeHtml(rule.body)}</textarea>
+        <div class="validation text-xs text-red-600 mt-1 hidden" data-error="json" role="alert"></div>
       </div>
     </div>
   `;
@@ -435,6 +438,12 @@ function renderRuleDetails(rule) {
   const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
   const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
   const hideBannerBtn = detailsContainer.querySelector('.hide-banner-btn');
+
+  // Also hook into other change events to trigger autoSync
+  const triggerAutoSync = async () => {
+    // Small delay to ensure blur/change event value has propagated to rule object if not already
+    setTimeout(() => autoSyncRule(rule), 50);
+  };
 
   const updateMatchTypeHelp = () => {
     const helpPattern = detailsContainer.querySelector('.matchType-help-pattern');
@@ -597,12 +606,36 @@ function renderRuleDetails(rule) {
 
   if (addVariantBtn) {
     addVariantBtn.addEventListener('click', async () => {
+      if (!rule.pattern.includes('*')) {
+        flashStatus('no wildcard in path', 'error');
+        // Find pattern input and highlight it
+        if (patternEl) {
+          patternEl.focus();
+          patternEl.classList.add('ring-2', 'ring-red-500');
+          setTimeout(() => patternEl.classList.remove('ring-2', 'ring-red-500'), 2000);
+        }
+        return;
+      }
+
       const newVar = { key: '', bodyType: rule.bodyType, statusCode: rule.statusCode, body: '' };
       rule.variants = Array.isArray(rule.variants) ? rule.variants.slice() : [];
       rule.variants.push(newVar);
       await setRuleVariantsMeta(rule.id, rule.variants);
+      
+      // Re-render to show new variant
       renderRuleDetails(rule);
+      
+      // Focus the new variant's key input
+      setTimeout(() => {
+        const lastItem = variantsListEl.querySelector('.variant-item:last-child');
+        if (lastItem) {
+          const keyInp = lastItem.querySelector('.variant-key');
+          if (keyInp) keyInp.focus();
+        }
+      }, 50);
+
       flashStatus('Variant added', 'success');
+      triggerAutoSync();
     });
   }
 
@@ -616,6 +649,10 @@ function renderRuleDetails(rule) {
       const getIdx = () => (rule.variants || []).findIndex(v => String(v.key) === String(item.getAttribute('data-key') || ''));
 
       keyInput.addEventListener('blur', async () => {
+        if (!rule.pattern.includes('*')) {
+          flashStatus('no wildcard in path', 'error');
+          return;
+        }
         const idx = getIdx();
         if (idx >= 0) {
           rule.variants[idx].key = keyInput.value;
@@ -735,20 +772,13 @@ function renderRuleDetails(rule) {
       renderRuleDetails(rule);
     });
   }
-  
-  // Also hook into other change events to trigger autoSync
-  const triggerAutoSync = async () => {
-      // Small delay to ensure blur/change event value has propagated to rule object if not already
-      setTimeout(() => autoSyncRule(rule), 50);
-  };
-  
+
   nameEl.addEventListener('blur', triggerAutoSync);
   if (groupSelectEl) groupSelectEl.addEventListener('change', triggerAutoSync);
   patternEl.addEventListener('blur', triggerAutoSync);
   statusCodeEl.addEventListener('change', triggerAutoSync);
   enabledToggle.addEventListener('change', triggerAutoSync);
   bodyEl.addEventListener('blur', triggerAutoSync);
-  if (addVariantBtn) addVariantBtn.addEventListener('click', () => setTimeout(triggerAutoSync, 150));
 }
 
 function renderGroupDetails(group) {
