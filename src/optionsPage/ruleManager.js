@@ -570,7 +570,7 @@ async function importFolderFromServer(folderId) {
                             // Ensure sync is enabled by default for imported rules
                             syncConfig: { enabled: true, method: mock.method || 'GET', autoSync: true },
                             // Map body if not present but response is (some server formats)
-                            body: mock.body || mock.response || '',
+                            body: mock.response || mock.body || '',
                             name: mock.name || 'Untitled Mock'
                         };
                         if (!rule.matchType) rule.matchType = 'substring'; // Default
