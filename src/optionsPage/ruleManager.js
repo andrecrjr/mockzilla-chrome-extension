@@ -137,7 +137,7 @@ async function exportRules() {
   const rules = await getRules();
   const groups = await getGroups();
   const exportedAt = new Date().toISOString();
-  // Create a minimal representation that excludes internal properties
+  // Create a representation that includes all necessary properties
   const rulesForExport = rules.map(rule => ({
     id: rule.id,
     name: rule.name,
@@ -145,9 +145,11 @@ async function exportRules() {
     pattern: rule.pattern,
     enabled: rule.enabled,
     bodyType: rule.bodyType,
-    group: rule.group, // Include group information
+    group: rule.group,
     statusCode: rule.statusCode,
     body: rule.body,
+    syncConfig: rule.syncConfig,
+    wildcardRequireMatch: rule.wildcardRequireMatch,
     variants: Array.isArray(rule.variants) ? rule.variants.map(v => ({ key: v.key, bodyType: v.bodyType, statusCode: v.statusCode, body: v.body })) : []
   }));
   
@@ -198,10 +200,54 @@ async function importRules(importText) {
       // New format with groups
       importedRules = importedData.rules || [];
       importedGroups = importedData.groups || [];
+    } else if (importedData.groups && Array.isArray(importedData.groups)) {
+      // Server format: { groups: [ { id, name, mocks: [] } ] }
+      importedData.groups.forEach(group => {
+        const groupId = group.id || group.slug || uid();
+        const { mocks, ...groupData } = group;
+        importedGroups.push({ ...groupData, id: groupId });
+
+        if (mocks && Array.isArray(mocks)) {
+          mocks.forEach(mock => {
+            importedRules.push({
+              ...mock,
+              group: groupId,
+              // Ensure critical fields for validation/storage
+              body: mock.body || mock.response || '',
+              name: mock.name || 'Untitled Mock'
+            });
+          });
+        }
+      });
+    // ... existing format parsing ...
     } else {
       // Unknown format
       throw new Error('Invalid import format');
     }
+
+    // --- NEW DEDUPLICATION LOGIC ---
+    // Helper to get method consistently
+    const getMethod = (r) => r.method || r.syncConfig?.method || 'GET';
+
+    // 1. Deduplicate incoming rules by content (Pattern + Method + MatchType)
+    // This ensures that if the import data itself has duplicates, we only take the best one.
+    const incomingContentMap = new Map();
+    importedRules.forEach(r => {
+      const key = `${r.pattern}|${getMethod(r)}|${r.matchType || 'substring'}`;
+      const existing = incomingContentMap.get(key);
+      
+      const newHasGroup = r.group && r.group !== 'ungrouped';
+      const existingHasGroup = existing && existing.group && existing.group !== 'ungrouped';
+      
+      // Keep if: first time seeing this content, OR this version has a group and the previous didn't
+      if (!existing || (!existingHasGroup && newHasGroup)) {
+        incomingContentMap.set(key, r);
+      }
+    });
+    importedRules = Array.from(incomingContentMap.values());
+
+    // 2. Ensure every rule has an ID
+    importedRules.forEach(r => { if (!r.id) r.id = uid(); });
 
     // Import groups first
     for (const group of importedGroups) {
@@ -215,8 +261,17 @@ async function importRules(importText) {
       await setGroup(group);
     }
 
+    // Fetch existing rules for deduplication check against current storage
+    const existingRules = await getRules();
+
     // Import rules
     for (const rule of importedRules) {
+      // Ensure defaults for critical fields
+      if (!rule.matchType) rule.matchType = 'substring';
+      if (!rule.bodyType) rule.bodyType = 'json';
+      if (!rule.pattern) rule.pattern = '';
+      if (rule.body === undefined) rule.body = rule.response || '';
+
       if (
         typeof rule !== 'object' ||
         typeof rule.id !== 'string' ||
@@ -232,7 +287,23 @@ async function importRules(importText) {
       if (rule.statusCode === undefined) rule.statusCode = 200;
       if (!Array.isArray(rule.variants)) rule.variants = [];
       
-      // If rule already exists, update it; otherwise, create a new one
+      // 3. CROSS-STORAGE DEDUPLICATION: 
+      // If we are importing a grouped rule, delete any existing ungrouped rule with the same pattern
+      if (rule.group && rule.group !== 'ungrouped') {
+        const duplicate = existingRules.find(r => 
+          r.pattern === rule.pattern && 
+          getMethod(r) === getMethod(rule) && 
+          r.matchType === rule.matchType &&
+          (!r.group || r.group === 'ungrouped') &&
+          r.id !== rule.id
+        );
+        if (duplicate) {
+          console.log(`[IMPORT] Removing existing ungrouped duplicate rule ${duplicate.id} for pattern ${rule.pattern}`);
+          await deleteRule(duplicate.id);
+        }
+      }
+
+      // If rule already exists (by ID), update it; otherwise, create a new one
       await setRule(rule);
     }
 
@@ -278,8 +349,9 @@ async function syncRules(rules) {
   // PHASE 1 FIX: Explicit validation - rules WITHOUT groups must show error
   const ungroupedRules = rules.filter(r => r.syncConfig?.enabled && (!r.group || r.group === 'ungrouped'));
   if (ungroupedRules.length > 0) {
-    console.warn(`[SYNC] ERROR: ${ungroupedRules.length} rule(s) have no group assigned. Assign groups before syncing.`);
-    flashStatus(`${ungroupedRules.length} rule(s) need to be assigned to a group first`, 'error');
+    const offendingNames = ungroupedRules.map(r => r.name || 'Untitled Rule').join(', ');
+    console.warn('[SYNC] Validation failed: Some rules enabled for sync have no group assigned', ungroupedRules.map(r => ({ id: r.id, name: r.name })));
+    flashStatus(`${ungroupedRules.length} rule(s) (${offendingNames}) need to be assigned to a group first`, 'error', 5000);
     return;
   }
 
@@ -334,6 +406,7 @@ async function syncRules(rules) {
       body: rule.body || '',
       statusCode: rule.statusCode,
       matchType: rule.matchType,
+      method: rule.syncConfig?.method || 'GET',
       enabled: rule.enabled,
       bodyType: rule.bodyType || 'text',
       wildcardRequireMatch: rule.wildcardRequireMatch || false,
@@ -480,15 +553,28 @@ async function importFolderFromServer(folderId) {
 
         if (json.groups && Array.isArray(json.groups)) {
             json.groups.forEach(group => {
+                // Ensure we have a valid ID for the group
+                const groupId = group.id || group.slug;
+                if (!groupId) return;
+
                 // Add group to list (exclude mocks to keep it clean)
                 const { mocks, ...groupData } = group;
-                importedGroups.push(groupData);
+                importedGroups.push({ ...groupData, id: groupId });
 
                 // Add mocks as rules with groupId
                 if (mocks && Array.isArray(mocks)) {
                     mocks.forEach(mock => {
-                        const rule = { ...mock, group: group.id };
+                        const rule = { 
+                            ...mock, 
+                            group: groupId,
+                            // Ensure sync is enabled by default for imported rules
+                            syncConfig: { enabled: true, method: mock.method || 'GET', autoSync: true },
+                            // Map body if not present but response is (some server formats)
+                            body: mock.body || mock.response || '',
+                            name: mock.name || 'Untitled Mock'
+                        };
                         if (!rule.matchType) rule.matchType = 'substring'; // Default
+                        if (!rule.bodyType) rule.bodyType = 'json'; // Default
                         importedRules.push(rule);
                     });
                 }

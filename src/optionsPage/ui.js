@@ -29,8 +29,11 @@ function renderRulesList(rules, groups) {
 
   // Group rules by their group ID (after filtering)
   const rulesByGroup = {};
+  const groupIds = new Set(groups.map(g => g.id));
+
   filtered.forEach(rule => {
-    const groupId = rule.group || 'ungrouped';
+    // If rule has a group but that group doesn't exist, treat it as ungrouped for rendering
+    const groupId = (rule.group && groupIds.has(rule.group)) ? rule.group : 'ungrouped';
     if (!rulesByGroup[groupId]) rulesByGroup[groupId] = [];
     rulesByGroup[groupId].push(rule);
   });
