@@ -1,7 +1,7 @@
 // UI rendering module for options page - handles all DOM rendering functions
 
 import { escapeHtml, flashStatus, isValidJSON } from './utils.js';
-import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule } from './ruleManager.js';
+import { selectRule, selectGroup, refresh, duplicateRule, autoSyncRule, manualSyncRule, importFolderFromServer } from './ruleManager.js';
 import { setRuleMeta, setRuleBody, deleteRule, deleteGroup, setGroup, getRules, setRuleVariantsMeta, setRuleVariantBody, deleteRuleVariant } from './storage.js';
 import { groupExpandedState, getSelectedId, getSelectedType, getGroupExpanded, setGroupExpanded, getSearchQuery, getSortOrder, getFilterStatus, getShowUngrouped, getDensity, clearSelection, getServerUrl, getShowServerSyncBanner, setShowServerSyncBanner } from './state.js';
 
@@ -256,10 +256,19 @@ function renderRuleDetails(rule) {
                 <span class="text-[10px] font-medium text-foreground/60 uppercase tracking-tight">Auto</span>
              </div>
              
-             <button class="btn btn-xs btn-ghost text-primary hover:bg-primary/10 flex items-center gap-1.5 sync-now-btn" title="Sync Now" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                <span class="text-[10px] font-bold">SYNC NOW</span>
-             </button>
+             <div class="flex items-center gap-1">
+               <button class="btn btn-xs btn-ghost text-primary hover:bg-primary/10 flex items-center gap-1 push-btn" title="Push: Send local changes to server" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                  <span class="text-[10px] font-bold uppercase">Push</span>
+               </button>
+
+               ${rule.syncConfig?.serverFolderId ? `
+               <button class="btn btn-xs btn-ghost text-primary hover:bg-primary/10 flex items-center gap-1 pull-btn" title="Pull: Download latest edits from server" ${!rule.syncConfig?.enabled ? 'disabled' : ''}>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/></svg>
+                  <span class="text-[10px] font-bold uppercase">Pull</span>
+               </button>
+               ` : ''}
+             </div>
              
              <div class="w-2 h-2 rounded-full ml-1 mr-2 ${rule.syncConfig?.enabled ? (rule.syncConfig?.autoSync ? 'bg-green-500 animate-pulse' : 'bg-blue-500') : 'bg-gray-300'}" title="${rule.syncConfig?.enabled ? 'Sync Active' : 'Sync Disabled'}"></div>
           </div>
@@ -439,7 +448,8 @@ function renderRuleDetails(rule) {
   
   const syncEnabledEl = detailsContainer.querySelector('.sync-enabled');
   const syncAutoSyncEl = detailsContainer.querySelector('.sync-autosync');
-  const syncNowBtn = detailsContainer.querySelector('.sync-now-btn');
+  const pushBtn = detailsContainer.querySelector('.push-btn');
+  const pullBtn = detailsContainer.querySelector('.pull-btn');
   const hideBannerBtn = detailsContainer.querySelector('.hide-banner-btn');
 
   // Also hook into other change events to trigger autoSync
@@ -755,18 +765,35 @@ function renderRuleDetails(rule) {
     });
   }
 
-  if (syncNowBtn) {
-     syncNowBtn.addEventListener('click', async () => {
-        const originalText = syncNowBtn.innerHTML;
-        syncNowBtn.disabled = true;
-        syncNowBtn.innerHTML = 'SYNCING...';
+  if (pushBtn) {
+     pushBtn.addEventListener('click', async () => {
+        const originalText = pushBtn.innerHTML;
+        pushBtn.disabled = true;
+        pushBtn.innerHTML = 'PUSHING...';
         try {
             await manualSyncRule(rule);
         } finally {
-            syncNowBtn.disabled = !rule.syncConfig?.enabled;
-            syncNowBtn.innerHTML = originalText;
+            pushBtn.disabled = !rule.syncConfig?.enabled;
+            pushBtn.innerHTML = originalText;
         }
      });
+  }
+
+  if (pullBtn && rule.syncConfig?.serverFolderId) {
+    pullBtn.addEventListener('click', async () => {
+      const originalText = pullBtn.innerHTML;
+      pullBtn.disabled = true;
+      pullBtn.innerHTML = 'PULLING...';
+      try {
+        const success = await importFolderFromServer(rule.syncConfig.serverFolderId);
+        if (success) {
+          await refresh();
+        }
+      } finally {
+        pullBtn.disabled = !rule.syncConfig?.enabled;
+        pullBtn.innerHTML = originalText;
+      }
+    });
   }
 
   if (hideBannerBtn) {

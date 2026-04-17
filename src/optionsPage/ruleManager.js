@@ -559,7 +559,7 @@ async function importFolderFromServer(folderId) {
 
                 // Add group to list (exclude mocks to keep it clean)
                 const { mocks, ...groupData } = group;
-                importedGroups.push({ ...groupData, id: groupId });
+                importedGroups.push({ ...groupData, id: groupId, serverFolderId: folderId });
 
                 // Add mocks as rules with groupId
                 if (mocks && Array.isArray(mocks)) {
@@ -568,7 +568,7 @@ async function importFolderFromServer(folderId) {
                             ...mock, 
                             group: groupId,
                             // Ensure sync is enabled by default for imported rules
-                            syncConfig: { enabled: true, method: mock.method || 'GET', autoSync: true },
+                            syncConfig: { enabled: true, method: mock.method || 'GET', autoSync: true, serverFolderId: folderId },
                             // Map body if not present but response is (some server formats)
                             body: mock.response || mock.body || '',
                             name: mock.name || 'Untitled Mock'
