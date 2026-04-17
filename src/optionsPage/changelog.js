@@ -1,5 +1,28 @@
 // Changelog data for Mockzilla
 export const changelogData = {
+  "1.0": {
+    title: "Version 1.0: Official Release",
+    date: "April 2026",
+    sections: [
+      {
+        title: "🚀 New Features",
+        items: [
+          "**Official 1.0 Release**: Mockzilla is now stable and ready for production!",
+          "**Server Side Upgraded**: Go to our new landing page version with a new design and better documentation! [mockzilla.dev](https://mockzilla.dev?utm_source=extension&utm_medium=changelog&utm_campaign=v1.0) ",
+          "**Folder Management**: Renamed 'Groups' to 'Folders' and improved the organization UI for better clarity.",
+          "**Enhanced Server Sync**: Server Sync is now out of BETA. Added Push and Pull functionality for seamless rule synchronization.",
+        ]
+      },
+      {
+        title: "🚀 Improvements",
+        items: [
+          "**Rule Export/Import**: Improved deduplication and validation when importing or exporting rules.",
+          "**UI/UX Polish**: Enhanced the rule details UI with better URL pattern handling and response body fields.",
+          "**Consistency**: Standardized terminology across the app (Folders, Sync, etc.) and improved UI feedback.",
+        ]
+      }
+    ]
+  },
   "0.4": {
     title: "Version 0.4: Capture Panel",
     date: "January 2026",
@@ -7,7 +30,7 @@ export const changelogData = {
       {
         title: "🚀 New Features",
         items: [
-          "**Capture Panel**: Now it's easier to debug the mock rules that was used directly in your page.",
+          "**Capture Panel**: Now it's easier to debug the mock rules that were used directly in your page.",
         ]
       },
       {
