@@ -75,7 +75,7 @@ The options page is composed of several interconnected modules:
 - Sortable rule lists (by name, status, recency)
 - Search and filter capabilities
 
-### Server Synchronization (Beta)
+### Server Synchronization
 - Integration with Mockzilla server for team collaboration
 - Import/export functionality for rule sharing
 - Folder-based organization for team workflows

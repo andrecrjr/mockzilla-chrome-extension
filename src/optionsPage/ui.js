@@ -282,7 +282,7 @@ function renderRuleDetails(rule) {
         </div>
       </div>
       
-      <!-- Mockzilla Server Sync Banner (BETA) -->
+      <!-- Mockzilla Server Sync Banner  -->
       ${((getShowServerSyncBanner() || (getServerUrl() && getServerUrl().trim() !== "")) && (rule.group && rule.group !== 'ungrouped')) ? `
       <div class="bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/10 rounded-lg p-3 text-[11px] leading-tight text-foreground/70 flex gap-2.5 items-center relative">
          <div class="p-1.5 bg-card rounded shadow-sm border border-border flex-shrink-0">
@@ -290,7 +290,7 @@ function renderRuleDetails(rule) {
          </div>
          <div class="flex-1 flex items-center justify-between">
            <div>
-             <strong class="text-primary">Server Sync (BETA):</strong>
+             <strong class="text-primary">Server Sync:</strong>
              Store this mock data on your server. <span>(Configure server URL in Settings)</span>
            </div>
            <div class="flex items-center gap-3">
