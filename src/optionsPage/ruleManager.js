@@ -449,6 +449,25 @@ async function syncRules(rules) {
     const json = await res.json();
     console.log('[SYNC] Success response:', json);
     
+    // Update local rules with serverFolderId if mapping is returned
+    if (json.folderMapping) {
+      const allRules = await getRules();
+      let updatedCount = 0;
+      for (const r of allRules) {
+        const localGroupId = r.group || 'ungrouped';
+        const serverId = json.folderMapping[localGroupId];
+        if (serverId && r.syncConfig?.enabled && r.syncConfig.serverFolderId !== serverId) {
+          r.syncConfig.serverFolderId = serverId;
+          await setRuleMeta(r);
+          updatedCount++;
+        }
+      }
+      if (updatedCount > 0) {
+        console.log(`[SYNC] Updated ${updatedCount} rules with serverFolderId`);
+        await refresh(); // Refresh UI to show PULL buttons
+      }
+    }
+    
     const msg = json.results ? 
       `Synced: ${json.results.foldersCreated || 0} folder(s) created, ${json.results.foldersUpdated || 0} updated, ${json.results.mocksSynced || 0} mock(s)` :
       'Synced to Mockzilla Server';

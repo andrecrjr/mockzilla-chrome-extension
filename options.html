@@ -208,7 +208,7 @@
           <button id="addGroup" class="btn btn-success flex items-center gap-1"><svg class="w-4 h-4" fill="none"
               stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>Group</button>
+            </svg>Folder</button>
           <button id="addRule" class="btn btn-primary flex items-center gap-1"><svg class="w-4 h-4" fill="none"
               stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -277,18 +277,6 @@
           </div>
         </div>
         <p class="text-[11px] text-muted-foreground leading-relaxed">Organize and manage your rules and folders below.</p>
-      </div>
-
-      <!-- Quick Create Folder Input -->
-      <div class="p-3 border-b border-border/50">
-        
-        <div class="flex items-center gap-2">
-          <input id="quickGroupName" class="input flex-1 text-xs" placeholder="New folder name" />
-          <button id="quickCreateGroup" class="btn btn-success px-2 py-1 text-xs h-9 whitespace-nowrap" title="Create folder">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            Folder
-          </button>
-        </div>
       </div>
 
       <!-- Rules List Container -->
@@ -435,21 +423,21 @@
     </div>
   </div>
 
-  <!-- Group Modal -->
+  <!-- Folder Modal -->
   <div id="groupModal" class="modal-overlay hidden">
     <div class="card modal-panel">
-      <h3 class="modal-title">Create or Edit Group</h3>
+      <h3 class="modal-title">Create or Edit Folder</h3>
       <div class="mb-3">
-        <label class="label block mb-1">Group Name</label>
-        <input id="groupName" class="w-full input" placeholder="Enter group name" />
+        <label class="label block mb-1">Folder Name</label>
+        <input id="groupName" class="w-full input" placeholder="Enter folder name" />
       </div>
       <div class="mb-3">
-        <label class="label block mb-1">Group Description (optional)</label>
-        <textarea id="groupDescription" class="w-full textarea" placeholder="Enter group description"></textarea>
+        <label class="label block mb-1">Folder Description (optional)</label>
+        <textarea id="groupDescription" class="w-full textarea" placeholder="Enter folder description"></textarea>
       </div>
       <div class="modal-actions">
         <button id="cancelGroup" class="btn btn-neutral">Cancel</button>
-        <button id="saveGroup" class="btn btn-primary">Save Group</button>
+        <button id="saveGroup" class="btn btn-primary">Save Folder</button>
       </div>
     </div>
   </div>
